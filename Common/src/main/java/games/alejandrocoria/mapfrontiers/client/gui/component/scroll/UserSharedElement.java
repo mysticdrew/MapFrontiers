@@ -32,7 +32,7 @@ public class UserSharedElement extends ScrollBox.ScrollElement {
         this.enabled = enabled;
 
         if (removable && enabled) {
-            buttonDelete = new IconButton(0, 0, IconButton.Type.Remove, (button) -> {});
+            buttonDelete = new IconButton(IconButton.Type.Remove, (button) -> {});
         }
     }
 

@@ -8,7 +8,6 @@ import games.alejandrocoria.mapfrontiers.client.gui.component.TabbedBox;
 import games.alejandrocoria.mapfrontiers.client.gui.component.button.IconButton;
 import games.alejandrocoria.mapfrontiers.client.gui.component.button.LinkButton;
 import games.alejandrocoria.mapfrontiers.client.gui.component.button.OptionButton;
-import games.alejandrocoria.mapfrontiers.client.gui.component.button.PatreonButton;
 import games.alejandrocoria.mapfrontiers.client.gui.component.button.SimpleButton;
 import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.GroupActionElement;
 import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.GroupElement;
@@ -123,7 +122,6 @@ public class ModSettings extends AutoScaledScreen {
     private LinkButton buttonWeb;
     private LinkButton buttonCurseForge;
     private LinkButton buttonModrinth;
-    private PatreonButton buttonPatreon;
     private StringWidget labelFullscreenButtons;
     private StringWidget labelFullscreenVisibility;
     private StringWidget labelFullscreenNameVisibility;
@@ -411,7 +409,7 @@ public class ModSettings extends AutoScaledScreen {
         textNewGroupName = newGroupLayout.addChild(new TextBox(font, 140, I18n.get("mapfrontiers.new_group_name")));
         textNewGroupName.setMaxLength(22);
 
-        buttonNewGroup = newGroupLayout.addChild(new IconButton(192, actualHeight - 61, IconButton.Type.Add, (b) -> newGroupPressed()));
+        buttonNewGroup = newGroupLayout.addChild(new IconButton(IconButton.Type.Add, (b) -> newGroupPressed()));
 
         LinearLayout usersCol = LinearLayout.vertical().spacing(4);
         usersCol.defaultCellSetting().alignHorizontallyLeft();

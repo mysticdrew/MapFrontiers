@@ -3,7 +3,7 @@ package games.alejandrocoria.mapfrontiers.client.gui.component.scroll;
 import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
-import games.alejandrocoria.mapfrontiers.client.gui.component.SimpleLabel;
+import games.alejandrocoria.mapfrontiers.client.gui.component.StringWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -17,12 +17,12 @@ public class RadioListElement extends ScrollBox.ScrollElement {
     private static final int textureSizeX = 24;
     private static final int textureSizeY = 12;
 
-    private final SimpleLabel label;
+    private final StringWidget label;
     private final int id;
 
     public RadioListElement(Font font, Component text, int id) {
         super(200, 16);
-        this.label = new SimpleLabel(font, x + 20, y + 4, SimpleLabel.Align.Left, text, ColorConstants.SIMPLE_BUTTON_TEXT);
+        this.label = new StringWidget(text, font).setColor(ColorConstants.SIMPLE_BUTTON_TEXT);
         this.id = id;
     }
 

@@ -21,13 +21,6 @@ public class OptionButton extends Button {
     private int color = ColorConstants.TEXT;
     private int highlightedColor = ColorConstants.TEXT_HIGHLIGHT;
 
-    // TODO remove
-    public OptionButton(Font font, int x, int y, int width, OnPress pressedAction) {
-        super(x, y, width, 12, Component.empty(), (b) -> pressedAction.onPress((OptionButton) b), Button.DEFAULT_NARRATION);
-        this.font = font;
-        options = new ArrayList<>();
-    }
-
     public OptionButton(Font font, int width, OnPress pressedAction) {
         super(0, 0, width, 12, Component.empty(), (b) -> pressedAction.onPress((OptionButton) b), Button.DEFAULT_NARRATION);
         this.font = font;

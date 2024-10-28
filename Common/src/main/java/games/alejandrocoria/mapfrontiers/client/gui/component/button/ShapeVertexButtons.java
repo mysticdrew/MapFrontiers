@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
 import games.alejandrocoria.mapfrontiers.client.gui.component.AbstractWidgetNoNarration;
-import games.alejandrocoria.mapfrontiers.client.gui.component.SimpleLabel;
+import games.alejandrocoria.mapfrontiers.client.gui.component.StringWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.sounds.SoundManager;
@@ -35,16 +35,18 @@ public class ShapeVertexButtons extends AbstractWidgetNoNarration {
     private static final int textureSizeX = 980;
     private static final int textureSizeY = 98;
 
+    private final Font font;
     private int selected;
-    private final SimpleLabel labelShapes;
-    private final SimpleLabel labelVertices;
+    private final StringWidget labelShapes;
+    private final StringWidget labelVertices;
     private final Consumer<ShapeVertexButtons> callbackShapeUpdated;
 
     public ShapeVertexButtons(Font font, int selected, Consumer<ShapeVertexButtons> callbackShapeUpdated) {
         super(0, 0, 324, 140, Component.empty());
+        this.font = font;
         this.selected = selected;
-        labelShapes = new SimpleLabel(font, 0, 0, SimpleLabel.Align.Center, Component.translatable("mapfrontiers.initial_shape"), ColorConstants.WHITE);
-        labelVertices = new SimpleLabel(font, 0, 0, SimpleLabel.Align.Center, Component.empty(), ColorConstants.WHITE);
+        labelShapes = new StringWidget(Component.translatable("mapfrontiers.initial_shape"), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
+        labelVertices = new StringWidget(Component.empty(), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
         this.callbackShapeUpdated = callbackShapeUpdated;
 
         updateVertexLabel();
@@ -157,6 +159,6 @@ public class ShapeVertexButtons extends AbstractWidgetNoNarration {
     }
 
     private void updateVertexLabel() {
-        labelVertices.setText(Component.translatable("mapfrontiers.vertices", vertexCount[selected]));
+        labelVertices.setMessage(Component.translatable("mapfrontiers.vertices", vertexCount[selected]));
     }
 }

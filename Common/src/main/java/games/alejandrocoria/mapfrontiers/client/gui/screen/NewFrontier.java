@@ -67,7 +67,7 @@ public class NewFrontier extends AutoScaledScreen {
         LayoutSettings centerColumnSettings = LayoutSettings.defaults().alignHorizontallyCenter();
 
         mainLayout.addChild(new StringWidget(frontierTypeLabel, font).setColor(ColorConstants.TEXT), 0, 0, leftColumnSettings);
-        buttonFrontierType = new OptionButton(font, 0, 0, 130, OptionButton.DO_NOTHING);
+        buttonFrontierType = new OptionButton(font, 130, OptionButton.DO_NOTHING);
         buttonFrontierType.addOption(Config.getTranslatedEnum(Config.FilterFrontierType.Global));
         buttonFrontierType.addOption(Config.getTranslatedEnum(Config.FilterFrontierType.Personal));
         buttonFrontierType.setSelected(0);
@@ -102,7 +102,7 @@ public class NewFrontier extends AutoScaledScreen {
         mainLayout.addChild(shapeChunkButtons, 3, 0, 1, 2, centerColumnSettings);
 
         labelSize = mainLayout.addChild(new StringWidget(Component.empty(), font).setColor(ColorConstants.WHITE), 4, 0, leftColumnSettings);
-        textSize = new TextBoxInt(1, 1, 999, font, 0, 0, 64);
+        textSize = new TextBoxInt(1, 1, 999, font, 64);
         textSize.setValueChangedCallback(value -> {
             if (Config.newFrontierMode == FrontierData.Mode.Vertex) {
                 if (shapeVertexButtons.getShapeMeasure() == ShapeVertexButtons.ShapeMeasure.Width) {

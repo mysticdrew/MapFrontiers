@@ -2,7 +2,7 @@ package games.alejandrocoria.mapfrontiers.client.gui.component.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
-import games.alejandrocoria.mapfrontiers.client.gui.component.SimpleLabel;
+import games.alejandrocoria.mapfrontiers.client.gui.component.StringWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -13,21 +13,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class SimpleButton extends Button {
     private final Font font;
-    private SimpleLabel label;
+    private final StringWidget label;
     private int textColor = ColorConstants.SIMPLE_BUTTON_TEXT;
     private int textColorHighlight = ColorConstants.SIMPLE_BUTTON_TEXT_HIGHLIGHT;
-
-    // TODO remove
-    public SimpleButton(Font font, int x, int y, int width, Component text, OnPress pressedAction) {
-        super(x, y, width, 16, text, (b) -> pressedAction.onPress((SimpleButton) b), Button.DEFAULT_NARRATION);
-        this.font = font;
-        this.label = new SimpleLabel(font, x + width / 2, y + 4, SimpleLabel.Align.Center, text, textColor);
-    }
 
     public SimpleButton(Font font, int width, Component text, OnPress pressedAction) {
         super(0, 0, width, 16, text, (b) -> pressedAction.onPress((SimpleButton) b), Button.DEFAULT_NARRATION);
         this.font = font;
-        this.label = new SimpleLabel(font, 0, 0, SimpleLabel.Align.Center, text, textColor);
+        this.label = new StringWidget(text, font, StringWidget.Align.Center);
     }
 
     @Override
@@ -44,7 +37,8 @@ public class SimpleButton extends Button {
 
     @Override
     public void setMessage(Component text) {
-        this.label = new SimpleLabel(font, getX() + width / 2, getY() + 4, SimpleLabel.Align.Center, text, textColor);
+        this.label.setMessage(text);
+        setX(getX());
     }
 
     @Override

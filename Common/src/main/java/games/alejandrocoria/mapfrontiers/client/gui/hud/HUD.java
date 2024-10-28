@@ -4,8 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import games.alejandrocoria.mapfrontiers.client.FrontierOverlay;
 import games.alejandrocoria.mapfrontiers.client.FrontiersOverlayManager;
 import games.alejandrocoria.mapfrontiers.client.event.ClientEventHandler;
-import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
-import games.alejandrocoria.mapfrontiers.client.gui.component.SimpleLabel;
+import games.alejandrocoria.mapfrontiers.client.gui.component.StringWidget;
 import games.alejandrocoria.mapfrontiers.common.Config;
 import games.alejandrocoria.mapfrontiers.common.FrontierData;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsUser;
@@ -38,9 +37,9 @@ public class HUD {
     private FrontierOverlay frontier;
     private int frontierHash;
     private BlockPos lastPlayerPosition = new BlockPos(0, 0, 0);
-    private final SimpleLabel frontierName1;
-    private final SimpleLabel frontierName2;
-    private final SimpleLabel frontierOwner;
+    private final StringWidget frontierName1;
+    private final StringWidget frontierName2;
+    private final StringWidget frontierOwner;
     private final List<Config.HUDSlot> slots;
     private int posX = 0;
     private int posY = 0;
@@ -84,12 +83,9 @@ public class HUD {
         this.frontiersOverlayManager = frontiersOverlayManager;
         this.personalFrontiersOverlayManager = personalFrontiersOverlayManager;
         slots = new ArrayList<>();
-        frontierName1 = new SimpleLabel(mc.font, 0, 0, SimpleLabel.Align.Center, Component.empty(),
-                ColorConstants.WHITE);
-        frontierName2 = new SimpleLabel(mc.font, 0, 0, SimpleLabel.Align.Center, Component.empty(),
-                ColorConstants.WHITE);
-        frontierOwner = new SimpleLabel(mc.font, 0, 0, SimpleLabel.Align.Center, Component.empty(),
-                ColorConstants.WHITE);
+        frontierName1 = new StringWidget(Component.empty(), mc.font, StringWidget.Align.Center);
+        frontierName2 = new StringWidget(Component.empty(), mc.font, StringWidget.Align.Center);
+        frontierOwner = new StringWidget(Component.empty(), mc.font, StringWidget.Align.Center);
 
         ClientEventHandler.subscribeDeletedFrontierEvent(this, frontierID -> frontierChanged());
         ClientEventHandler.subscribeNewFrontierEvent(this, (frontierOverlay, playerID) -> frontierChanged());
@@ -349,12 +345,12 @@ public class HUD {
                     frontierName1.setX(posX + hudWidth / 2);
                     frontierName1.setY(posY + nameOffsetY + 2 * textScale);
                     frontierName1.setScale(textScale);
-                    frontierName1.setText(Component.literal(frontier.getName1()));
+                    frontierName1.setMessage(Component.literal(frontier.getName1()));
 
                     frontierName2.setX(posX + hudWidth / 2);
                     frontierName2.setY(posY + nameOffsetY + 14 * textScale);
                     frontierName2.setScale(textScale);
-                    frontierName2.setText(Component.literal(frontier.getName2()));
+                    frontierName2.setMessage(Component.literal(frontier.getName2()));
 
                     offsetY += 24 * textScale;
                     break;
@@ -366,7 +362,7 @@ public class HUD {
                         frontierOwner.setX(posX + hudWidth / 2);
                         frontierOwner.setY(posY + ownerOffsetY + 2);
                         frontierOwner.setScale(textScale);
-                        frontierOwner.setText(Component.literal(ChatFormatting.ITALIC + owner));
+                        frontierOwner.setMessage(Component.literal(ChatFormatting.ITALIC + owner));
 
                         offsetY += 12 * textScale;
                     }

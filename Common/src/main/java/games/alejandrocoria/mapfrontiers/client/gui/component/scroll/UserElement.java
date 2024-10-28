@@ -20,7 +20,7 @@ public class UserElement extends ScrollBox.ScrollElement {
         this.font = font;
         this.user = user;
 
-        buttonDelete = new IconButton(0, 0, IconButton.Type.Remove, (button) -> {});
+        buttonDelete = new IconButton(IconButton.Type.Remove, (button) -> {});
     }
 
     public SettingsUser getUser() {

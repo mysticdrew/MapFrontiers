@@ -22,7 +22,7 @@ public class GroupElement extends ScrollBox.ScrollElement {
         this.group = group;
 
         if (!group.isSpecial()) {
-            buttonDelete = new IconButton(0, 0, IconButton.Type.Remove, (button) -> {});
+            buttonDelete = new IconButton(IconButton.Type.Remove, (button) -> {});
         }
     }
 

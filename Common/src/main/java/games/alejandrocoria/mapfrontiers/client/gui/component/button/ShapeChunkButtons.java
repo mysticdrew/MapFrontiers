@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
 import games.alejandrocoria.mapfrontiers.client.gui.component.AbstractWidgetNoNarration;
-import games.alejandrocoria.mapfrontiers.client.gui.component.SimpleLabel;
+import games.alejandrocoria.mapfrontiers.client.gui.component.StringWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.sounds.SoundManager;
@@ -24,17 +24,19 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
     private static final int textureSizeX = 980;
     private static final int textureSizeY = 98;
 
+    private final Font font;
     private int selected;
     private int size;
-    private final SimpleLabel labelShapes;
-    private final SimpleLabel labelChunks;
+    private final StringWidget labelShapes;
+    private final StringWidget labelChunks;
     private final Consumer<ShapeChunkButtons> callbackShapeUpdated;
 
     public ShapeChunkButtons(Font font, int selected, Consumer<ShapeChunkButtons> callbackShapeUpdated) {
         super(0, 0, 214, 140, Component.empty());
+        this.font = font;
         this.selected = selected;
-        labelShapes = new SimpleLabel(font, 0, 0, SimpleLabel.Align.Center, Component.translatable("mapfrontiers.initial_shape"), ColorConstants.WHITE);
-        labelChunks = new SimpleLabel(font, 0, 0, SimpleLabel.Align.Center, Component.empty(), ColorConstants.WHITE);
+        labelShapes = new StringWidget(Component.translatable("mapfrontiers.initial_shape"), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
+        labelChunks = new StringWidget(Component.empty(), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
         this.callbackShapeUpdated = callbackShapeUpdated;
 
         updateChunksLabel();
@@ -145,6 +147,6 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
             case 7 -> chunks = 1024;
         }
 
-        labelChunks.setText(Component.translatable("mapfrontiers.chunks", chunks));
+        labelChunks.setMessage(Component.translatable("mapfrontiers.chunks", chunks));
     }
 }
