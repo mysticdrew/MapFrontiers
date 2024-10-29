@@ -35,6 +35,10 @@ public class NewFrontier extends AutoScaledScreen {
     private static final Component frontierTypeLabel = Component.translatable("mapfrontiers.frontier_type");
     private static final Component frontierModeLabel = Component.translatable("mapfrontiers.frontier_mode");
     private static final Component afterCreatingLabel = Component.translatable("mapfrontiers.after_creating");
+    private static final Component vertexCountLabel = Component.translatable("mapfrontiers.shape_vertex_count");
+    private static final Component sizeInfoLabel = Component.translatable("mapfrontiers.shape_size_info");
+    private static final String verticesKey = "mapfrontiers.vertices";
+    private static final String chunksKey = "mapfrontiers.chunks";
     private static final Component createLabel = Component.translatable("mapfrontiers.create");
     private static final Component cancelLabel = Component.translatable("gui.cancel");
 
@@ -45,7 +49,11 @@ public class NewFrontier extends AutoScaledScreen {
     private OptionButton buttonAfterCreate;
     private ShapeVertexButtons shapeVertexButtons;
     private ShapeChunkButtons shapeChunkButtons;
+    private StringWidget labelCount;
+    private StringWidget labelCountInfo;
+    private TextBoxInt textCount;
     private StringWidget labelSize;
+    private StringWidget labelSizeInfo;
     private TextBoxInt textSize;
 
     public NewFrontier(IClientAPI jmAPI) {
@@ -101,7 +109,18 @@ public class NewFrontier extends AutoScaledScreen {
         shapeChunkButtons = new ShapeChunkButtons(font, Config.newFrontierChunkShape, (s) -> shapeButtonsUpdated());
         mainLayout.addChild(shapeChunkButtons, 3, 0, 1, 2, centerColumnSettings);
 
-        labelSize = mainLayout.addChild(new StringWidget(Component.empty(), font).setColor(ColorConstants.WHITE), 4, 0, leftColumnSettings);
+        labelCount = mainLayout.addChild(new StringWidget(vertexCountLabel, font).setColor(ColorConstants.WHITE), 4, 0, leftColumnSettings);
+        textCount = new TextBoxInt(Config.newFrontierCount, 1, 999, font, 64);
+        textCount.setValueChangedCallback(value -> {
+            if (Config.isInRange("newFrontierVertexCount", value)) {
+                Config.newFrontierCount = value;
+            }
+        });
+        mainLayout.addChild(textCount, 4, 1, rightColumnSettings);
+
+        labelCountInfo = mainLayout.addChild(new StringWidget(Component.empty(), font).setColor(ColorConstants.WHITE), 4, 0, 1, 2, centerColumnSettings);
+
+        labelSize = mainLayout.addChild(new StringWidget(Component.empty(), font).setColor(ColorConstants.WHITE), 5, 0, leftColumnSettings);
         textSize = new TextBoxInt(1, 1, 999, font, 64);
         textSize.setValueChangedCallback(value -> {
             if (Config.newFrontierMode == FrontierData.Mode.Vertex) {
@@ -128,7 +147,9 @@ public class NewFrontier extends AutoScaledScreen {
                 }
             }
         });
-        mainLayout.addChild(textSize, 4, 1, rightColumnSettings);
+        mainLayout.addChild(textSize, 5, 1, rightColumnSettings);
+
+        labelSizeInfo = mainLayout.addChild(new StringWidget(sizeInfoLabel, font).setColor(ColorConstants.WHITE), 5, 0, 1, 2, centerColumnSettings);
 
         bottomButtons.addChild(new SimpleButton(font, 100, createLabel, (b) -> {
             boolean personal = buttonFrontierType.getSelected() == 1;
@@ -163,6 +184,19 @@ public class NewFrontier extends AutoScaledScreen {
             int selected = shapeVertexButtons.getSelected();
             Config.newFrontierShape = selected;
 
+            if (selected == 11) {
+                labelCount.visible = true;
+                textCount.visible = true;
+                labelCountInfo.visible = false;
+            } else {
+                labelCount.visible = false;
+                textCount.visible = false;
+                labelCountInfo.visible = true;
+                setLabelCountInfoMessage(verticesKey, shapeVertexButtons.getVertexCount());
+            }
+
+            labelSizeInfo.visible = false;
+
             if (selected == 0 || selected == 1) {
                 labelSize.visible = false;
                 textSize.visible = false;
@@ -186,6 +220,13 @@ public class NewFrontier extends AutoScaledScreen {
 
             int selected = shapeChunkButtons.getSelected();
             Config.newFrontierChunkShape = selected;
+
+            labelCount.visible = false;
+            textCount.visible = false;
+            labelCountInfo.visible = true;
+            setLabelCountInfoMessage(chunksKey, shapeChunkButtons.getChunkCount());
+
+            labelSizeInfo.visible = selected == 7;
 
             if (selected == 0 || selected == 1 || selected == 7) {
                 labelSize.visible = false;
@@ -216,12 +257,23 @@ public class NewFrontier extends AutoScaledScreen {
         labelSize.setWidth(font.width(labelSize.getMessage()));
     }
 
+    private void setLabelCountInfoMessage(String key, int count) {
+        labelCountInfo.setMessage(Component.translatable(key, count));
+        labelCountInfo.setWidth(font.width(labelCountInfo.getMessage()));
+    }
+
     private List<BlockPos> calculateVertices() {
         if (minecraft.player == null || Config.newFrontierMode != FrontierData.Mode.Vertex) {
             return null;
         }
 
-        List<Vec2> shapeVertices = shapeVertexButtons.getVertices();
+        List<Vec2> shapeVertices;
+        if (shapeVertexButtons.getSelected() == 11) {
+            shapeVertices = shapeVertexButtons.getVertices(Config.newFrontierCount);
+        } else {
+            shapeVertices = shapeVertexButtons.getVertices();
+        }
+
         if (shapeVertices == null) {
             return new ArrayList<>();
         }

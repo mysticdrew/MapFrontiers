@@ -60,6 +60,7 @@ public class Config {
     }
 
     public static int newFrontierShape;
+    public static int newFrontierCount;
     public static int newFrontierShapeWidth;
     public static int newFrontierShapeRadius;
     public static int newFrontierChunkShape;
@@ -100,6 +101,7 @@ public class Config {
 
     public static void bakeConfig() {
         newFrontierShape = CLIENT.newFrontierShape.get();
+        newFrontierCount = CLIENT.newFrontierCount.get();
         newFrontierShapeWidth = CLIENT.newFrontierShapeWidth.get();
         newFrontierShapeRadius = CLIENT.newFrontierShapeRadius.get();
         newFrontierChunkShape = CLIENT.newFrontierChunkShape.get();
@@ -141,6 +143,7 @@ public class Config {
 
     public static class ClientConfig {
         public final IntValue newFrontierShape;
+        public final IntValue newFrontierCount;
         public final IntValue newFrontierShapeWidth;
         public final IntValue newFrontierShapeRadius;
         public final IntValue newFrontierChunkShape;
@@ -181,6 +184,7 @@ public class Config {
 
         public ClientConfig(Builder builder) {
             newFrontierShape = builder.defineInRange("newFrontierShape", 0, 0, 11);
+            newFrontierCount = builder.defineInRange("newFrontierVertexCount", 16, 3, 999);
             newFrontierShapeWidth = builder.defineInRange("newFrontierShapeWidth", 10, 0, 999);
             newFrontierShapeRadius = builder.defineInRange("newFrontierShapeRadius", 20, 0, 999);
             newFrontierChunkShape = builder.defineInRange("newFrontierChunkShape", 0, 0, 7);
@@ -271,6 +275,7 @@ public class Config {
 
     private static void save() {
         CLIENT.newFrontierShape.set(newFrontierShape);
+        CLIENT.newFrontierCount.set(newFrontierCount);
         CLIENT.newFrontierShapeWidth.set(newFrontierShapeWidth);
         CLIENT.newFrontierShapeRadius.set(newFrontierShapeRadius);
         CLIENT.newFrontierChunkShape.set(newFrontierChunkShape);

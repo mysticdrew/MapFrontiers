@@ -24,27 +24,20 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
     private static final int textureSizeX = 980;
     private static final int textureSizeY = 98;
 
-    private final Font font;
     private int selected;
     private int size;
     private final StringWidget labelShapes;
-    private final StringWidget labelChunks;
     private final Consumer<ShapeChunkButtons> callbackShapeUpdated;
 
     public ShapeChunkButtons(Font font, int selected, Consumer<ShapeChunkButtons> callbackShapeUpdated) {
-        super(0, 0, 214, 140, Component.empty());
-        this.font = font;
+        super(0, 0, 214, 122, Component.empty());
         this.selected = selected;
         labelShapes = new StringWidget(Component.translatable("mapfrontiers.initial_shape"), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
-        labelChunks = new StringWidget(Component.empty(), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
         this.callbackShapeUpdated = callbackShapeUpdated;
-
-        updateChunksLabel();
     }
 
     public void setSize(int size) {
         this.size = Math.min(Math.max(size, 1), 32);
-        updateChunksLabel();
     }
 
     public int getSelected() {
@@ -61,18 +54,35 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
         }
     }
 
+    public int getChunkCount() {
+        int chunks;
+        switch (selected) {
+            case 1 -> chunks = 1;
+            case 2 -> chunks = size * size;
+            case 3 -> chunks = Math.max(1, (size - 1) * 4);
+            case 4 -> {
+                chunks = (size * size + 1) / 2;
+                if (size % 2 == 0) {
+                    chunks += size;
+                }
+            }
+            case 5, 6 -> chunks = size;
+            case 7 -> chunks = 1024;
+            default -> chunks = 0;
+        }
+        return chunks;
+    }
+
     @Override
     public void setX(int x) {
         super.setX(x);
         labelShapes.setX(x + 107);
-        labelChunks.setX(x + 107);
     }
 
     @Override
     public void setY(int y) {
         super.setY(y);
         labelShapes.setY(y + 2);
-        labelChunks.setY(y + 129);
     }
 
     @Override
@@ -95,7 +105,6 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
         double row = (mouseY - getY() - 15) / 55.0;
         if (col >= 0.0 && col < 4.0 && row >= 0.0 && row < 2.0) {
             selected = (int) col + (int) row * 4;
-            updateChunksLabel();
             callbackShapeUpdated.accept(this);
         }
     }
@@ -128,25 +137,5 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
         }
 
         labelShapes.render(graphics, mouseX, mouseY, partialTicks);
-        labelChunks.render(graphics, mouseX, mouseY, partialTicks);
-    }
-
-    private void updateChunksLabel() {
-        int chunks = 0;
-        switch (selected) {
-            case 1 -> chunks = 1;
-            case 2 -> chunks = size * size;
-            case 3 -> chunks = Math.max(1, (size - 1) * 4);
-            case 4 -> {
-                chunks = (size * size + 1) / 2;
-                if (size % 2 == 0) {
-                    chunks += size;
-                }
-            }
-            case 5, 6 -> chunks = size;
-            case 7 -> chunks = 1024;
-        }
-
-        labelChunks.setMessage(Component.translatable("mapfrontiers.chunks", chunks));
     }
 }

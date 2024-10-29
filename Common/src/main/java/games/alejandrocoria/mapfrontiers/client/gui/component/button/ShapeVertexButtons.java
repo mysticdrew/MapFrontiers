@@ -35,21 +35,15 @@ public class ShapeVertexButtons extends AbstractWidgetNoNarration {
     private static final int textureSizeX = 980;
     private static final int textureSizeY = 98;
 
-    private final Font font;
     private int selected;
     private final StringWidget labelShapes;
-    private final StringWidget labelVertices;
     private final Consumer<ShapeVertexButtons> callbackShapeUpdated;
 
     public ShapeVertexButtons(Font font, int selected, Consumer<ShapeVertexButtons> callbackShapeUpdated) {
-        super(0, 0, 324, 140, Component.empty());
-        this.font = font;
+        super(0, 0, 324, 122, Component.empty());
         this.selected = selected;
         labelShapes = new StringWidget(Component.translatable("mapfrontiers.initial_shape"), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
-        labelVertices = new StringWidget(Component.empty(), font, StringWidget.Align.Center).setColor(ColorConstants.WHITE);
         this.callbackShapeUpdated = callbackShapeUpdated;
-
-        updateVertexLabel();
     }
 
     public int getSelected() {
@@ -66,22 +60,32 @@ public class ShapeVertexButtons extends AbstractWidgetNoNarration {
         }
     }
 
+    public int getVertexCount() {
+        return vertexCount[selected];
+    }
+
     public List<Vec2> getVertices() {
-        if (vertexCount[selected] == 0) {
+        return getVertices(vertexCount[selected], vertexAngle[selected] / 180.0 * Math.PI);
+    }
+
+    public List<Vec2> getVertices(int count) {
+        return getVertices(count, 0.0);
+    }
+
+    private List<Vec2> getVertices(int count, double angleOffset) {
+        if (count == 0) {
             return null;
         }
 
         List<Vec2> vertices = new ArrayList<>();
 
-        if (vertexCount[selected] == 1) {
+        if (count == 1) {
             vertices.add(Vec2.ZERO);
             return vertices;
         }
 
-        double angle = vertexAngle[selected] / 180.0 * Math.PI;
-
-        for (int i = 0; i < vertexCount[selected]; ++i) {
-            double vertexAngle = Math.PI * 2 / vertexCount[selected] * i + angle;
+        for (int i = 0; i < count; ++i) {
+            double vertexAngle = Math.PI * 2 / count * i + angleOffset;
             vertices.add(new Vec2((float) Math.cos(vertexAngle), (float) Math.sin(vertexAngle)));
         }
 
@@ -92,14 +96,12 @@ public class ShapeVertexButtons extends AbstractWidgetNoNarration {
     public void setX(int x) {
         super.setX(x);
         labelShapes.setX(x + 162);
-        labelVertices.setX(x + 162);
     }
 
     @Override
     public void setY(int y) {
         super.setY(y);
         labelShapes.setY(y + 2);
-        labelVertices.setY(y + 129);
     }
 
     @Override
@@ -122,7 +124,6 @@ public class ShapeVertexButtons extends AbstractWidgetNoNarration {
         double row = (mouseY - getY() - 15) / 55.0;
         if (col >= 0.0 && col < 6.0 && row >= 0.0 && row < 2.0) {
             selected = (int) col + (int) row * 6;
-            updateVertexLabel();
             callbackShapeUpdated.accept(this);
         }
     }
@@ -155,10 +156,5 @@ public class ShapeVertexButtons extends AbstractWidgetNoNarration {
         }
 
         labelShapes.render(graphics, mouseX, mouseY, partialTicks);
-        labelVertices.render(graphics, mouseX, mouseY, partialTicks);
-    }
-
-    private void updateVertexLabel() {
-        labelVertices.setMessage(Component.translatable("mapfrontiers.vertices", vertexCount[selected]));
     }
 }
