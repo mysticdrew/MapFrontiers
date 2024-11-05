@@ -5,6 +5,8 @@ import games.alejandrocoria.mapfrontiers.client.FrontierOverlay;
 import games.alejandrocoria.mapfrontiers.client.FrontiersOverlayManager;
 import games.alejandrocoria.mapfrontiers.client.MapFrontiersClient;
 import games.alejandrocoria.mapfrontiers.client.event.ClientEventHandler;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.ConfirmationDialog;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.DeleteConfirmationDialog;
 import games.alejandrocoria.mapfrontiers.client.gui.screen.FrontierInfo;
 import games.alejandrocoria.mapfrontiers.client.gui.screen.FrontierList;
 import games.alejandrocoria.mapfrontiers.client.gui.screen.NewFrontier;
@@ -134,7 +136,22 @@ public class FullscreenMap {
                 ResourceLocation.fromNamespaceAndPath(MapFrontiers.MODID, path + "edit_frontier.png"), editing, b -> buttonEditToggled());
         buttonVisible = buttonDisplay.addThemeToggleButton(I18n.get("mapfrontiers.button_hide_frontier"), I18n.get("mapfrontiers.button_show_frontier"),
                 ResourceLocation.fromNamespaceAndPath(MapFrontiers.MODID, path + "visible_frontier.png"), false, b -> buttonVisibleToggled());
-        buttonDelete = buttonDisplay.addThemeButton(I18n.get("mapfrontiers.button_delete_frontier"), ResourceLocation.fromNamespaceAndPath(MapFrontiers.MODID, path + "delete_frontier.png"), b -> buttonDelete());
+        buttonDelete = buttonDisplay.addThemeButton(I18n.get("mapfrontiers.button_delete_frontier"), ResourceLocation.fromNamespaceAndPath(MapFrontiers.MODID, path + "delete_frontier.png"), b -> {
+            if (Config.askConfirmationFrontierDelete) {
+                new DeleteConfirmationDialog(
+                        "mapfrontiers.delete_frontier_dialog",
+                        response -> {
+                            if (response == ConfirmationDialog.Response.ConfirmAlternative) {
+                                Config.askConfirmationFrontierDelete = false;
+                                ClientEventHandler.postUpdatedConfigEvent();
+                            }
+                            buttonDelete();
+                        }
+                ).display();
+            } else {
+                buttonDelete();
+            }
+        });
 
         updateButtons();
     }

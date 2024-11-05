@@ -26,6 +26,7 @@ public class ScrollBox extends AbstractWidgetNoNarration {
     private int selected;
     private Consumer<ScrollElement> elementClickedCallback;
     private Consumer<ScrollElement> elementDeletedCallback;
+    private Consumer<ScrollElement> elementDeletePressedCallback;
 
     public ScrollBox(int height, int elementWidth, int elementHeight) {
         super(0, 0, elementWidth + 15, Math.max(height, elementHeight), Component.empty());
@@ -41,7 +42,11 @@ public class ScrollBox extends AbstractWidgetNoNarration {
     }
 
     public void setElementDeletedCallback(Consumer<ScrollElement> callback) {
-        elementDeletedCallback = callback;
+        elementDeletePressedCallback = callback;
+    }
+
+    public void setElementDeletePressedCallback(Consumer<ScrollElement> callback) {
+        elementDeletePressedCallback = callback;
     }
 
     public List<ScrollElement> getElements() {
@@ -236,7 +241,11 @@ public class ScrollBox extends AbstractWidgetNoNarration {
                     ScrollElement element = it.next();
                     ScrollElement.Action action = element.mousePressed(mouseX, mouseY);
                     if (action == ScrollElement.Action.Deleted) {
-                        removeElement(element, it);
+                        if (elementDeletePressedCallback != null) {
+                            elementDeletePressedCallback.accept(element);
+                        } else {
+                            removeElement(element, it);
+                        }
                         return true;
                     } else if (action == ScrollElement.Action.Clicked) {
                         if (getSelectedElement() != element) {

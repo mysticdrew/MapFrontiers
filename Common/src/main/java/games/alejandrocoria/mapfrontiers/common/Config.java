@@ -1,7 +1,6 @@
 package games.alejandrocoria.mapfrontiers.common;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
-import com.google.common.base.Splitter;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import games.alejandrocoria.mapfrontiers.client.event.ClientEventHandler;
 import games.alejandrocoria.mapfrontiers.platform.Services;
@@ -20,7 +19,6 @@ import net.minecraftforge.common.ForgeConfigSpec.ValueSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,6 +57,7 @@ public class Config {
         None, Name, Owner, Banner
     }
 
+    // New Frontier
     public static int newFrontierShape;
     public static int newFrontierCount;
     public static int newFrontierShapeWidth;
@@ -68,12 +67,15 @@ public class Config {
     public static int newFrontierChunkShapeLength;
     public static FrontierData.Mode newFrontierMode;
     public static AfterCreatingFrontier afterCreatingFrontier;
+
+    // Paste
     public static boolean pasteName;
     public static boolean pasteVisibility;
     public static boolean pasteColor;
     public static boolean pasteBanner;
     public static boolean pasteOptionsVisible;
-    public static boolean fullscreenButtons;
+
+    // Frontiers
     public static Visibility fullscreenVisibility;
     public static Visibility fullscreenNameVisibility;
     public static Visibility fullscreenOwnerVisibility;
@@ -85,9 +87,19 @@ public class Config {
     public static boolean hideNamesThatDontFit;
     public static double polygonsOpacity;
     public static int snapDistance;
+
+    // GUI
+    public static boolean fullscreenButtons;
+    public static boolean askConfirmationFrontierDelete;
+    public static boolean askConfirmationGroupDelete;
+    public static boolean askConfirmationUserDelete;
+
+    // Filters
     public static FilterFrontierType filterFrontierType;
     public static FilterFrontierOwner filterFrontierOwner;
     public static String filterFrontierDimension;
+
+    // HUD
     public static boolean hudEnabled;
     public static boolean hudAutoAdjustAnchor;
     public static boolean hudSnapToBorder;
@@ -109,12 +121,13 @@ public class Config {
         newFrontierChunkShapeLength = CLIENT.newFrontierChunkShapeLength.get();
         newFrontierMode = CLIENT.newFrontierMode.get();
         afterCreatingFrontier = CLIENT.afterCreatingFrontier.get();
+
         pasteName = CLIENT.pasteName.get();
         pasteVisibility = CLIENT.pasteVisibility.get();
         pasteColor = CLIENT.pasteColor.get();
         pasteBanner = CLIENT.pasteBanner.get();
         pasteOptionsVisible = CLIENT.pasteOptionsVisible.get();
-        fullscreenButtons = CLIENT.fullscreenButtons.get();
+
         fullscreenVisibility = CLIENT.fullscreenVisibility.get();
         fullscreenNameVisibility = CLIENT.fullscreenNameVisibility.get();
         fullscreenOwnerVisibility = CLIENT.fullscreenOwnerVisibility.get();
@@ -126,9 +139,16 @@ public class Config {
         hideNamesThatDontFit = CLIENT.hideNamesThatDontFit.get();
         polygonsOpacity = CLIENT.polygonsOpacity.get();
         snapDistance = CLIENT.snapDistance.get();
+
+        fullscreenButtons = CLIENT.fullscreenButtons.get();
+        askConfirmationFrontierDelete = CLIENT.askConfirmationFrontierDelete.get();
+        askConfirmationGroupDelete = CLIENT.askConfirmationGroupDelete.get();
+        askConfirmationUserDelete = CLIENT.askConfirmationUserDelete.get();
+
         filterFrontierType = CLIENT.filterFrontierType.get();
         filterFrontierOwner = CLIENT.filterFrontierOwner.get();
         filterFrontierDimension = CLIENT.filterFrontierDimension.get();
+
         hudEnabled = CLIENT.hudEnabled.get();
         hudAutoAdjustAnchor = CLIENT.hudAutoAdjustAnchor.get();
         hudSnapToBorder = CLIENT.hudSnapToBorder.get();
@@ -151,12 +171,13 @@ public class Config {
         public final IntValue newFrontierChunkShapeLength;
         public final EnumValue<FrontierData.Mode> newFrontierMode;
         public final EnumValue<AfterCreatingFrontier> afterCreatingFrontier;
+
         public final BooleanValue pasteName;
         public final BooleanValue pasteVisibility;
         public final BooleanValue pasteColor;
         public final BooleanValue pasteBanner;
         public final BooleanValue pasteOptionsVisible;
-        public final BooleanValue fullscreenButtons;
+
         public final EnumValue<Visibility> fullscreenVisibility;
         public final EnumValue<Visibility> fullscreenNameVisibility;
         public final EnumValue<Visibility> fullscreenOwnerVisibility;
@@ -168,9 +189,16 @@ public class Config {
         public final BooleanValue hideNamesThatDontFit;
         public final DoubleValue polygonsOpacity;
         public final IntValue snapDistance;
+
+        public final BooleanValue fullscreenButtons;
+        public final BooleanValue askConfirmationFrontierDelete;
+        public final BooleanValue askConfirmationGroupDelete;
+        public final BooleanValue askConfirmationUserDelete;
+
         public final EnumValue<FilterFrontierType> filterFrontierType;
         public final EnumValue<FilterFrontierOwner> filterFrontierOwner;
         public final ConfigValue<String> filterFrontierDimension;
+
         public final BooleanValue hudEnabled;
         public final BooleanValue hudAutoAdjustAnchor;
         public final BooleanValue hudSnapToBorder;
@@ -192,14 +220,13 @@ public class Config {
             newFrontierChunkShapeLength = builder.defineInRange("newFrontierChunkShapeLength", 5, 0, 32);
             newFrontierMode = builder.defineEnum("newFrontierMode", FrontierData.Mode.Vertex);
             afterCreatingFrontier = builder.defineEnum("afterCreatingFrontier", AfterCreatingFrontier.Info);
+
             pasteName = builder.define("pasteName", false);
             pasteVisibility = builder.define("pasteVisibility", true);
             pasteColor = builder.define("pasteColor", true);
             pasteBanner = builder.define("pasteBanner", true);
             pasteOptionsVisible = builder.define("pasteOptionsVisible", false);
-            fullscreenButtons = builder.comment("Show buttons on fullscreen map.")
-                    .translation(MapFrontiers.MODID + ".config." + "fullscreenButtons")
-                    .define("fullscreenButtons", true);
+
             fullscreenVisibility = builder.comment(
                     "Force all frontier to be shown or hidden on the fullscreen map. In Manual you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "fullscreenVisibility")
@@ -242,6 +269,20 @@ public class Config {
                     .defineInRange("polygonsOpacity", 0.4, 0.0, 1.0);
             snapDistance = builder.comment("Distance at which vertices are attached to nearby vertices.")
                     .translation(MapFrontiers.MODID + ".config." + "snapDistance").defineInRange("snapDistance", 8, 0, 16);
+
+            fullscreenButtons = builder.comment("Show buttons on fullscreen map.")
+                    .translation(MapFrontiers.MODID + ".config." + "fullscreenButtons")
+                    .define("fullscreenButtons", true);
+            askConfirmationFrontierDelete = builder.comment("Show a confirmation dialog before deleting a frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "askConfirmationFrontierDelete")
+                    .define("askConfirmationFrontierDelete", true);
+            askConfirmationGroupDelete = builder.comment("Show a confirmation dialog before deleting a group.")
+                    .translation(MapFrontiers.MODID + ".config." + "askConfirmationGroupDelete")
+                    .define("askConfirmationGroupDelete", true);
+            askConfirmationUserDelete = builder.comment("Show a confirmation dialog before deleting an user.")
+                    .translation(MapFrontiers.MODID + ".config." + "askConfirmationUserDelete")
+                    .define("askConfirmationUserDelete", true);
+
             filterFrontierType = builder.defineEnum("filterFrontierType", FilterFrontierType.All);
             filterFrontierOwner = builder.defineEnum("filterFrontierOwner", FilterFrontierOwner.All);
             filterFrontierDimension = builder.define("filterFrontierDimension", "all");
@@ -283,12 +324,13 @@ public class Config {
         CLIENT.newFrontierChunkShapeLength.set(newFrontierChunkShapeLength);
         CLIENT.newFrontierMode.set(newFrontierMode);
         CLIENT.afterCreatingFrontier.set(afterCreatingFrontier);
+
         CLIENT.pasteName.set(pasteName);
         CLIENT.pasteVisibility.set(pasteVisibility);
         CLIENT.pasteColor.set(pasteColor);
         CLIENT.pasteBanner.set(pasteBanner);
         CLIENT.pasteOptionsVisible.set(pasteOptionsVisible);
-        CLIENT.fullscreenButtons.set(fullscreenButtons);
+
         CLIENT.fullscreenVisibility.set(fullscreenVisibility);
         CLIENT.fullscreenNameVisibility.set(fullscreenNameVisibility);
         CLIENT.fullscreenOwnerVisibility.set(fullscreenOwnerVisibility);
@@ -300,9 +342,16 @@ public class Config {
         CLIENT.hideNamesThatDontFit.set(hideNamesThatDontFit);
         CLIENT.polygonsOpacity.set(polygonsOpacity);
         CLIENT.snapDistance.set(snapDistance);
+
+        CLIENT.fullscreenButtons.set(fullscreenButtons);
+        CLIENT.askConfirmationFrontierDelete.set(askConfirmationFrontierDelete);
+        CLIENT.askConfirmationGroupDelete.set(askConfirmationGroupDelete);
+        CLIENT.askConfirmationUserDelete.set(askConfirmationUserDelete);
+
         CLIENT.filterFrontierType.set(filterFrontierType);
         CLIENT.filterFrontierOwner.set(filterFrontierOwner);
         CLIENT.filterFrontierDimension.set(filterFrontierDimension);
+
         CLIENT.hudEnabled.set(hudEnabled);
         CLIENT.hudAutoAdjustAnchor.set(hudAutoAdjustAnchor);
         CLIENT.hudSnapToBorder.set(hudSnapToBorder);
@@ -336,20 +385,6 @@ public class Config {
 
     public static <E extends Enum<E>> Component getTranslatedEnum(E value) {
         return Component.translatable("mapfrontiers.config." + value.name());
-    }
-
-    public static List<Component> getTooltipOld(String name) {
-        List<Component> tooltip = new ArrayList<>();
-
-        ValueSpec valueSpec = getValueSpec(name);
-        if (valueSpec != null) {
-            String lines = Component.translatable(valueSpec.getTranslationKey() + ".tooltip").getString();
-            for (String string : Splitter.on("\n").split(lines)) {
-                tooltip.add(Component.literal(string));
-            }
-        }
-
-        return tooltip;
     }
 
     @Nullable

@@ -18,6 +18,8 @@ import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBox;
 import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBoxDouble;
 import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBoxInt;
 import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBoxUser;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.ConfirmationDialog;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.DeleteConfirmationDialog;
 import games.alejandrocoria.mapfrontiers.common.Config;
 import games.alejandrocoria.mapfrontiers.common.network.PacketFrontierSettings;
 import games.alejandrocoria.mapfrontiers.common.network.PacketHandler;
@@ -75,8 +77,6 @@ public class ModSettings extends AutoScaledScreen {
     private static final Component versionLabel = Component.literal(Services.PLATFORM.getModVersion());
     private static final String keyHintkey = "mapfrontiers.key.open_settings.hint";
     private static final Component frontiersLabel = Component.translatable("mapfrontiers.frontiers");
-    private static final Component fullscreenButtonsLabel = Config.getTranslatedName("fullscreenButtons");
-    private static final Tooltip fullscreenButtonsTooltip = Config.getTooltip("fullscreenButtons");
     private static final Component fullscreenVisibilityLabel = Config.getTranslatedName("fullscreenVisibility");
     private static final Tooltip fullscreenVisibilityTooltip = Config.getTooltip("fullscreenVisibility");
     private static final Component fullscreenNameVisibilityLabel = Config.getTranslatedName("fullscreenNameVisibility");
@@ -99,6 +99,15 @@ public class ModSettings extends AutoScaledScreen {
     private static final Tooltip polygonsOpacityTooltip = Config.getTooltip("polygonsOpacity");
     private static final Component snapDistanceLabel = Config.getTranslatedName("snapDistance");
     private static final Tooltip snapDistanceTooltip = Config.getTooltip("snapDistance");
+    private static final Component guiLabel = Component.translatable("mapfrontiers.gui");
+    private static final Component fullscreenButtonsLabel = Config.getTranslatedName("fullscreenButtons");
+    private static final Tooltip fullscreenButtonsTooltip = Config.getTooltip("fullscreenButtons");
+    private static final Component askConfirmationFrontierDeleteLabel = Config.getTranslatedName("askConfirmationFrontierDelete");
+    private static final Tooltip askConfirmationFrontierDeleteTooltip = Config.getTooltip("askConfirmationFrontierDelete");
+    private static final Component askConfirmationGroupDeleteLabel = Config.getTranslatedName("askConfirmationGroupDelete");
+    private static final Tooltip askConfirmationGroupDeleteTooltip = Config.getTooltip("askConfirmationGroupDelete");
+    private static final Component askConfirmationUserDeleteLabel = Config.getTranslatedName("askConfirmationUserDelete");
+    private static final Tooltip askConfirmationUserDeleteTooltip = Config.getTooltip("askConfirmationUserDelete");
     private static final Component hudLabel = Component.translatable("mapfrontiers.hud");
     private static final Component hudEnabledLabel = Config.getTranslatedName("hud.enabled");
     private static final Tooltip hudEnabledTooltip = Config.getTooltip("hud.enabled");
@@ -112,7 +121,7 @@ public class ModSettings extends AutoScaledScreen {
     private static final Component deleteGlobalFrontierLabel = Component.translatable("mapfrontiers.delete_global_frontier");
     private static final Component updateGlobalFrontierLabel = Component.translatable("mapfrontiers.update_global_frontier");
     private static final Component updateSettingsLabel = Component.translatable("mapfrontiers.update_settings");
-    private static final Component sharePresonalFrontierLabel = Component.translatable("mapfrontiers.share_personal_frontier");
+    private static final Component sharePersonalFrontierLabel = Component.translatable("mapfrontiers.share_personal_frontier");
     private static final Component doneLabel = Component.translatable("gui.done");
 
     private final boolean showKeyHint;
@@ -122,7 +131,6 @@ public class ModSettings extends AutoScaledScreen {
     private LinkButton buttonWeb;
     private LinkButton buttonCurseForge;
     private LinkButton buttonModrinth;
-    private StringWidget labelFullscreenButtons;
     private StringWidget labelFullscreenVisibility;
     private StringWidget labelFullscreenNameVisibility;
     private StringWidget labelFullscreenOwnerVisibility;
@@ -134,8 +142,11 @@ public class ModSettings extends AutoScaledScreen {
     private StringWidget labelHideNamesThatDontFit;
     private StringWidget labelPolygonsOpacity;
     private StringWidget labelSnapDistance;
+    private StringWidget labelFullscreenButtons;
+    private StringWidget labelAskConfirmationFrontierDelete;
+    private StringWidget labelAskConfirmationGroupDelete;
+    private StringWidget labelAskConfirmationUserDelete;
     private StringWidget labelHUDEnabled;
-    private OptionButton buttonFullscreenButtons;
     private OptionButton buttonFullscreenVisibility;
     private OptionButton buttonFullscreenNameVisibility;
     private OptionButton buttonFullscreenOwnerVisibility;
@@ -147,6 +158,10 @@ public class ModSettings extends AutoScaledScreen {
     private OptionButton buttonHideNamesThatDontFit;
     private TextBoxDouble textPolygonsOpacity;
     private TextBoxInt textSnapDistance;
+    private OptionButton buttonFullscreenButtons;
+    private OptionButton buttonAskConfirmationFrontierDelete;
+    private OptionButton buttonAskConfirmationGroupDelete;
+    private OptionButton buttonAskConfirmationUserDelete;
     private OptionButton buttonHUDEnabled;
     private SimpleButton buttonEditHUD;
     private ScrollBox groups;
@@ -262,16 +277,6 @@ public class ModSettings extends AutoScaledScreen {
         generalLayout.addChild(SpacerElement.height(16));
         generalLayout.addChild(new StringWidget(frontiersLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT));
 
-        LinearLayout fullscreenButtons = LinearLayout.horizontal().spacing(4);
-        generalLayout.addChild(fullscreenButtons);
-        labelFullscreenButtons = fullscreenButtons.addChild(new StringWidget(fullscreenButtonsLabel, font).setColor(ColorConstants.TEXT));
-        labelFullscreenButtons.setTooltip(fullscreenButtonsTooltip);
-        buttonFullscreenButtons = fullscreenButtons.addChild(new OptionButton(font, 40, (b) -> Config.fullscreenButtons = b.getSelected() == 0));
-        buttonFullscreenButtons.addOption(onLabel);
-        buttonFullscreenButtons.addOption(offLabel);
-        buttonFullscreenButtons.setSelected(Config.fullscreenButtons ? 0 : 1);
-        generalLayout.addChild(SpacerElement.height(8));
-
         GridLayout visibilityLayout = new GridLayout().spacing(4);
         visibilityLayout.defaultCellSetting().alignHorizontallyLeft();
         generalLayout.addChild(visibilityLayout);
@@ -368,11 +373,45 @@ public class ModSettings extends AutoScaledScreen {
         textSnapDistance.setValueChangedCallback(value -> Config.snapDistance = value);
 
         miscLayout.addChild(SpacerElement.height(4), 5, 0);
-        miscLayout.addChild(new StringWidget(hudLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT), 6, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
+        miscLayout.addChild(new StringWidget(guiLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT), 6, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
 
-        labelHUDEnabled = miscLayout.addChild(new StringWidget(hudEnabledLabel, font).setColor(ColorConstants.TEXT), 7, 0);
+        labelFullscreenButtons = miscLayout.addChild(new StringWidget(fullscreenButtonsLabel, font).setColor(ColorConstants.TEXT), 7, 0);
+        labelFullscreenButtons.setTooltip(fullscreenButtonsTooltip);
+        buttonFullscreenButtons = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.fullscreenButtons = b.getSelected() == 0), 7, 1);
+        buttonFullscreenButtons.addOption(onLabel);
+        buttonFullscreenButtons.addOption(offLabel);
+        buttonFullscreenButtons.setSelected(Config.fullscreenButtons ? 0 : 1);
+
+        labelAskConfirmationFrontierDelete = miscLayout.addChild(new StringWidget(askConfirmationFrontierDeleteLabel, font).setColor(ColorConstants.TEXT), 8, 0);
+        labelAskConfirmationFrontierDelete.setTooltip(askConfirmationFrontierDeleteTooltip);
+        buttonAskConfirmationFrontierDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationFrontierDelete = b.getSelected() == 0), 8, 1);
+        buttonAskConfirmationFrontierDelete.addOption(onLabel);
+        buttonAskConfirmationFrontierDelete.addOption(offLabel);
+        buttonAskConfirmationFrontierDelete.setSelected(Config.askConfirmationFrontierDelete ? 0 : 1);
+
+        labelAskConfirmationGroupDelete = miscLayout.addChild(new StringWidget(askConfirmationGroupDeleteLabel, font).setColor(ColorConstants.TEXT), 9, 0);
+        labelAskConfirmationGroupDelete.setTooltip(askConfirmationGroupDeleteTooltip);
+        buttonAskConfirmationGroupDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationGroupDelete = b.getSelected() == 0), 9, 1);
+        buttonAskConfirmationGroupDelete.addOption(onLabel);
+        buttonAskConfirmationGroupDelete.addOption(offLabel);
+        buttonAskConfirmationGroupDelete.setSelected(Config.askConfirmationGroupDelete ? 0 : 1);
+
+        labelAskConfirmationUserDelete = miscLayout.addChild(new StringWidget(askConfirmationUserDeleteLabel, font).setColor(ColorConstants.TEXT), 10, 0);
+        labelAskConfirmationUserDelete.setTooltip(askConfirmationUserDeleteTooltip);
+        buttonAskConfirmationUserDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationUserDelete = b.getSelected() == 0), 10, 1);
+        buttonAskConfirmationUserDelete.addOption(onLabel);
+        buttonAskConfirmationUserDelete.addOption(offLabel);
+        buttonAskConfirmationUserDelete.setSelected(Config.askConfirmationUserDelete ? 0 : 1);
+
+        miscLayout.addChild(SpacerElement.height(4), 11, 0);
+        miscLayout.addChild(new StringWidget(hudLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT), 12, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
+
+        labelHUDEnabled = miscLayout.addChild(new StringWidget(hudEnabledLabel, font).setColor(ColorConstants.TEXT), 13, 0);
         labelHUDEnabled.setTooltip(hudEnabledTooltip);
-        buttonHUDEnabled = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.hudEnabled = b.getSelected() == 0), 7, 1);
+        buttonHUDEnabled = miscLayout.addChild(new OptionButton(font, 40, (b) -> {
+            Config.hudEnabled = b.getSelected() == 0;
+            updateButtonsVisibility();
+        }), 13, 1);
         buttonHUDEnabled.addOption(onLabel);
         buttonHUDEnabled.addOption(offLabel);
         buttonHUDEnabled.setSelected(Config.hudEnabled ? 0 : 1);
@@ -395,12 +434,29 @@ public class ModSettings extends AutoScaledScreen {
             groupClicked((GroupElement) element);
             updateButtonsVisibility();
         });
-        groups.setElementDeletedCallback(element -> {
+        groups.setElementDeletePressedCallback(element -> {
             if (groups.getSelectedElement() != null) {
-                groupClicked((GroupElement) groups.getSelectedElement());
+                groupClicked((GroupElement) element);
             }
-            settings.removeCustomGroup(((GroupElement) element).getGroup());
-            sendChangesToServer();
+            if (Config.askConfirmationGroupDelete) {
+                new DeleteConfirmationDialog(
+                        "mapfrontiers.delete_group_dialog",
+                        response -> {
+                            if (response == ConfirmationDialog.Response.ConfirmAlternative) {
+                                Config.askConfirmationGroupDelete = false;
+                                buttonAskConfirmationGroupDelete.setSelected(1);
+                                ClientEventHandler.postUpdatedConfigEvent();
+                            }
+                            groups.removeElement(element);
+                            settings.removeCustomGroup(((GroupElement) element).getGroup());
+                            sendChangesToServer();
+                        }
+                ).display();
+            } else {
+                groups.removeElement(element);
+                settings.removeCustomGroup(((GroupElement) element).getGroup());
+                sendChangesToServer();
+            }
         });
 
         LinearLayout newGroupLayout = LinearLayout.horizontal().spacing(4);
@@ -430,10 +486,27 @@ public class ModSettings extends AutoScaledScreen {
         labelGroupDesc = usersCol.addChild(new MultiLineTextWidget(groupOpsDescLabel, font).setColor(ColorConstants.TEXT));
 
         users = usersCol.addChild(new ScrollBox(actualHeight - 150, 258, 16));
-        users.setElementDeletedCallback(element -> {
+        users.setElementDeletePressedCallback(element -> {
             SettingsGroup group = ((GroupElement) groups.getSelectedElement()).getGroup();
-            group.removeUser(((UserElement) element).getUser());
-            sendChangesToServer();
+            if (Config.askConfirmationUserDelete) {
+                new DeleteConfirmationDialog(
+                        "mapfrontiers.delete_user_dialog",
+                        response -> {
+                            if (response == ConfirmationDialog.Response.ConfirmAlternative) {
+                                Config.askConfirmationUserDelete = false;
+                                buttonAskConfirmationUserDelete.setSelected(1);
+                                ClientEventHandler.postUpdatedConfigEvent();
+                            }
+                            users.removeElement(element);
+                            group.removeUser(((UserElement) element).getUser());
+                            sendChangesToServer();
+                        }
+                ).display();
+            } else {
+                users.removeElement(element);
+                group.removeUser(((UserElement) element).getUser());
+                sendChangesToServer();
+            }
         });
 
         LinearLayout newUserLayout = LinearLayout.horizontal().spacing(4);
@@ -459,7 +532,7 @@ public class ModSettings extends AutoScaledScreen {
         labelUpdateFrontier.setCentered(true);
         labelUpdateSettings = actionsHeader.addChild(new MultiLineTextWidget(updateSettingsLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT));
         labelUpdateSettings.setCentered(true);
-        labelSharePersonalFrontier = actionsHeader.addChild(new MultiLineTextWidget(sharePresonalFrontierLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT));
+        labelSharePersonalFrontier = actionsHeader.addChild(new MultiLineTextWidget(sharePersonalFrontierLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT));
         labelSharePersonalFrontier.setCentered(true);
 
         groupsActions = actionsLayout.addChild(new ScrollBox(actualHeight - 128, 430, 16));
@@ -481,9 +554,6 @@ public class ModSettings extends AutoScaledScreen {
         users.setHeight(actualHeight - 150);
         groupsActions.setHeight(actualHeight - 128);
         super.repositionElements();
-
-        labelFullscreenButtons.setX(labelTitleAnnouncementAboveHotbar.getX());
-        buttonFullscreenButtons.setX(buttonTitleAnnouncementAboveHotbar.getX());
 
         labelCreateFrontier.setX(groupsActions.getX() + 160 - labelCreateFrontier.getWidth() / 2);
         labelDeleteFrontier.setX(groupsActions.getX() + 220 - labelDeleteFrontier.getWidth() / 2);

@@ -11,6 +11,9 @@ import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.ScrollBox;
 import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.ScrollBox.ScrollElement;
 import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.UserSharedElement;
 import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBoxUser;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.ConfirmationDialog;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.DeleteConfirmationDialog;
+import games.alejandrocoria.mapfrontiers.common.Config;
 import games.alejandrocoria.mapfrontiers.common.network.PacketHandler;
 import games.alejandrocoria.mapfrontiers.common.network.PacketRemoveSharedUserPersonalFrontier;
 import games.alejandrocoria.mapfrontiers.common.network.PacketUpdateSharedUserPersonalFrontier;
@@ -95,11 +98,21 @@ public class ShareSettings extends AutoScaledScreen {
         updateSettings.setCentered(true);
 
         users = new ScrollBox(actualHeight - 128, 430, 16);
-        users.setElementDeletedCallback(element -> {
-            SettingsUser user = ((UserSharedElement) element).getUser();
-            frontier.removeUserShared(user);
-            PacketHandler.sendToServer(new PacketRemoveSharedUserPersonalFrontier(frontier.getId(), user));
-            resetLabels();
+        users.setElementDeletePressedCallback(element -> {
+            if (Config.askConfirmationUserDelete) {
+                new DeleteConfirmationDialog(
+                        "mapfrontiers.delete_user_dialog",
+                        response -> {
+                            if (response == ConfirmationDialog.Response.ConfirmAlternative) {
+                                Config.askConfirmationUserDelete = false;
+                                ClientEventHandler.postUpdatedConfigEvent();
+                            }
+                            deleteUserPressed(element);
+                        }
+                ).display();
+            } else {
+                deleteUserPressed(element);
+            }
         });
         mainLayout.addChild(users);
 
@@ -188,6 +201,14 @@ public class ShareSettings extends AutoScaledScreen {
         }
 
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    private void deleteUserPressed(ScrollElement element) {
+        users.removeElement(element);
+        SettingsUser user = ((UserSharedElement) element).getUser();
+        frontier.removeUserShared(user);
+        PacketHandler.sendToServer(new PacketRemoveSharedUserPersonalFrontier(frontier.getId(), user));
+        resetLabels();
     }
 
     private void buttonNewUserPressed() {

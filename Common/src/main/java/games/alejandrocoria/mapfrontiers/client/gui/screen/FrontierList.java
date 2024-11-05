@@ -11,6 +11,8 @@ import games.alejandrocoria.mapfrontiers.client.gui.component.button.SimpleButto
 import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.FrontierListElement;
 import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.RadioListElement;
 import games.alejandrocoria.mapfrontiers.client.gui.component.scroll.ScrollBox;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.ConfirmationDialog;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.DeleteConfirmationDialog;
 import games.alejandrocoria.mapfrontiers.common.Config;
 import games.alejandrocoria.mapfrontiers.common.FrontierData;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsProfile;
@@ -189,11 +191,20 @@ public class FrontierList extends AutoScaledScreen {
             new FrontierInfo(jmAPI, frontier).display();
         }));
         buttonDelete = bottomButtons.addChild(new SimpleButton(font, 110, deleteLabel, (b) -> {
-            FrontierOverlay frontier = ((FrontierListElement) frontiers.getSelectedElement()).getFrontier();
-            FrontiersOverlayManager frontierManager = MapFrontiersClient.getFrontiersOverlayManager(frontier.getPersonal());
-            frontierManager.clientDeleteFrontier(frontier);
-            frontiers.removeElement(frontiers.getSelectedElement());
-            updateButtons();
+            if (Config.askConfirmationFrontierDelete) {
+                new DeleteConfirmationDialog(
+                        "mapfrontiers.delete_frontier_dialog",
+                        response -> {
+                            if (response == ConfirmationDialog.Response.ConfirmAlternative) {
+                                Config.askConfirmationFrontierDelete = false;
+                                ClientEventHandler.postUpdatedConfigEvent();
+                            }
+                            deleteSelectedFrontier();
+                        }
+                ).display();
+            } else {
+                deleteSelectedFrontier();
+            }
         }));
         buttonDelete.setTextColors(ColorConstants.SIMPLE_BUTTON_TEXT_DELETE, ColorConstants.SIMPLE_BUTTON_TEXT_DELETE_HIGHLIGHT);
         buttonVisible = bottomButtons.addChild(new SimpleButton(font, 110, hideLabel, (b) -> {
@@ -242,6 +253,14 @@ public class FrontierList extends AutoScaledScreen {
     public void onClose() {
         ClientEventHandler.unsuscribeAllEvents(this);
         super.onClose();
+    }
+
+    private void deleteSelectedFrontier() {
+        FrontierOverlay frontier = ((FrontierListElement) frontiers.getSelectedElement()).getFrontier();
+        FrontiersOverlayManager frontierManager = MapFrontiersClient.getFrontiersOverlayManager(frontier.getPersonal());
+        frontierManager.clientDeleteFrontier(frontier);
+        frontiers.removeElement(frontiers.getSelectedElement());
+        updateButtons();
     }
 
     private void addDimensionsToFilter() {

@@ -171,8 +171,8 @@ public class TextBoxUser extends TextBox {
         if (!isFocusedIn) {
             suggestions.clear();
             suggestionsToDraw.clear();
+        } else {
+            setError(null);
         }
-
-        setError(null);
     }
 }
