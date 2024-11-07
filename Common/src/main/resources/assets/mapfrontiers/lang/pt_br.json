@@ -39,6 +39,7 @@
     "mapfrontiers.assign_banner_warn": "Você precisa ter um banner em mãos para atribuí-lo",
     "mapfrontiers.select_in_map": "Selecione no mapa",
     "mapfrontiers.close": "Fechar",
+    "mapfrontiers.default": "Padrão: %1$s",
 
     "mapfrontiers.delete_frontier_dialog": "Tem certeza de que deseja excluir a fronteira?",
     "mapfrontiers.delete_group_dialog": "Tem certeza de que deseja excluir o grupo?",
@@ -164,7 +165,7 @@
     "mapfrontiers.config.hud.slot1.tooltip": "Interface elemento no slot 1.",
     "mapfrontiers.config.hud.slot2.tooltip": "Interface elemento no slot 2.",
     "mapfrontiers.config.hud.slot3.tooltip": "Interface elemento no slot 3.",
-    "mapfrontiers.config.hud.anchor.tooltip": "Ponto de ancoragem da Interface. No caso de escolher o minimapa como âncora,\nsua posição padrão será utilizada como referência nas coordenadas.",
+    "mapfrontiers.config.hud.anchor.tooltip": "Ponto de ancoragem da Interface. No caso de escolher o minimapa como âncora, sua posição padrão será utilizada como referência nas coordenadas.",
     "mapfrontiers.config.hud.position.tooltip": "Posição da Interface em relação à âncora.",
 
     "mapfrontiers.config.Vertex": "Vértice",

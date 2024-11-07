@@ -39,6 +39,7 @@
   "mapfrontiers.assign_banner_warn": "你需要拿着一面旗帜以指定领地旗~",
   "mapfrontiers.select_in_map": "在地图中选中",
   "mapfrontiers.close": "关闭",
+  "mapfrontiers.default": "Default: %1$s",
 
   "mapfrontiers.delete_frontier_dialog": "Are you sure you want to delete the frontier?",
   "mapfrontiers.delete_group_dialog": "Are you sure you want to delete the group?",
@@ -164,7 +165,7 @@
   "mapfrontiers.config.hud.slot1.tooltip": "第一行中显示的内容。",
   "mapfrontiers.config.hud.slot2.tooltip": "第二行中显示的内容。",
   "mapfrontiers.config.hud.slot3.tooltip": "第三行中显示的内容。",
-  "mapfrontiers.config.hud.anchor.tooltip": "HUD的锚点位置。\n若是选择小地图作为锚点，\n其默认位置则会相对于小地图坐标。",
+  "mapfrontiers.config.hud.anchor.tooltip": "HUD的锚点位置。\n若是选择小地图作为锚点，其默认位置则会相对于小地图坐标。",
   "mapfrontiers.config.hud.position.tooltip": "HUD相对于锚点的位置坐标（可尽情拖动～）。",
 
   "mapfrontiers.config.Vertex": "顶点",

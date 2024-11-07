@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
@@ -391,19 +393,24 @@ public class Config {
     public static Tooltip getTooltip(String name) {
         ValueSpec valueSpec = getValueSpec(name);
         if (valueSpec != null) {
-            return Tooltip.create(Component.translatable(valueSpec.getTranslationKey() + ".tooltip"));
+            MutableComponent tooltip = Component.translatable(valueSpec.getTranslationKey() + ".tooltip");
+            tooltip.append("\n\n");
+            tooltip.append(Component.translatable("mapfrontiers.default", getDefault(valueSpec)).withStyle(Style.EMPTY.withBold(true)));
+            return Tooltip.create(tooltip);
         }
 
         return null;
     }
 
-    public static String getDefault(String name) {
-        ValueSpec valueSpec = getValueSpec(name);
-        if (valueSpec != null) {
-            return valueSpec.getDefault().toString();
+    public static Component getDefault(ValueSpec valueSpec) {
+        Object defaultValue = valueSpec.getDefault();
+        if (Enum.class.isAssignableFrom(valueSpec.getClazz())) {
+            return getTranslatedEnum((Enum) defaultValue);
+        } else if (valueSpec.getClazz() == Boolean.class) {
+            return Component.translatable((Boolean) defaultValue ? "options.on" : "options.off");
+        } else {
+            return Component.literal(defaultValue.toString());
         }
-
-        return "";
     }
 
     public static boolean isInRange(String name, Object value) {

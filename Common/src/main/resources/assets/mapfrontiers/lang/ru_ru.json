@@ -41,6 +41,7 @@
   "mapfrontiers.assign_banner_warn": "Вы должны иметь баннер в другой руке!",
   "mapfrontiers.select_in_map": "Выбрать на карте",
   "mapfrontiers.close": "Закрыть",
+  "mapfrontiers.default": "Default: %1$s",
 
   "mapfrontiers.delete_frontier_dialog": "Are you sure you want to delete the frontier?",
   "mapfrontiers.delete_group_dialog": "Are you sure you want to delete the group?",
@@ -166,7 +167,7 @@
   "mapfrontiers.config.hud.slot1.tooltip": "Элемент HUD на слоте 1.",
   "mapfrontiers.config.hud.slot2.tooltip": "Элемент HUD на слоте 2.",
   "mapfrontiers.config.hud.slot3.tooltip": "Элемент HUD на слоте 3.",
-  "mapfrontiers.config.hud.anchor.tooltip": "Точка якоря HUD. В случае выбора миникарты в качестве якоря,\nиспользуется ее стандартное положение как опорная координата.",
+  "mapfrontiers.config.hud.anchor.tooltip": "Точка якоря HUD. В случае выбора миникарты в качестве якоря, используется ее стандартное положение как опорная координата.",
   "mapfrontiers.config.hud.position.tooltip": "Положение HUD относительно якоря.",
 
   "mapfrontiers.config.Vertex": "Вершина",
