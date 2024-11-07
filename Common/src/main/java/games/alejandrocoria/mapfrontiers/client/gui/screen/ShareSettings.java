@@ -121,6 +121,7 @@ public class ShareSettings extends AutoScaledScreen {
 
         textNewUser = new TextBoxUser(minecraft, font, 238);
         textNewUser.setMaxLength(38);
+        textNewUser.setSubmitCallback((value) -> buttonNewUserPressed());
         newUserLayout.addChild(textNewUser);
 
         buttonNewUser = new IconButton(IconButton.Type.Add, (b) -> buttonNewUserPressed());

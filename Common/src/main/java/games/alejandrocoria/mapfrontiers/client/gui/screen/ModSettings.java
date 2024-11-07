@@ -464,6 +464,7 @@ public class ModSettings extends AutoScaledScreen {
 
         textNewGroupName = newGroupLayout.addChild(new TextBox(font, 140, I18n.get("mapfrontiers.new_group_name")));
         textNewGroupName.setMaxLength(22);
+        textNewGroupName.setSubmitCallback((value) -> newGroupPressed());
 
         buttonNewGroup = newGroupLayout.addChild(new IconButton(IconButton.Type.Add, (b) -> newGroupPressed()));
 
@@ -514,6 +515,7 @@ public class ModSettings extends AutoScaledScreen {
 
         textNewUser = newUserLayout.addChild(new TextBoxUser(minecraft, font, 238, I18n.get("mapfrontiers.new_user")));
         textNewUser.setMaxLength(38);
+        textNewUser.setSubmitCallback((value) -> newUserPressed());
 
         buttonNewUser = newUserLayout.addChild(new IconButton(IconButton.Type.Add, (b) -> newUserPressed()));
 

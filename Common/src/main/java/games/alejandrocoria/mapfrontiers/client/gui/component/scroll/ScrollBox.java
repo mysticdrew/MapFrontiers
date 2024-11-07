@@ -123,6 +123,10 @@ public class ScrollBox extends AbstractWidgetNoNarration {
         if (elementDeletedCallback != null) {
             elementDeletedCallback.accept(element);
         }
+
+        if (selected >= 0 && elementClickedCallback != null) {
+            elementClickedCallback.accept(getSelectedElement());
+        }
     }
 
     public void removeAll() {

@@ -14,6 +14,7 @@ public class TextBox extends EditBox {
     private final String defaultText;
     private Consumer<String> valueChangedCallback;
     private Consumer<String> lostFocusCallback;
+    private Consumer<String> submitCallback;
 
     public TextBox(Font font, int width) {
         this(font, width, "");
@@ -42,6 +43,10 @@ public class TextBox extends EditBox {
 
     public void setLostFocusCallback(Consumer<String> callback) {
         lostFocusCallback = callback;
+    }
+
+    public void setSubmitCallback(Consumer<String> callback) {
+        submitCallback = callback;
     }
 
     public void setHeight(int height) {
@@ -74,6 +79,9 @@ public class TextBox extends EditBox {
 
             if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
                 setFocused(false);
+                if (submitCallback != null) {
+                    submitCallback.accept(getValue());
+                }
             }
         }
 
