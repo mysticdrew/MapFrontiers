@@ -42,7 +42,7 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class FrontierData {
     public enum Change {
-        Name, Vertices, Banner, Shared, Other;
+        Name, Vertices, Banner, Shared, Visibility, Color;
 
         public final static Change[] valuesArray = values();
     }
@@ -57,15 +57,7 @@ public class FrontierData {
     protected Mode mode = Mode.Vertex;
     protected String name1 = "New";
     protected String name2 = "Frontier";
-    protected boolean visible = true;
-    protected boolean fullscreenVisible = true;
-    protected boolean fullscreenNameVisible = true;
-    protected boolean fullscreenOwnerVisible = false;
-    protected boolean minimapVisible = true;
-    protected boolean minimapNameVisible = true;
-    protected boolean minimapOwnerVisible = false;
-    protected boolean announceInChat = false;
-    protected boolean announceInTitle = false;
+    protected VisibilityData visibilityData;
     protected int color = 0xffffffff;
     protected ResourceKey<Level> dimension;
     protected SettingsUser owner = new SettingsUser();
@@ -79,6 +71,7 @@ public class FrontierData {
 
     public FrontierData() {
         id = new UUID(0, 0);
+        visibilityData = new VisibilityData();
     }
 
     public FrontierData(FrontierData other) {
@@ -87,15 +80,7 @@ public class FrontierData {
         owner = other.owner;
         personal = other.personal;
 
-        visible = other.visible;
-        fullscreenVisible = other.fullscreenVisible;
-        fullscreenNameVisible = other.fullscreenNameVisible;
-        fullscreenOwnerVisible = other.fullscreenOwnerVisible;
-        minimapVisible = other.minimapVisible;
-        minimapNameVisible = other.minimapNameVisible;
-        minimapOwnerVisible = other.minimapOwnerVisible;
-        announceInChat = other.announceInChat;
-        announceInTitle = other.announceInTitle;
+        visibilityData = new VisibilityData(other.visibilityData);
         color = other.color;
 
         name1 = other.name1;
@@ -128,16 +113,11 @@ public class FrontierData {
         owner = other.owner;
         personal = other.personal;
 
-        if (other.changes.contains(Change.Other)) {
-            visible = other.visible;
-            fullscreenVisible = other.fullscreenVisible;
-            fullscreenNameVisible = other.fullscreenNameVisible;
-            fullscreenOwnerVisible = other.fullscreenOwnerVisible;
-            minimapVisible = other.minimapVisible;
-            minimapNameVisible = other.minimapNameVisible;
-            minimapOwnerVisible = other.minimapOwnerVisible;
-            announceInChat = other.announceInChat;
-            announceInTitle = other.announceInTitle;
+        if (other.changes.contains(Change.Visibility)) {
+            visibilityData = other.visibilityData;
+        }
+
+        if (other.changes.contains(Change.Color)) {
             color = other.color;
         }
 
@@ -310,89 +290,98 @@ public class FrontierData {
     }
 
     public void setVisible(boolean visible) {
-        this.visible = visible;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.Visible, visible);
+        changes.add(Change.Visibility);
     }
 
     public boolean getVisible() {
-        return visible;
+        return visibilityData.getValue(VisibilityData.Visibility.Visible);
     }
 
     public void setFullscreenVisible(boolean visible) {
-        this.fullscreenVisible = visible;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenVisible, visible);
+        changes.add(Change.Visibility);
     }
 
     public boolean getFullscreenVisible() {
-        return fullscreenVisible;
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenVisible);
     }
 
     public void setMinimapVisible(boolean visible) {
-        this.minimapVisible = visible;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapVisible, visible);
+        changes.add(Change.Visibility);
     }
 
     public boolean getMinimapVisible() {
-        return minimapVisible;
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapVisible);
     }
 
     public void setFullscreenNameVisible(boolean nameVisible) {
-        this.fullscreenNameVisible = nameVisible;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenNameVisible, nameVisible);
+        changes.add(Change.Visibility);
     }
 
     public boolean getFullscreenNameVisible() {
-        return fullscreenNameVisible;
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenNameVisible);
     }
 
     public void setFullscreenOwnerVisible(boolean ownerVisible) {
-        this.fullscreenOwnerVisible = ownerVisible;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenOwnerVisible, ownerVisible);
+        changes.add(Change.Visibility);
     }
 
     public boolean getFullscreenOwnerVisible() {
-        return fullscreenOwnerVisible;
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenOwnerVisible);
     }
 
     public void setMinimapNameVisible(boolean nameVisible) {
-        this.minimapNameVisible = nameVisible;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapNameVisible, nameVisible);
+        changes.add(Change.Visibility);
     }
 
     public boolean getMinimapNameVisible() {
-        return minimapNameVisible;
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapNameVisible);
     }
 
     public void setMinimapOwnerVisible(boolean ownerVisible) {
-        this.minimapOwnerVisible = ownerVisible;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapOwnerVisible, ownerVisible);
+        changes.add(Change.Visibility);
     }
 
     public boolean getMinimapOwnerVisible() {
-        return minimapOwnerVisible;
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapOwnerVisible);
     }
 
     public void setAnnounceInChat(boolean announceInChat) {
-        this.announceInChat = announceInChat;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.AnnounceInChat, announceInChat);
+        changes.add(Change.Visibility);
     }
 
     public boolean getAnnounceInChat() {
-        return announceInChat;
+        return visibilityData.getValue(VisibilityData.Visibility.AnnounceInChat);
     }
 
     public void setAnnounceInTitle(boolean announceInTitle) {
-        this.announceInTitle = announceInTitle;
-        changes.add(Change.Other);
+        this.visibilityData.setValue(VisibilityData.Visibility.AnnounceInTitle, announceInTitle);
+        changes.add(Change.Visibility);
     }
 
     public boolean getAnnounceInTitle() {
-        return announceInTitle;
+        return visibilityData.getValue(VisibilityData.Visibility.AnnounceInTitle);
+    }
+
+    public void setVisibilityData(VisibilityData visibilityData) {
+        this.visibilityData = visibilityData;
+        changes.add(Change.Visibility);
+    }
+
+    public VisibilityData getVisibilityData() {
+        return visibilityData;
     }
 
     public void setColor(int color) {
         this.color = color;
-        changes.add(Change.Other);
+        changes.add(Change.Color);
     }
 
     public int getColor() {
@@ -576,39 +565,13 @@ public class FrontierData {
     }
 
     public void readFromNBT(CompoundTag nbt, int version) {
-        boolean splitVisibility = version >= 10;
-
         id = UUID.fromString(nbt.getString("id"));
         color = nbt.getInt("color");
         dimension = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(nbt.getString("dimension")));
         name1 = nbt.getString("name1");
         name2 = nbt.getString("name2");
-        visible = nbt.getBoolean("visible");
-        if (splitVisibility)
-        {
-            fullscreenVisible = nbt.getBoolean("fullscreenVisible");
-            fullscreenNameVisible = nbt.getBoolean("fullscreenNameVisible");
-            fullscreenOwnerVisible = nbt.getBoolean("fullscreenOwnerVisible");
-            minimapVisible = nbt.getBoolean("minimapVisible");
-            minimapNameVisible = nbt.getBoolean("minimapNameVisible");
-            minimapOwnerVisible = nbt.getBoolean("minimapOwnerVisible");
-        }
-        else
-        {
-            fullscreenVisible = nbt.getBoolean("visible");
-            minimapVisible = nbt.getBoolean("visible");
-            fullscreenNameVisible = nbt.getBoolean("nameVisible");
-            minimapNameVisible = nbt.getBoolean("nameVisible");
-            fullscreenOwnerVisible = nbt.getBoolean("ownerVisible");
-            minimapOwnerVisible = nbt.getBoolean("ownerVisible");
-        }
 
-        if (nbt.contains("announceInChat")) {
-            announceInChat = nbt.getBoolean("announceInChat");
-        }
-        if (nbt.contains("announceInTitle")) {
-            announceInTitle = nbt.getBoolean("announceInTitle");
-        }
+        visibilityData.readFromNBT(nbt, version);
 
         personal = nbt.getBoolean("personal");
 
@@ -679,15 +642,7 @@ public class FrontierData {
         nbt.putString("dimension", dimension.location().toString());
         nbt.putString("name1", name1);
         nbt.putString("name2", name2);
-        nbt.putBoolean("visible", visible);
-        nbt.putBoolean("fullscreenVisible", fullscreenVisible);
-        nbt.putBoolean("fullscreenNameVisible", fullscreenNameVisible);
-        nbt.putBoolean("fullscreenOwnerVisible", fullscreenOwnerVisible);
-        nbt.putBoolean("minimapVisible", minimapVisible);
-        nbt.putBoolean("minimapNameVisible", minimapNameVisible);
-        nbt.putBoolean("minimapOwnerVisible", minimapOwnerVisible);
-        nbt.putBoolean("announceInChat", announceInChat);
-        nbt.putBoolean("announceInTitle", announceInTitle);
+        visibilityData.writeToNBT(nbt);
         nbt.putBoolean("personal", personal);
 
         CompoundTag nbtOwner = new CompoundTag();
@@ -757,17 +712,12 @@ public class FrontierData {
         owner = new SettingsUser();
         owner.fromBytes(buf);
 
-        if (changes.contains(Change.Other)) {
+        if (changes.contains(Change.Visibility)) {
+            visibilityData.fromBytes(buf);
+        }
+
+        if (changes.contains(Change.Color)) {
             color = buf.readInt();
-            visible = buf.readBoolean();
-            fullscreenVisible = buf.readBoolean();
-            fullscreenNameVisible = buf.readBoolean();
-            fullscreenOwnerVisible = buf.readBoolean();
-            minimapVisible = buf.readBoolean();
-            minimapNameVisible = buf.readBoolean();
-            minimapOwnerVisible = buf.readBoolean();
-            announceInChat = buf.readBoolean();
-            announceInTitle = buf.readBoolean();
         }
 
         if (changes.contains(Change.Name)) {
@@ -860,17 +810,12 @@ public class FrontierData {
         buf.writeBoolean(personal);
         owner.toBytes(buf);
 
-        if (withChanges == null || withChanges.contains(Change.Other)) {
+        if (withChanges == null || withChanges.contains(Change.Visibility)) {
+            visibilityData.toBytes(buf);
+        }
+
+        if (withChanges == null || withChanges.contains(Change.Color)) {
             buf.writeInt(color);
-            buf.writeBoolean(visible);
-            buf.writeBoolean(fullscreenVisible);
-            buf.writeBoolean(fullscreenNameVisible);
-            buf.writeBoolean(fullscreenOwnerVisible);
-            buf.writeBoolean(minimapVisible);
-            buf.writeBoolean(minimapNameVisible);
-            buf.writeBoolean(minimapOwnerVisible);
-            buf.writeBoolean(announceInChat);
-            buf.writeBoolean(announceInTitle);
         }
 
         if (withChanges == null || withChanges.contains(Change.Name)) {
@@ -930,6 +875,7 @@ public class FrontierData {
             buf.writeLong(modified.getTime());
         }
     }
+
 
     public static class BannerData {
         public DyeColor baseColor;
@@ -1000,6 +946,135 @@ public class FrontierData {
                 nbt.put("Patterns", patterns);
                 buf.writeNbt(nbt);
             }
+        }
+    }
+
+    public static class VisibilityData {
+        public enum Visibility {
+            Visible,
+            FullscreenVisible,
+            FullscreenNameVisible,
+            FullscreenOwnerVisible,
+            MinimapVisible,
+            MinimapNameVisible,
+            MinimapOwnerVisible,
+            AnnounceInChat,
+            AnnounceInTitle,
+        }
+
+        private final EnumSet<Visibility> values;
+
+        public VisibilityData() {
+            values = EnumSet.of(
+                    Visibility.Visible,
+                    Visibility.FullscreenVisible,
+                    Visibility.FullscreenNameVisible,
+                    Visibility.MinimapVisible,
+                    Visibility.MinimapNameVisible
+            );
+        }
+
+        public VisibilityData(boolean setAll) {
+            if (setAll) {
+                values = EnumSet.allOf(Visibility.class);
+            } else {
+                values = EnumSet.noneOf(Visibility.class);
+            }
+        }
+
+        public VisibilityData(VisibilityData other) {
+            values = other.values.clone();
+        }
+
+        public int getHash() {
+            return values.hashCode();
+        }
+
+        public boolean equals(VisibilityData other) {
+            if (this == other) {
+                return true;
+            }
+
+            return values.equals(other.values);
+        }
+
+        public void setValue(Visibility value, boolean set) {
+            if (set) {
+                values.add(value);
+            } else {
+                values.remove(value);
+            }
+        }
+
+        public boolean getValue(Visibility value) {
+            return values.contains(value);
+        }
+
+        public void readFromNBT(CompoundTag nbt, int version) {
+            boolean splitVisibility = version >= 10;
+
+            setValue(Visibility.Visible, nbt.getBoolean("visible"));
+            if (splitVisibility)
+            {
+                setValue(Visibility.FullscreenVisible, nbt.getBoolean("fullscreenVisible"));
+                setValue(Visibility.FullscreenNameVisible, nbt.getBoolean("fullscreenNameVisible"));
+                setValue(Visibility.FullscreenOwnerVisible, nbt.getBoolean("fullscreenOwnerVisible"));
+                setValue(Visibility.MinimapVisible, nbt.getBoolean("minimapVisible"));
+                setValue(Visibility.MinimapNameVisible, nbt.getBoolean("minimapNameVisible"));
+                setValue(Visibility.MinimapOwnerVisible, nbt.getBoolean("minimapOwnerVisible"));
+            }
+            else
+            {
+                setValue(Visibility.FullscreenVisible, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenNameVisible, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenOwnerVisible, nbt.getBoolean("nameVisible"));
+                setValue(Visibility.MinimapVisible, nbt.getBoolean("nameVisible"));
+                setValue(Visibility.MinimapNameVisible, nbt.getBoolean("ownerVisible"));
+                setValue(Visibility.MinimapOwnerVisible, nbt.getBoolean("ownerVisible"));
+            }
+
+            if (nbt.contains("announceInChat")) {
+                setValue(Visibility.AnnounceInChat, nbt.getBoolean("announceInChat"));
+            }
+            if (nbt.contains("announceInTitle")) {
+                setValue(Visibility.AnnounceInTitle, nbt.getBoolean("announceInTitle"));
+            }
+        }
+
+        public void writeToNBT(CompoundTag nbt) {
+            nbt.putBoolean("visible", getValue(Visibility.Visible));
+            nbt.putBoolean("fullscreenVisible", getValue(Visibility.FullscreenVisible));
+            nbt.putBoolean("fullscreenNameVisible", getValue(Visibility.FullscreenNameVisible));
+            nbt.putBoolean("fullscreenOwnerVisible", getValue(Visibility.FullscreenOwnerVisible));
+            nbt.putBoolean("minimapVisible", getValue(Visibility.MinimapVisible));
+            nbt.putBoolean("minimapNameVisible", getValue(Visibility.MinimapNameVisible));
+            nbt.putBoolean("minimapOwnerVisible", getValue(Visibility.MinimapOwnerVisible));
+            nbt.putBoolean("announceInChat", getValue(Visibility.AnnounceInChat));
+            nbt.putBoolean("announceInTitle", getValue(Visibility.AnnounceInTitle));
+        }
+
+        public void fromBytes(FriendlyByteBuf buf) {
+            setValue(Visibility.Visible, buf.readBoolean());
+            setValue(Visibility.FullscreenVisible, buf.readBoolean());
+            setValue(Visibility.FullscreenNameVisible, buf.readBoolean());
+            setValue(Visibility.FullscreenOwnerVisible, buf.readBoolean());
+            setValue(Visibility.MinimapVisible, buf.readBoolean());
+            setValue(Visibility.MinimapNameVisible, buf.readBoolean());
+            setValue(Visibility.MinimapOwnerVisible, buf.readBoolean());
+            setValue(Visibility.AnnounceInChat, buf.readBoolean());
+            setValue(Visibility.AnnounceInTitle, buf.readBoolean());
+        }
+
+        public void toBytes(FriendlyByteBuf buf) {
+            buf.writeBoolean(getValue(Visibility.Visible));
+            buf.writeBoolean(getValue(Visibility.FullscreenVisible));
+            buf.writeBoolean(getValue(Visibility.FullscreenNameVisible));
+            buf.writeBoolean(getValue(Visibility.FullscreenOwnerVisible));
+            buf.writeBoolean(getValue(Visibility.MinimapVisible));
+            buf.writeBoolean(getValue(Visibility.MinimapNameVisible));
+            buf.writeBoolean(getValue(Visibility.MinimapOwnerVisible));
+            buf.writeBoolean(getValue(Visibility.AnnounceInChat));
+            buf.writeBoolean(getValue(Visibility.AnnounceInTitle));
         }
     }
 }

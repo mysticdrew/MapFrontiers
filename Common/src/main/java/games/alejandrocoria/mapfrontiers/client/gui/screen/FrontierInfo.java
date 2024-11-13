@@ -15,6 +15,7 @@ import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBox;
 import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBoxInt;
 import games.alejandrocoria.mapfrontiers.client.gui.dialog.ConfirmationDialog;
 import games.alejandrocoria.mapfrontiers.client.gui.dialog.DeleteConfirmationDialog;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.VisibilityDialog;
 import games.alejandrocoria.mapfrontiers.common.Config;
 import games.alejandrocoria.mapfrontiers.common.FrontierData;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsProfile;
@@ -67,13 +68,7 @@ public class FrontierInfo extends AutoScaledScreen {
     private static final String perimeterKey = "mapfrontiers.perimeter";
     private static final String createdKey = "mapfrontiers.created";
     private static final String modifiedKey = "mapfrontiers.modified";
-    private static final Component showFrontierLabel = Component.translatable("mapfrontiers.show_frontier");
-    private static final Component announceInChatLabel = Component.translatable("mapfrontiers.announce_in_chat");
-    private static final Component announceInTitleLabel = Component.translatable("mapfrontiers.announce_in_title");
-    private static final Component showFullscreenLabel = Component.translatable("mapfrontiers.show_fullscreen");
-    private static final Component showNameLabel = Component.translatable("mapfrontiers.show_name");
-    private static final Component showOwnerLabel = Component.translatable("mapfrontiers.show_owner");
-    private static final Component showMinimapLabel = Component.translatable("mapfrontiers.show_minimap");
+    private static final Component visibilityLabel = Component.translatable("mapfrontiers.visibility");
     private static final Component colorLabel = Component.translatable("mapfrontiers.color");
     private static final Component rLabel = Component.literal("R");
     private static final Component gLabel = Component.literal("G");
@@ -104,15 +99,7 @@ public class FrontierInfo extends AutoScaledScreen {
     private final FrontierOverlay frontier;
     private TextBox textName1;
     private TextBox textName2;
-    private OptionButton buttonVisible;
-    private OptionButton buttonFullscreenVisible;
-    private OptionButton buttonFullscreenNameVisible;
-    private OptionButton buttonFullscreenOwnerVisible;
-    private OptionButton buttonMinimapVisible;
-    private OptionButton buttonMinimapNameVisible;
-    private OptionButton buttonMinimapOwnerVisible;
-    private OptionButton buttonAnnounceInChat;
-    private OptionButton buttonAnnounceInTitle;
+    private SimpleButton buttonVisibility;
     private TextBoxInt textRed;
     private TextBoxInt textGreen;
     private TextBoxInt textBlue;
@@ -268,47 +255,15 @@ public class FrontierInfo extends AutoScaledScreen {
             modifiedLabel = dataRow2Col2.addChild(new StringWidget(modified, font).setColor(ColorConstants.WHITE));
         }
 
-        GridLayout visibilityCol1 = new GridLayout().rowSpacing(4);
-        visibilityCol1.defaultCellSetting().alignHorizontallyLeft();
-        visibilityCol1.addChild(SpacerElement.width(116), 0, 0);
-        mainLayout.addChild(visibilityCol1, 2, 1);
-
-        visibilityCol1.addChild(new StringWidget(showFrontierLabel, font).setColor(ColorConstants.TEXT), 0, 0);
-        buttonVisible = visibilityCol1.addChild(createVisibilityOptionButton(frontier.getVisible(), frontier::setVisible), 0, 1);
-
-        visibilityCol1.addChild(new StringWidget(announceInChatLabel, font).setColor(ColorConstants.TEXT), 1, 0);
-        buttonAnnounceInChat = visibilityCol1.addChild(createVisibilityOptionButton(frontier.getAnnounceInChat(), frontier::setAnnounceInChat), 1, 1);
-
-        visibilityCol1.addChild(new StringWidget(announceInTitleLabel, font).setColor(ColorConstants.TEXT), 2, 0);
-        buttonAnnounceInTitle = visibilityCol1.addChild(createVisibilityOptionButton(frontier.getAnnounceInTitle(), frontier::setAnnounceInTitle), 2, 1);
-
-        GridLayout visibilityCol2 = new GridLayout().rowSpacing(4);
-        visibilityCol2.defaultCellSetting().alignHorizontallyLeft();
-        visibilityCol2.addChild(SpacerElement.width(116), 0, 0);
-        mainLayout.addChild(visibilityCol2, 2, 2);
-
-        visibilityCol2.addChild(new StringWidget(showFullscreenLabel, font).setColor(ColorConstants.TEXT), 0, 0);
-        buttonFullscreenVisible = visibilityCol2.addChild(createVisibilityOptionButton(frontier.getFullscreenVisible(), frontier::setFullscreenVisible), 0, 1);
-
-        visibilityCol2.addChild(new StringWidget(showNameLabel, font).setColor(ColorConstants.TEXT), 1, 0);
-        buttonFullscreenNameVisible = visibilityCol2.addChild(createVisibilityOptionButton(frontier.getFullscreenNameVisible(), frontier::setFullscreenNameVisible), 1, 1);
-
-        visibilityCol2.addChild(new StringWidget(showOwnerLabel, font).setColor(ColorConstants.TEXT), 2, 0);
-        buttonFullscreenOwnerVisible = visibilityCol2.addChild(createVisibilityOptionButton(frontier.getFullscreenOwnerVisible(), frontier::setFullscreenOwnerVisible), 2, 1);
-
-        GridLayout visibilityCol3 = new GridLayout().rowSpacing(4);
-        visibilityCol3.defaultCellSetting().alignHorizontallyLeft();
-        visibilityCol3.addChild(SpacerElement.width(116), 0, 0);
-        mainLayout.addChild(visibilityCol3, 2, 3);
-
-        visibilityCol3.addChild(new StringWidget(showMinimapLabel, font).setColor(ColorConstants.TEXT), 0, 0);
-        buttonMinimapVisible = visibilityCol3.addChild(createVisibilityOptionButton(frontier.getMinimapVisible(), frontier::setMinimapVisible), 0, 1);
-
-        visibilityCol3.addChild(new StringWidget(showNameLabel, font).setColor(ColorConstants.TEXT), 1, 0);
-        buttonMinimapNameVisible = visibilityCol3.addChild(createVisibilityOptionButton(frontier.getMinimapNameVisible(), frontier::setMinimapNameVisible), 1, 1);
-
-        visibilityCol3.addChild(new StringWidget(showOwnerLabel, font).setColor(ColorConstants.TEXT), 2, 0);
-        buttonMinimapOwnerVisible = visibilityCol3.addChild(createVisibilityOptionButton(frontier.getMinimapOwnerVisible(), frontier::setMinimapOwnerVisible), 2, 1);
+        buttonVisibility = new SimpleButton(font, 144, visibilityLabel, (b) -> {
+            new VisibilityDialog(frontier.getVisibilityData(), (newVisibilityData, newVisibilityMask) -> {
+                if (!newVisibilityData.equals(frontier.getVisibilityData())) {
+                    frontier.setVisibilityData(newVisibilityData);
+                    sendChangesToServer();
+                }
+            }).display();
+        });
+        mainLayout.addChild(buttonVisibility, 2, 1);
 
         colorPicker = new ColorPicker(frontier.getColor(), (color, dragging) -> {
             colorPalette.setColor(color);
@@ -641,15 +596,7 @@ public class FrontierInfo extends AutoScaledScreen {
 
         textName1.setEditable(actions.canUpdate);
         textName2.setEditable(actions.canUpdate);
-        buttonVisible.active = actions.canUpdate;
-        buttonFullscreenVisible.active = actions.canUpdate;
-        buttonFullscreenNameVisible.active = actions.canUpdate;
-        buttonFullscreenOwnerVisible.active = actions.canUpdate;
-        buttonMinimapVisible.active = actions.canUpdate;
-        buttonMinimapNameVisible.active = actions.canUpdate;
-        buttonMinimapOwnerVisible.active = actions.canUpdate;
-        buttonAnnounceInChat.active = actions.canUpdate;
-        buttonAnnounceInTitle.active = actions.canUpdate;
+        buttonVisibility.active = actions.canUpdate;
         textRed.setEditable(actions.canUpdate);
         textGreen.setEditable(actions.canUpdate);
         textBlue.setEditable(actions.canUpdate);

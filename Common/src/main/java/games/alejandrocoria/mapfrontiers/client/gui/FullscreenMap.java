@@ -323,7 +323,7 @@ public class FullscreenMap {
         FrontiersOverlayManager globalManager = MapFrontiersClient.getFrontiersOverlayManager(false);
         FrontiersOverlayManager personalManager = MapFrontiersClient.getFrontiersOverlayManager(true);
 
-        if (globalManager == null || personalManager == null) {
+        if (globalManager == null || personalManager == null || Config.frontierVisibility == Config.Visibility.Never) {
             return false;
         }
 

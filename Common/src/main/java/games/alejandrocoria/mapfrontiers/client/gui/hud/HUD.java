@@ -114,7 +114,7 @@ public class HUD {
     }
 
     public void tick() {
-        if (previewMode || frontiersOverlayManager == null || personalFrontiersOverlayManager == null || mc.player == null) {
+        if (previewMode || frontiersOverlayManager == null || personalFrontiersOverlayManager == null || mc.player == null || Config.frontierVisibility == Config.Visibility.Never) {
             return;
         }
 

@@ -20,7 +20,9 @@ import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBoxInt
 import games.alejandrocoria.mapfrontiers.client.gui.component.textbox.TextBoxUser;
 import games.alejandrocoria.mapfrontiers.client.gui.dialog.ConfirmationDialog;
 import games.alejandrocoria.mapfrontiers.client.gui.dialog.DeleteConfirmationDialog;
+import games.alejandrocoria.mapfrontiers.client.gui.dialog.VisibilityDialog;
 import games.alejandrocoria.mapfrontiers.common.Config;
+import games.alejandrocoria.mapfrontiers.common.FrontierData;
 import games.alejandrocoria.mapfrontiers.common.network.PacketFrontierSettings;
 import games.alejandrocoria.mapfrontiers.common.network.PacketHandler;
 import games.alejandrocoria.mapfrontiers.common.network.PacketRequestFrontierSettings;
@@ -77,18 +79,7 @@ public class ModSettings extends AutoScaledScreen {
     private static final Component versionLabel = Component.literal(Services.PLATFORM.getModVersion());
     private static final String keyHintkey = "mapfrontiers.key.open_settings.hint";
     private static final Component frontiersLabel = Component.translatable("mapfrontiers.frontiers");
-    private static final Component fullscreenVisibilityLabel = Config.getTranslatedName("fullscreenVisibility");
-    private static final Tooltip fullscreenVisibilityTooltip = Config.getTooltip("fullscreenVisibility");
-    private static final Component fullscreenNameVisibilityLabel = Config.getTranslatedName("fullscreenNameVisibility");
-    private static final Tooltip fullscreenNameVisibilityTooltip = Config.getTooltip("fullscreenNameVisibility");
-    private static final Component fullscreenOwnerVisibilityLabel = Config.getTranslatedName("fullscreenOwnerVisibility");
-    private static final Tooltip fullscreenOwnerVisibilityTooltip = Config.getTooltip("fullscreenOwnerVisibility");
-    private static final Component minimapVisibilityLabel = Config.getTranslatedName("minimapVisibility");
-    private static final Tooltip minimapVisibilityTooltip = Config.getTooltip("minimapVisibility");
-    private static final Component minimapNameVisibilityLabel = Config.getTranslatedName("minimapNameVisibility");
-    private static final Tooltip minimapNameVisibilityTooltip = Config.getTooltip("minimapNameVisibility");
-    private static final Component minimapOwnerVisibilityLabel = Config.getTranslatedName("minimapOwnerVisibility");
-    private static final Tooltip minimapOwnerVisibilityTooltip = Config.getTooltip("minimapOwnerVisibility");
+    private static final Component forcedVisibilityLabel = Component.translatable("mapfrontiers.forced_visibility");
     private static final Component titleAnnouncementAboveHotbarLabel = Config.getTranslatedName("titleAnnouncementAboveHotbar");
     private static final Tooltip titleAnnouncementAboveHotbarTooltip = Config.getTooltip("titleAnnouncementAboveHotbar");
     private static final Component announceUnnamedFrontiersLabel = Config.getTranslatedName("announceUnnamedFrontiers");
@@ -131,12 +122,6 @@ public class ModSettings extends AutoScaledScreen {
     private LinkButton buttonWeb;
     private LinkButton buttonCurseForge;
     private LinkButton buttonModrinth;
-    private StringWidget labelFullscreenVisibility;
-    private StringWidget labelFullscreenNameVisibility;
-    private StringWidget labelFullscreenOwnerVisibility;
-    private StringWidget labelMinimapVisibility;
-    private StringWidget labelMinimapNameVisibility;
-    private StringWidget labelMinimapOwnerVisibility;
     private StringWidget labelTitleAnnouncementAboveHotbar;
     private StringWidget labelAnnounceUnnamedFrontiers;
     private StringWidget labelHideNamesThatDontFit;
@@ -147,12 +132,6 @@ public class ModSettings extends AutoScaledScreen {
     private StringWidget labelAskConfirmationGroupDelete;
     private StringWidget labelAskConfirmationUserDelete;
     private StringWidget labelHUDEnabled;
-    private OptionButton buttonFullscreenVisibility;
-    private OptionButton buttonFullscreenNameVisibility;
-    private OptionButton buttonFullscreenOwnerVisibility;
-    private OptionButton buttonMinimapVisibility;
-    private OptionButton buttonMinimapNameVisibility;
-    private OptionButton buttonMinimapOwnerVisibility;
     private OptionButton buttonTitleAnnouncementAboveHotbar;
     private OptionButton buttonAnnounceUnnamedFrontiers;
     private OptionButton buttonHideNamesThatDontFit;
@@ -277,141 +256,91 @@ public class ModSettings extends AutoScaledScreen {
         generalLayout.addChild(SpacerElement.height(16));
         generalLayout.addChild(new StringWidget(frontiersLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT));
 
-        GridLayout visibilityLayout = new GridLayout().spacing(4);
-        visibilityLayout.defaultCellSetting().alignHorizontallyLeft();
-        generalLayout.addChild(visibilityLayout);
-
-        labelFullscreenVisibility = visibilityLayout.addChild(new StringWidget(fullscreenVisibilityLabel, font).setColor(ColorConstants.TEXT), 0, 0);
-        labelFullscreenVisibility.setTooltip(fullscreenVisibilityTooltip);
-        buttonFullscreenVisibility = visibilityLayout.addChild(new OptionButton(font, 80, (b) -> Config.fullscreenVisibility = Config.Visibility.values()[b.getSelected()]), 0, 1);
-        buttonFullscreenVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Custom));
-        buttonFullscreenVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Always));
-        buttonFullscreenVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Never));
-        buttonFullscreenVisibility.setSelected(Config.fullscreenVisibility.ordinal());
-
-        labelFullscreenNameVisibility = visibilityLayout.addChild(new StringWidget(fullscreenNameVisibilityLabel, font).setColor(ColorConstants.TEXT), 1, 0);
-        labelFullscreenNameVisibility.setTooltip(fullscreenNameVisibilityTooltip);
-        buttonFullscreenNameVisibility = visibilityLayout.addChild(new OptionButton(font, 80, (b) -> Config.fullscreenNameVisibility = Config.Visibility.values()[b.getSelected()]), 1, 1);
-        buttonFullscreenNameVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Custom));
-        buttonFullscreenNameVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Always));
-        buttonFullscreenNameVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Never));
-        buttonFullscreenNameVisibility.setSelected(Config.fullscreenNameVisibility.ordinal());
-
-        labelFullscreenOwnerVisibility = visibilityLayout.addChild(new StringWidget(fullscreenOwnerVisibilityLabel, font).setColor(ColorConstants.TEXT), 2, 0);
-        labelFullscreenOwnerVisibility.setTooltip(fullscreenOwnerVisibilityTooltip);
-        buttonFullscreenOwnerVisibility = visibilityLayout.addChild(new OptionButton(font, 80, (b) -> Config.fullscreenOwnerVisibility = Config.Visibility.values()[b.getSelected()]), 2, 1);
-        buttonFullscreenOwnerVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Custom));
-        buttonFullscreenOwnerVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Always));
-        buttonFullscreenOwnerVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Never));
-        buttonFullscreenOwnerVisibility.setSelected(Config.fullscreenOwnerVisibility.ordinal());
-
-        visibilityLayout.addChild(SpacerElement.width(16), 0, 2);
-
-        labelMinimapVisibility = visibilityLayout.addChild(new StringWidget(minimapVisibilityLabel, font).setColor(ColorConstants.TEXT), 0, 3);
-        labelMinimapVisibility.setTooltip(minimapVisibilityTooltip);
-        buttonMinimapVisibility = visibilityLayout.addChild(new OptionButton(font, 80, (b) -> Config.minimapVisibility = Config.Visibility.values()[b.getSelected()]), 0, 4);
-        buttonMinimapVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Custom));
-        buttonMinimapVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Always));
-        buttonMinimapVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Never));
-        buttonMinimapVisibility.setSelected(Config.minimapVisibility.ordinal());
-
-        labelMinimapNameVisibility = visibilityLayout.addChild(new StringWidget(minimapNameVisibilityLabel, font).setColor(ColorConstants.TEXT), 1, 3);
-        labelMinimapNameVisibility.setTooltip(minimapNameVisibilityTooltip);
-        buttonMinimapNameVisibility = visibilityLayout.addChild(new OptionButton(font, 80, (b) -> Config.minimapNameVisibility = Config.Visibility.values()[b.getSelected()]), 1, 4);
-        buttonMinimapNameVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Custom));
-        buttonMinimapNameVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Always));
-        buttonMinimapNameVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Never));
-        buttonMinimapNameVisibility.setSelected(Config.minimapNameVisibility.ordinal());
-
-        labelMinimapOwnerVisibility = visibilityLayout.addChild(new StringWidget(minimapOwnerVisibilityLabel, font).setColor(ColorConstants.TEXT), 2, 3);
-        labelMinimapOwnerVisibility.setTooltip(minimapOwnerVisibilityTooltip);
-        buttonMinimapOwnerVisibility = visibilityLayout.addChild(new OptionButton(font, 80, (b) -> Config.minimapOwnerVisibility = Config.Visibility.values()[b.getSelected()]), 2, 4);
-        buttonMinimapOwnerVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Custom));
-        buttonMinimapOwnerVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Always));
-        buttonMinimapOwnerVisibility.addOption(Config.getTranslatedEnum(Config.Visibility.Never));
-        buttonMinimapOwnerVisibility.setSelected(Config.minimapOwnerVisibility.ordinal());
-
-        generalLayout.addChild(SpacerElement.height(8));
-
         GridLayout miscLayout = new GridLayout().spacing(4);
         miscLayout.defaultCellSetting().alignHorizontallyLeft();
         generalLayout.addChild(miscLayout);
+        int row = 0;
 
-        labelTitleAnnouncementAboveHotbar = miscLayout.addChild(new StringWidget(titleAnnouncementAboveHotbarLabel, font).setColor(ColorConstants.TEXT), 0, 0);
+        labelTitleAnnouncementAboveHotbar = miscLayout.addChild(new StringWidget(titleAnnouncementAboveHotbarLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelTitleAnnouncementAboveHotbar.setTooltip(titleAnnouncementAboveHotbarTooltip);
-        buttonTitleAnnouncementAboveHotbar = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.titleAnnouncementAboveHotbar = b.getSelected() == 0), 0, 1);
+        buttonTitleAnnouncementAboveHotbar = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.titleAnnouncementAboveHotbar = b.getSelected() == 0), row++, 1);
         buttonTitleAnnouncementAboveHotbar.addOption(onLabel);
         buttonTitleAnnouncementAboveHotbar.addOption(offLabel);
         buttonTitleAnnouncementAboveHotbar.setSelected(Config.titleAnnouncementAboveHotbar ? 0 : 1);
 
-        labelAnnounceUnnamedFrontiers = miscLayout.addChild(new StringWidget(announceUnnamedFrontiersLabel, font).setColor(ColorConstants.TEXT), 1, 0);
+        labelAnnounceUnnamedFrontiers = miscLayout.addChild(new StringWidget(announceUnnamedFrontiersLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelAnnounceUnnamedFrontiers.setTooltip(announceUnnamedFrontiersTooltip);
-        buttonAnnounceUnnamedFrontiers = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.announceUnnamedFrontiers = b.getSelected() == 0), 1, 1);
+        buttonAnnounceUnnamedFrontiers = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.announceUnnamedFrontiers = b.getSelected() == 0), row++, 1);
         buttonAnnounceUnnamedFrontiers.addOption(onLabel);
         buttonAnnounceUnnamedFrontiers.addOption(offLabel);
         buttonAnnounceUnnamedFrontiers.setSelected(Config.announceUnnamedFrontiers ? 0 : 1);
 
-        labelHideNamesThatDontFit = miscLayout.addChild(new StringWidget(hideNamesThatDontFitLabel, font).setColor(ColorConstants.TEXT), 2, 0);
+        labelHideNamesThatDontFit = miscLayout.addChild(new StringWidget(hideNamesThatDontFitLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelHideNamesThatDontFit.setTooltip(hideNamesThatDontFitTooltip);
-        buttonHideNamesThatDontFit = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.hideNamesThatDontFit = b.getSelected() == 0), 2, 1);
+        buttonHideNamesThatDontFit = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.hideNamesThatDontFit = b.getSelected() == 0), row++, 1);
         buttonHideNamesThatDontFit.addOption(onLabel);
         buttonHideNamesThatDontFit.addOption(offLabel);
         buttonHideNamesThatDontFit.setSelected(Config.hideNamesThatDontFit ? 0 : 1);
 
-        labelPolygonsOpacity = miscLayout.addChild(new StringWidget(polygonsOpacityLabel, font).setColor(ColorConstants.TEXT), 3, 0);
+        labelPolygonsOpacity = miscLayout.addChild(new StringWidget(polygonsOpacityLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelPolygonsOpacity.setTooltip(polygonsOpacityTooltip);
-        textPolygonsOpacity = miscLayout.addChild(new TextBoxDouble(0.4, 0.0, 1.0, font, 40), 3, 1);
+        textPolygonsOpacity = miscLayout.addChild(new TextBoxDouble(0.4, 0.0, 1.0, font, 40), row++, 1);
         textPolygonsOpacity.setValue(String.valueOf(Config.polygonsOpacity));
         textPolygonsOpacity.setMaxLength(6);
         textPolygonsOpacity.setValueChangedCallback(value -> Config.polygonsOpacity = value);
 
-        labelSnapDistance = miscLayout.addChild(new StringWidget(snapDistanceLabel, font).setColor(ColorConstants.TEXT), 4, 0);
+        labelSnapDistance = miscLayout.addChild(new StringWidget(snapDistanceLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelSnapDistance.setTooltip(snapDistanceTooltip);
-        textSnapDistance = miscLayout.addChild(new TextBoxInt(8, 0, 16, font, 40), 4, 1);
+        textSnapDistance = miscLayout.addChild(new TextBoxInt(8, 0, 16, font, 40), row++, 1);
         textSnapDistance.setValue(String.valueOf(Config.snapDistance));
         textSnapDistance.setMaxLength(2);
         textSnapDistance.setValueChangedCallback(value -> Config.snapDistance = value);
 
-        miscLayout.addChild(SpacerElement.height(4), 5, 0);
-        miscLayout.addChild(new StringWidget(guiLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT), 6, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
+        SimpleButton buttonVisibility = new SimpleButton(font, 144, forcedVisibilityLabel, (b) -> {
+            new VisibilityDialog(createForcedVisibility(), createForcedVisibilityMask(), this::setForcedVisibility).display();
+        });
+        miscLayout.addChild(buttonVisibility, row++, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
 
-        labelFullscreenButtons = miscLayout.addChild(new StringWidget(fullscreenButtonsLabel, font).setColor(ColorConstants.TEXT), 7, 0);
+        miscLayout.addChild(SpacerElement.height(4), row++, 0);
+        miscLayout.addChild(new StringWidget(guiLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT), row++, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
+
+        labelFullscreenButtons = miscLayout.addChild(new StringWidget(fullscreenButtonsLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelFullscreenButtons.setTooltip(fullscreenButtonsTooltip);
-        buttonFullscreenButtons = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.fullscreenButtons = b.getSelected() == 0), 7, 1);
+        buttonFullscreenButtons = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.fullscreenButtons = b.getSelected() == 0), row++, 1);
         buttonFullscreenButtons.addOption(onLabel);
         buttonFullscreenButtons.addOption(offLabel);
         buttonFullscreenButtons.setSelected(Config.fullscreenButtons ? 0 : 1);
 
-        labelAskConfirmationFrontierDelete = miscLayout.addChild(new StringWidget(askConfirmationFrontierDeleteLabel, font).setColor(ColorConstants.TEXT), 8, 0);
+        labelAskConfirmationFrontierDelete = miscLayout.addChild(new StringWidget(askConfirmationFrontierDeleteLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelAskConfirmationFrontierDelete.setTooltip(askConfirmationFrontierDeleteTooltip);
-        buttonAskConfirmationFrontierDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationFrontierDelete = b.getSelected() == 0), 8, 1);
+        buttonAskConfirmationFrontierDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationFrontierDelete = b.getSelected() == 0), row++, 1);
         buttonAskConfirmationFrontierDelete.addOption(onLabel);
         buttonAskConfirmationFrontierDelete.addOption(offLabel);
         buttonAskConfirmationFrontierDelete.setSelected(Config.askConfirmationFrontierDelete ? 0 : 1);
 
-        labelAskConfirmationGroupDelete = miscLayout.addChild(new StringWidget(askConfirmationGroupDeleteLabel, font).setColor(ColorConstants.TEXT), 9, 0);
+        labelAskConfirmationGroupDelete = miscLayout.addChild(new StringWidget(askConfirmationGroupDeleteLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelAskConfirmationGroupDelete.setTooltip(askConfirmationGroupDeleteTooltip);
-        buttonAskConfirmationGroupDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationGroupDelete = b.getSelected() == 0), 9, 1);
+        buttonAskConfirmationGroupDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationGroupDelete = b.getSelected() == 0), row++, 1);
         buttonAskConfirmationGroupDelete.addOption(onLabel);
         buttonAskConfirmationGroupDelete.addOption(offLabel);
         buttonAskConfirmationGroupDelete.setSelected(Config.askConfirmationGroupDelete ? 0 : 1);
 
-        labelAskConfirmationUserDelete = miscLayout.addChild(new StringWidget(askConfirmationUserDeleteLabel, font).setColor(ColorConstants.TEXT), 10, 0);
+        labelAskConfirmationUserDelete = miscLayout.addChild(new StringWidget(askConfirmationUserDeleteLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelAskConfirmationUserDelete.setTooltip(askConfirmationUserDeleteTooltip);
-        buttonAskConfirmationUserDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationUserDelete = b.getSelected() == 0), 10, 1);
+        buttonAskConfirmationUserDelete = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.askConfirmationUserDelete = b.getSelected() == 0), row++, 1);
         buttonAskConfirmationUserDelete.addOption(onLabel);
         buttonAskConfirmationUserDelete.addOption(offLabel);
         buttonAskConfirmationUserDelete.setSelected(Config.askConfirmationUserDelete ? 0 : 1);
 
-        miscLayout.addChild(SpacerElement.height(4), 11, 0);
-        miscLayout.addChild(new StringWidget(hudLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT), 12, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
+        miscLayout.addChild(SpacerElement.height(4), row++, 0);
+        miscLayout.addChild(new StringWidget(hudLabel, font).setColor(ColorConstants.TEXT_HIGHLIGHT), row++, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
 
-        labelHUDEnabled = miscLayout.addChild(new StringWidget(hudEnabledLabel, font).setColor(ColorConstants.TEXT), 13, 0);
+        labelHUDEnabled = miscLayout.addChild(new StringWidget(hudEnabledLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelHUDEnabled.setTooltip(hudEnabledTooltip);
         buttonHUDEnabled = miscLayout.addChild(new OptionButton(font, 40, (b) -> {
             Config.hudEnabled = b.getSelected() == 0;
             updateButtonsVisibility();
-        }), 13, 1);
+        }), row++, 1);
         buttonHUDEnabled.addOption(onLabel);
         buttonHUDEnabled.addOption(offLabel);
         buttonHUDEnabled.setSelected(Config.hudEnabled ? 0 : 1);
@@ -650,6 +579,53 @@ public class ModSettings extends AutoScaledScreen {
         }
 
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    private FrontierData.VisibilityData createForcedVisibility() {
+        FrontierData.VisibilityData visibilityData = new FrontierData.VisibilityData();
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Visible, Config.frontierVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenVisible, Config.fullscreenVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenNameVisible, Config.fullscreenNameVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenOwnerVisible, Config.fullscreenOwnerVisibility == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapVisible, Config.minimapVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapNameVisible, Config.minimapNameVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapOwnerVisible, Config.minimapOwnerVisibility == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInChat, Config.announceInChat == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInTitle, Config.announceInTitle == Config.Visibility.Always);
+        return visibilityData;
+    }
+
+    private FrontierData.VisibilityData createForcedVisibilityMask() {
+        FrontierData.VisibilityData visibilityData = new FrontierData.VisibilityData();
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Visible, Config.frontierVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenVisible, Config.fullscreenVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenNameVisible, Config.fullscreenNameVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenOwnerVisible, Config.fullscreenOwnerVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapVisible, Config.minimapVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapNameVisible, Config.minimapNameVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapOwnerVisible, Config.minimapOwnerVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInChat, Config.announceInChat != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInTitle, Config.announceInTitle != Config.Visibility.Custom);
+        return visibilityData;
+    }
+
+    private void setForcedVisibility(FrontierData.VisibilityData visibilityData, FrontierData.VisibilityData visibilityDataMask) {
+        Config.frontierVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.Visible);
+        Config.fullscreenVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenVisible);
+        Config.fullscreenNameVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenNameVisible);
+        Config.fullscreenOwnerVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenOwnerVisible);
+        Config.minimapVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapVisible);
+        Config.minimapNameVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapNameVisible);
+        Config.minimapOwnerVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapOwnerVisible);
+        Config.announceInChat = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.AnnounceInChat);
+        Config.announceInTitle = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.AnnounceInTitle);
+    }
+
+    private Config.Visibility getVisibilityValue(FrontierData.VisibilityData visibilityData, FrontierData.VisibilityData visibilityDataMask, FrontierData.VisibilityData.Visibility visibility) {
+        if (visibilityDataMask.getValue(visibility)) {
+            return visibilityData.getValue(visibility) ? Config.Visibility.Always : Config.Visibility.Never;
+        }
+        return Config.Visibility.Custom;
     }
 
     private void newGroupPressed() {

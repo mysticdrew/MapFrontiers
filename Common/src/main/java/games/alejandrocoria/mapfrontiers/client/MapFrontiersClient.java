@@ -77,7 +77,7 @@ public class MapFrontiersClient {
                 new ModSettings(false).display();
             }
 
-            if (player == null) {
+            if (player == null || Config.frontierVisibility == Config.Visibility.Never) {
                 return;
             }
 

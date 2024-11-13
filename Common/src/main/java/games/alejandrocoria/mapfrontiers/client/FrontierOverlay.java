@@ -103,7 +103,7 @@ public class FrontierOverlay extends FrontierData {
             vertexSelected = vertices.size() - 1;
         }
 
-        if (other.hasChange(Change.Name) || other.hasChange(Change.Vertices) || other.hasChange(Change.Other)) {
+        if (other.hasChange(Change.Name) || other.hasChange(Change.Vertices) || other.hasChange(Change.Color)) {
             updateOverlay();
         }
 
@@ -128,15 +128,7 @@ public class FrontierOverlay extends FrontierData {
             hash = prime * hash + ((dimension == null) ? 0 : dimension.hashCode());
             hash = prime * hash + ((name1 == null) ? 0 : name1.hashCode());
             hash = prime * hash + ((name2 == null) ? 0 : name2.hashCode());
-            hash = prime * hash + (visible ? 1231 : 1237);
-            hash = prime * hash + (fullscreenVisible ? 1231 : 1237);
-            hash = prime * hash + (fullscreenNameVisible ? 1231 : 1237);
-            hash = prime * hash + (fullscreenOwnerVisible ? 1231 : 1237);
-            hash = prime * hash + (minimapVisible ? 1231 : 1237);
-            hash = prime * hash + (minimapNameVisible ? 1231 : 1237);
-            hash = prime * hash + (minimapOwnerVisible ? 1231 : 1237);
-            hash = prime * hash + (announceInChat ? 1231 : 1237);
-            hash = prime * hash + (announceInTitle ? 1231 : 1237);
+            hash = prime * hash + visibilityData.getHash();
             hash = prime * hash + ((vertices == null) ? 0 : vertices.hashCode());
             hash = prime * hash + ((chunks == null) ? 0 : chunks.hashCode());
             hash = prime * hash + mode.ordinal();
@@ -164,7 +156,7 @@ public class FrontierOverlay extends FrontierData {
         removeOverlay();
         recalculateOverlays();
 
-        if (visible) {
+        if (Config.getVisibilityValue(Config.frontierVisibility, getVisible())) {
             try {
                 for (PolygonOverlay polygon : polygonOverlays) {
                     jmAPI.show(polygon);
@@ -453,6 +445,11 @@ public class FrontierOverlay extends FrontierData {
         needUpdateOverlay = true;
     }
 
+    public void setVisibilityData(VisibilityData visibilityData) {
+        super.setVisibilityData(visibilityData);
+        needUpdateOverlay = true;
+    }
+
     @Override
     public void setColor(int color) {
         super.setColor(color);
@@ -690,12 +687,12 @@ public class FrontierOverlay extends FrontierData {
         PolygonOverlay polygonOverlayFullscreen = null;
         PolygonOverlay polygonOverlayMinimap = null;
 
-        boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, fullscreenVisible);
-        boolean fullscreenNameV = Config.getVisibilityValue(Config.fullscreenNameVisibility, fullscreenNameVisible);
-        boolean fullscreenOwnerV = Config.getVisibilityValue(Config.fullscreenOwnerVisibility, fullscreenOwnerVisible);
-        boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, minimapVisible);
-        boolean minimapNameV = Config.getVisibilityValue(Config.minimapNameVisibility, minimapNameVisible);
-        boolean minimapOwnerV = Config.getVisibilityValue(Config.minimapOwnerVisibility, minimapOwnerVisible);
+        boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, getFullscreenVisible());
+        boolean fullscreenNameV = Config.getVisibilityValue(Config.fullscreenNameVisibility, getFullscreenNameVisible());
+        boolean fullscreenOwnerV = Config.getVisibilityValue(Config.fullscreenOwnerVisibility, getFullscreenOwnerVisible());
+        boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, getMinimapVisible());
+        boolean minimapNameV = Config.getVisibilityValue(Config.minimapNameVisibility, getMinimapNameVisible());
+        boolean minimapOwnerV = Config.getVisibilityValue(Config.minimapOwnerVisibility, getMinimapOwnerVisible());
 
         if (fullscreenV && minimapV && (fullscreenNameV == minimapNameV) && (fullscreenOwnerV == minimapOwnerV)) {
             polygonOverlay = new PolygonOverlay(MapFrontiers.MODID, dimension, shapeProps, polygon, polygonHoles);
@@ -740,8 +737,8 @@ public class FrontierOverlay extends FrontierData {
                 }
                 area = abs(area);
             } else {
-                boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, fullscreenVisible);
-                boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, minimapVisible);
+                boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, getFullscreenVisible());
+                boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, getMinimapVisible());
                 if (fullscreenV || minimapV) {
                     List<Context.UI> ui = new ArrayList<>();
                     if (fullscreenV && minimapV) {

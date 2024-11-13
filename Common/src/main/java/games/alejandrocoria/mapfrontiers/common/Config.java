@@ -78,12 +78,15 @@ public class Config {
     public static boolean pasteOptionsVisible;
 
     // Frontiers
+    public static Visibility frontierVisibility;
     public static Visibility fullscreenVisibility;
     public static Visibility fullscreenNameVisibility;
     public static Visibility fullscreenOwnerVisibility;
     public static Visibility minimapVisibility;
     public static Visibility minimapNameVisibility;
     public static Visibility minimapOwnerVisibility;
+    public static Visibility announceInChat;
+    public static Visibility announceInTitle;
     public static boolean titleAnnouncementAboveHotbar;
     public static boolean announceUnnamedFrontiers;
     public static boolean hideNamesThatDontFit;
@@ -130,12 +133,15 @@ public class Config {
         pasteBanner = CLIENT.pasteBanner.get();
         pasteOptionsVisible = CLIENT.pasteOptionsVisible.get();
 
+        frontierVisibility = CLIENT.frontierVisibility.get();
         fullscreenVisibility = CLIENT.fullscreenVisibility.get();
         fullscreenNameVisibility = CLIENT.fullscreenNameVisibility.get();
         fullscreenOwnerVisibility = CLIENT.fullscreenOwnerVisibility.get();
         minimapVisibility = CLIENT.minimapVisibility.get();
         minimapNameVisibility = CLIENT.minimapNameVisibility.get();
         minimapOwnerVisibility = CLIENT.minimapOwnerVisibility.get();
+        announceInChat = CLIENT.announceInChat.get();
+        announceInTitle = CLIENT.announceInTitle.get();
         titleAnnouncementAboveHotbar = CLIENT.titleAnnouncementAboveHotbar.get();
         announceUnnamedFrontiers = CLIENT.announceUnnamedFrontiers.get();
         hideNamesThatDontFit = CLIENT.hideNamesThatDontFit.get();
@@ -180,12 +186,15 @@ public class Config {
         public final BooleanValue pasteBanner;
         public final BooleanValue pasteOptionsVisible;
 
+        public final EnumValue<Visibility> frontierVisibility;
         public final EnumValue<Visibility> fullscreenVisibility;
         public final EnumValue<Visibility> fullscreenNameVisibility;
         public final EnumValue<Visibility> fullscreenOwnerVisibility;
         public final EnumValue<Visibility> minimapVisibility;
         public final EnumValue<Visibility> minimapNameVisibility;
         public final EnumValue<Visibility> minimapOwnerVisibility;
+        public final EnumValue<Visibility> announceInChat;
+        public final EnumValue<Visibility> announceInTitle;
         public final BooleanValue titleAnnouncementAboveHotbar;
         public final BooleanValue announceUnnamedFrontiers;
         public final BooleanValue hideNamesThatDontFit;
@@ -229,30 +238,42 @@ public class Config {
             pasteBanner = builder.define("pasteBanner", true);
             pasteOptionsVisible = builder.define("pasteOptionsVisible", false);
 
+            frontierVisibility = builder.comment(
+                    "Force all frontier to be shown or hidden. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "frontierVisibility")
+                    .defineEnum("frontierVisibility", Visibility.Custom);
             fullscreenVisibility = builder.comment(
-                    "Force all frontier to be shown or hidden on the fullscreen map. In Manual you can decide for each frontier.")
+                    "Force all frontier to be shown or hidden on the fullscreen map. In Custom you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "fullscreenVisibility")
                     .defineEnum("fullscreenVisibility", Visibility.Custom);
             fullscreenNameVisibility = builder.comment(
-                    "Force all frontier names to be shown or hidden on the fullscreen map. In Manual you can decide for each frontier.")
+                    "Force all frontier names to be shown or hidden on the fullscreen map. In Custom you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "fullscreenNameVisibility")
                     .defineEnum("fullscreenNameVisibility", Visibility.Custom);
             fullscreenOwnerVisibility = builder.comment(
-                    "Force all frontier owners to be shown or hidden on the fullscreen map. In Manual you can decide for each frontier.")
+                    "Force all frontier owners to be shown or hidden on the fullscreen map. In Custom you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "fullscreenOwnerVisibility")
                     .defineEnum("fullscreenOwnerVisibility", Visibility.Custom);
             minimapVisibility = builder.comment(
-                    "Force all frontier to be shown or hidden on the minimap. In Manual you can decide for each frontier.")
+                    "Force all frontier to be shown or hidden on the minimap. In Custom you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "minimapVisibility")
                     .defineEnum("minimapVisibility", Visibility.Custom);
             minimapNameVisibility = builder.comment(
-                    "Force all frontier names to be shown or hidden on the minimap. In Manual you can decide for each frontier.")
+                    "Force all frontier names to be shown or hidden on the minimap. In Custom you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "minimapNameVisibility")
                     .defineEnum("minimapNameVisibility", Visibility.Custom);
             minimapOwnerVisibility = builder.comment(
-                    "Force all frontier owners to be shown or hidden on the minimap. In Manual you can decide for each frontier.")
+                    "Force all frontier owners to be shown or hidden on the minimap. In Custom you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "minimapOwnerVisibility")
                     .defineEnum("minimapOwnerVisibility", Visibility.Custom);
+            announceInChat = builder.comment(
+                    "Force all frontier to be announced in chat. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "announceInChat")
+                    .defineEnum("announceInChat", Visibility.Custom);
+            announceInTitle = builder.comment(
+                    "Force all frontier to be announced as a title. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "announceInTitle")
+                    .defineEnum("announceInTitle", Visibility.Custom);
             titleAnnouncementAboveHotbar = builder.comment(
                     "Show the frontier announcement above the hotbar instead of showing it as a title.")
                     .translation(MapFrontiers.MODID + ".config." + "titleAnnouncementAboveHotbar")
@@ -333,12 +354,15 @@ public class Config {
         CLIENT.pasteBanner.set(pasteBanner);
         CLIENT.pasteOptionsVisible.set(pasteOptionsVisible);
 
+        CLIENT.frontierVisibility.set(frontierVisibility);
         CLIENT.fullscreenVisibility.set(fullscreenVisibility);
         CLIENT.fullscreenNameVisibility.set(fullscreenNameVisibility);
         CLIENT.fullscreenOwnerVisibility.set(fullscreenOwnerVisibility);
         CLIENT.minimapVisibility.set(minimapVisibility);
         CLIENT.minimapNameVisibility.set(minimapNameVisibility);
         CLIENT.minimapOwnerVisibility.set(minimapOwnerVisibility);
+        CLIENT.announceInChat.set(announceInChat);
+        CLIENT.announceInTitle.set(announceInTitle);
         CLIENT.titleAnnouncementAboveHotbar.set(titleAnnouncementAboveHotbar);
         CLIENT.announceUnnamedFrontiers.set(announceUnnamedFrontiers);
         CLIENT.hideNamesThatDontFit.set(hideNamesThatDontFit);
