@@ -356,7 +356,7 @@ public class FullscreenMap {
             return false;
         }
 
-        float snapDistance = (float) Math.pow(2.0, Math.max(4.0 - uiState.zoom, 1.0));
+        float snapDistance = 512.f / uiState.zoom * Config.snapDistance;
         frontierHighlighted.moveSelectedVertex(position, snapDistance);
         return true;
     }
