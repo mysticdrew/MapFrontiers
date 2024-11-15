@@ -9,7 +9,6 @@ import games.alejandrocoria.mapfrontiers.client.gui.screen.AutoScaledScreen;
 import games.alejandrocoria.mapfrontiers.common.FrontierData;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.layouts.GridLayout;
-import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -28,6 +27,11 @@ public class VisibilityDialog extends AutoScaledScreen {
     private static final Component showNameLabel = Component.translatable("mapfrontiers.show_name");
     private static final Component showOwnerLabel = Component.translatable("mapfrontiers.show_owner");
     private static final Component minimapLabel = Component.translatable("mapfrontiers.minimap");
+    private static final Component dayLabel = Component.translatable("mapfrontiers.day");
+    private static final Component nightLabel = Component.translatable("mapfrontiers.night");
+    private static final Component undergroundLabel = Component.translatable("mapfrontiers.underground");
+    private static final Component topoLabel = Component.translatable("mapfrontiers.topo");
+    private static final Component biomeLabel = Component.translatable("mapfrontiers.biome");
     private static final Component doneLabel = Component.translatable("gui.done");
     private static final Component onLabel = Component.translatable("options.on");
     private static final Component offLabel = Component.translatable("options.off");
@@ -61,26 +65,48 @@ public class VisibilityDialog extends AutoScaledScreen {
         LinearLayout mainColumns = LinearLayout.horizontal().spacing(16);
         mainLayout.addChild(mainColumns);
 
-        GridLayout generalColumn = new GridLayout().spacing(4);
+        LinearLayout generalColumn = LinearLayout.vertical().spacing(6);
+        generalColumn.defaultCellSetting().alignHorizontallyCenter();
         mainColumns.addChild(generalColumn);
-        generalColumn.addChild(new StringWidget(generalLabel.copy().withStyle(Style.EMPTY.withBold(true)), font).setColor(ColorConstants.TEXT), 0, 0, 1, 3, LayoutSettings.defaults().alignHorizontallyCenter());
-        createWidgets(generalColumn, 1, showFrontierLabel, FrontierData.VisibilityData.Visibility.Visible);
-        createWidgets(generalColumn, 2, announceInChatLabel, FrontierData.VisibilityData.Visibility.AnnounceInChat);
-        createWidgets(generalColumn, 3, announceInTitleLabel, FrontierData.VisibilityData.Visibility.AnnounceInTitle);
+        generalColumn.addChild(new StringWidget(generalLabel.copy().withStyle(Style.EMPTY.withBold(true)), font).setColor(ColorConstants.TEXT));
 
-        GridLayout fullscreenColumn = new GridLayout().spacing(4);
+        GridLayout generalGrid = new GridLayout().spacing(4);
+        generalColumn.addChild(generalGrid);
+        createWidgets(generalGrid, 1, showFrontierLabel, FrontierData.VisibilityData.Visibility.Frontier);
+        createWidgets(generalGrid, 2, announceInChatLabel, FrontierData.VisibilityData.Visibility.AnnounceInChat);
+        createWidgets(generalGrid, 3, announceInTitleLabel, FrontierData.VisibilityData.Visibility.AnnounceInTitle);
+
+        LinearLayout fullscreenColumn = LinearLayout.vertical().spacing(6);
+        fullscreenColumn.defaultCellSetting().alignHorizontallyCenter();
         mainColumns.addChild(fullscreenColumn);
-        fullscreenColumn.addChild(new StringWidget(fullscreenLabel.copy().withStyle(Style.EMPTY.withBold(true)), font).setColor(ColorConstants.TEXT), 0, 0, 1, 3, LayoutSettings.defaults().alignHorizontallyCenter());
-        createWidgets(fullscreenColumn, 1, showFrontierLabel, FrontierData.VisibilityData.Visibility.FullscreenVisible);
-        createWidgets(fullscreenColumn, 2, showNameLabel, FrontierData.VisibilityData.Visibility.FullscreenNameVisible);
-        createWidgets(fullscreenColumn, 3, showOwnerLabel, FrontierData.VisibilityData.Visibility.FullscreenOwnerVisible);
+        fullscreenColumn.addChild(new StringWidget(fullscreenLabel.copy().withStyle(Style.EMPTY.withBold(true)), font).setColor(ColorConstants.TEXT));
 
-        GridLayout minimapColumn = new GridLayout().spacing(4);
+        GridLayout fullscreenGrid = new GridLayout().spacing(4);
+        fullscreenColumn.addChild(fullscreenGrid);
+        createWidgets(fullscreenGrid, 1, showFrontierLabel, FrontierData.VisibilityData.Visibility.Fullscreen);
+        createWidgets(fullscreenGrid, 2, showNameLabel, FrontierData.VisibilityData.Visibility.FullscreenName);
+        createWidgets(fullscreenGrid, 3, showOwnerLabel, FrontierData.VisibilityData.Visibility.FullscreenOwner);
+        createWidgets(fullscreenGrid, 4, dayLabel, FrontierData.VisibilityData.Visibility.FullscreenDay);
+        createWidgets(fullscreenGrid, 5, nightLabel, FrontierData.VisibilityData.Visibility.FullscreenNight);
+        createWidgets(fullscreenGrid, 6, undergroundLabel, FrontierData.VisibilityData.Visibility.FullscreenUnderground);
+        createWidgets(fullscreenGrid, 7, topoLabel, FrontierData.VisibilityData.Visibility.FullscreenTopo);
+        createWidgets(fullscreenGrid, 8, biomeLabel, FrontierData.VisibilityData.Visibility.FullscreenBiome);
+
+        LinearLayout minimapColumn = LinearLayout.vertical().spacing(6);
+        minimapColumn.defaultCellSetting().alignHorizontallyCenter();
         mainColumns.addChild(minimapColumn);
-        minimapColumn.addChild(new StringWidget(minimapLabel.copy().withStyle(Style.EMPTY.withBold(true)), font).setColor(ColorConstants.TEXT), 0, 0, 1, 3, LayoutSettings.defaults().alignHorizontallyCenter());
-        createWidgets(minimapColumn, 1, showFrontierLabel, FrontierData.VisibilityData.Visibility.MinimapVisible);
-        createWidgets(minimapColumn, 2, showNameLabel, FrontierData.VisibilityData.Visibility.MinimapNameVisible);
-        createWidgets(minimapColumn, 3, showOwnerLabel, FrontierData.VisibilityData.Visibility.MinimapOwnerVisible);
+        minimapColumn.addChild(new StringWidget(minimapLabel.copy().withStyle(Style.EMPTY.withBold(true)), font).setColor(ColorConstants.TEXT));
+
+        GridLayout minimapGrid = new GridLayout().spacing(4);
+        minimapColumn.addChild(minimapGrid);
+        createWidgets(minimapGrid, 1, showFrontierLabel, FrontierData.VisibilityData.Visibility.Minimap);
+        createWidgets(minimapGrid, 2, showNameLabel, FrontierData.VisibilityData.Visibility.MinimapName);
+        createWidgets(minimapGrid, 3, showOwnerLabel, FrontierData.VisibilityData.Visibility.MinimapOwner);
+        createWidgets(minimapGrid, 4, dayLabel, FrontierData.VisibilityData.Visibility.MinimapDay);
+        createWidgets(minimapGrid, 5, nightLabel, FrontierData.VisibilityData.Visibility.MinimapNight);
+        createWidgets(minimapGrid, 6, undergroundLabel, FrontierData.VisibilityData.Visibility.MinimapUnderground);
+        createWidgets(minimapGrid, 7, topoLabel, FrontierData.VisibilityData.Visibility.MinimapTopo);
+        createWidgets(minimapGrid, 8, biomeLabel, FrontierData.VisibilityData.Visibility.MinimapBiome);
 
         doneButton = mainLayout.addChild(new SimpleButton(font, 100, doneLabel, (b) -> onClose()));
     }

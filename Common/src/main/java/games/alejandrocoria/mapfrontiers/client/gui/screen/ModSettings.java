@@ -583,42 +583,72 @@ public class ModSettings extends AutoScaledScreen {
 
     private FrontierData.VisibilityData createForcedVisibility() {
         FrontierData.VisibilityData visibilityData = new FrontierData.VisibilityData();
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Visible, Config.frontierVisibility != Config.Visibility.Never);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenVisible, Config.fullscreenVisibility != Config.Visibility.Never);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenNameVisible, Config.fullscreenNameVisibility != Config.Visibility.Never);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenOwnerVisible, Config.fullscreenOwnerVisibility == Config.Visibility.Always);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapVisible, Config.minimapVisibility != Config.Visibility.Never);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapNameVisible, Config.minimapNameVisibility != Config.Visibility.Never);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapOwnerVisible, Config.minimapOwnerVisibility == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Frontier, Config.frontierVisibility != Config.Visibility.Never);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInChat, Config.announceInChat == Config.Visibility.Always);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInTitle, Config.announceInTitle == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Fullscreen, Config.fullscreenVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenName, Config.fullscreenNameVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenOwner, Config.fullscreenOwnerVisibility == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenDay, Config.fullscreenDayVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenNight, Config.fullscreenNightVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenUnderground, Config.fullscreenUndergroundVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenTopo, Config.fullscreenTopoVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenBiome, Config.fullscreenBiomeVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Minimap, Config.minimapVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapName, Config.minimapNameVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapOwner, Config.minimapOwnerVisibility == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapDay, Config.minimapDayVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapNight, Config.minimapNightVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapUnderground, Config.minimapUndergroundVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapTopo, Config.minimapTopoVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapBiome, Config.minimapBiomeVisibility != Config.Visibility.Never);
         return visibilityData;
     }
 
     private FrontierData.VisibilityData createForcedVisibilityMask() {
         FrontierData.VisibilityData visibilityData = new FrontierData.VisibilityData();
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Visible, Config.frontierVisibility != Config.Visibility.Custom);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenVisible, Config.fullscreenVisibility != Config.Visibility.Custom);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenNameVisible, Config.fullscreenNameVisibility != Config.Visibility.Custom);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenOwnerVisible, Config.fullscreenOwnerVisibility != Config.Visibility.Custom);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapVisible, Config.minimapVisibility != Config.Visibility.Custom);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapNameVisible, Config.minimapNameVisibility != Config.Visibility.Custom);
-        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapOwnerVisible, Config.minimapOwnerVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Frontier, Config.frontierVisibility != Config.Visibility.Custom);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInChat, Config.announceInChat != Config.Visibility.Custom);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.AnnounceInTitle, Config.announceInTitle != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Fullscreen, Config.fullscreenVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenName, Config.fullscreenNameVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenOwner, Config.fullscreenOwnerVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenDay, Config.fullscreenDayVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenNight, Config.fullscreenNightVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenUnderground, Config.fullscreenUndergroundVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenTopo, Config.fullscreenTopoVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.FullscreenBiome, Config.fullscreenBiomeVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Minimap, Config.minimapVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapName, Config.minimapNameVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapOwner, Config.minimapOwnerVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapDay, Config.minimapDayVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapNight, Config.minimapNightVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapUnderground, Config.minimapUndergroundVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapTopo, Config.minimapTopoVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapBiome, Config.minimapBiomeVisibility != Config.Visibility.Custom);
         return visibilityData;
     }
 
     private void setForcedVisibility(FrontierData.VisibilityData visibilityData, FrontierData.VisibilityData visibilityDataMask) {
-        Config.frontierVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.Visible);
-        Config.fullscreenVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenVisible);
-        Config.fullscreenNameVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenNameVisible);
-        Config.fullscreenOwnerVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenOwnerVisible);
-        Config.minimapVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapVisible);
-        Config.minimapNameVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapNameVisible);
-        Config.minimapOwnerVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapOwnerVisible);
+        Config.frontierVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.Frontier);
         Config.announceInChat = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.AnnounceInChat);
         Config.announceInTitle = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.AnnounceInTitle);
+        Config.fullscreenVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.Fullscreen);
+        Config.fullscreenNameVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenName);
+        Config.fullscreenOwnerVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenOwner);
+        Config.fullscreenDayVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenDay);
+        Config.fullscreenNightVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenNight);
+        Config.fullscreenUndergroundVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenUnderground);
+        Config.fullscreenTopoVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenTopo);
+        Config.fullscreenBiomeVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.FullscreenBiome);
+        Config.minimapVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.Minimap);
+        Config.minimapNameVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapName);
+        Config.minimapOwnerVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapOwner);
+        Config.minimapDayVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapDay);
+        Config.minimapNightVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapNight);
+        Config.minimapUndergroundVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapUnderground);
+        Config.minimapTopoVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapTopo);
+        Config.minimapBiomeVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapBiome);
     }
 
     private Config.Visibility getVisibilityValue(FrontierData.VisibilityData visibilityData, FrontierData.VisibilityData visibilityDataMask, FrontierData.VisibilityData.Visibility visibility) {

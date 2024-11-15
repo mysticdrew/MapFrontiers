@@ -535,14 +535,14 @@ public class FrontierInfo extends AutoScaledScreen {
         }
         if (visibility) {
             frontier.setVisible(other.getVisible());
+            frontier.setAnnounceInChat(other.getAnnounceInChat());
+            frontier.setAnnounceInTitle(other.getAnnounceInTitle());
             frontier.setFullscreenVisible(other.getFullscreenVisible());
             frontier.setFullscreenNameVisible(other.getFullscreenNameVisible());
             frontier.setFullscreenOwnerVisible(other.getFullscreenOwnerVisible());
             frontier.setMinimapVisible(other.getMinimapVisible());
             frontier.setMinimapNameVisible(other.getMinimapNameVisible());
             frontier.setMinimapOwnerVisible(other.getMinimapOwnerVisible());
-            frontier.setAnnounceInChat(other.getAnnounceInChat());
-            frontier.setAnnounceInTitle(other.getAnnounceInTitle());
         }
         if (color) {
             frontier.setColor(other.getColor());

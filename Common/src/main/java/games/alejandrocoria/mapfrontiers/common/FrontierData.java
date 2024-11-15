@@ -290,66 +290,12 @@ public class FrontierData {
     }
 
     public void setVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.Visible, visible);
+        this.visibilityData.setValue(VisibilityData.Visibility.Frontier, visible);
         changes.add(Change.Visibility);
     }
 
     public boolean getVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.Visible);
-    }
-
-    public void setFullscreenVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenVisible, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenVisible);
-    }
-
-    public void setMinimapVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapVisible, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapVisible);
-    }
-
-    public void setFullscreenNameVisible(boolean nameVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenNameVisible, nameVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenNameVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenNameVisible);
-    }
-
-    public void setFullscreenOwnerVisible(boolean ownerVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenOwnerVisible, ownerVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenOwnerVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenOwnerVisible);
-    }
-
-    public void setMinimapNameVisible(boolean nameVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapNameVisible, nameVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapNameVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapNameVisible);
-    }
-
-    public void setMinimapOwnerVisible(boolean ownerVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapOwnerVisible, ownerVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapOwnerVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapOwnerVisible);
+        return visibilityData.getValue(VisibilityData.Visibility.Frontier);
     }
 
     public void setAnnounceInChat(boolean announceInChat) {
@@ -368,6 +314,150 @@ public class FrontierData {
 
     public boolean getAnnounceInTitle() {
         return visibilityData.getValue(VisibilityData.Visibility.AnnounceInTitle);
+    }
+
+    public void setFullscreenVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.Fullscreen, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.Fullscreen);
+    }
+
+    public void setFullscreenNameVisible(boolean nameVisible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenName, nameVisible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenNameVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenName);
+    }
+
+    public void setFullscreenOwnerVisible(boolean ownerVisible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenOwner, ownerVisible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenOwnerVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenOwner);
+    }
+
+    public void setFullscreenDayVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenDay, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenDayVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenDay);
+    }
+
+    public void setFullscreenNightVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenNight, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenNightVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenNight);
+    }
+
+    public void setFullscreenUndergroundVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenUnderground, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenUndergroundVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenUnderground);
+    }
+
+    public void setFullscreenTopoVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenTopo, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenTopoVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenTopo);
+    }
+
+    public void setFullscreenBiomeVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenBiome, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getFullscreenBiomeVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.FullscreenBiome);
+    }
+
+    public void setMinimapVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.Minimap, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.Minimap);
+    }
+
+    public void setMinimapNameVisible(boolean nameVisible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapName, nameVisible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapNameVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapName);
+    }
+
+    public void setMinimapOwnerVisible(boolean ownerVisible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapOwner, ownerVisible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapOwnerVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapOwner);
+    }
+
+    public void setMinimapDayVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapDay, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapDayVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapDay);
+    }
+
+    public void setMinimapNightVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapNight, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapNightVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapNight);
+    }
+
+    public void setMinimapUndergroundVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapUnderground, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapUndergroundVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapUnderground);
+    }
+
+    public void setMinimapTopoVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapTopo, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapTopoVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapTopo);
+    }
+
+    public void setMinimapBiomeVisible(boolean visible) {
+        this.visibilityData.setValue(VisibilityData.Visibility.MinimapBiome, visible);
+        changes.add(Change.Visibility);
+    }
+
+    public boolean getMinimapBiomeVisible() {
+        return visibilityData.getValue(VisibilityData.Visibility.MinimapBiome);
     }
 
     public void setVisibilityData(VisibilityData visibilityData) {
@@ -951,26 +1041,46 @@ public class FrontierData {
 
     public static class VisibilityData {
         public enum Visibility {
-            Visible,
-            FullscreenVisible,
-            FullscreenNameVisible,
-            FullscreenOwnerVisible,
-            MinimapVisible,
-            MinimapNameVisible,
-            MinimapOwnerVisible,
+            Frontier,
             AnnounceInChat,
             AnnounceInTitle,
+            Fullscreen,
+            FullscreenName,
+            FullscreenOwner,
+            FullscreenDay,
+            FullscreenNight,
+            FullscreenUnderground,
+            FullscreenTopo,
+            FullscreenBiome,
+            Minimap,
+            MinimapName,
+            MinimapOwner,
+            MinimapDay,
+            MinimapNight,
+            MinimapUnderground,
+            MinimapTopo,
+            MinimapBiome,
         }
 
         private final EnumSet<Visibility> values;
 
         public VisibilityData() {
             values = EnumSet.of(
-                    Visibility.Visible,
-                    Visibility.FullscreenVisible,
-                    Visibility.FullscreenNameVisible,
-                    Visibility.MinimapVisible,
-                    Visibility.MinimapNameVisible
+                    Visibility.Frontier,
+                    Visibility.Fullscreen,
+                    Visibility.FullscreenName,
+                    Visibility.FullscreenDay,
+                    Visibility.FullscreenNight,
+                    Visibility.FullscreenUnderground,
+                    Visibility.FullscreenTopo,
+                    Visibility.FullscreenBiome,
+                    Visibility.Minimap,
+                    Visibility.MinimapName,
+                    Visibility.MinimapDay,
+                    Visibility.MinimapNight,
+                    Visibility.MinimapUnderground,
+                    Visibility.MinimapTopo,
+                    Visibility.MinimapBiome
             );
         }
 
@@ -1013,24 +1123,44 @@ public class FrontierData {
         public void readFromNBT(CompoundTag nbt, int version) {
             boolean splitVisibility = version >= 10;
 
-            setValue(Visibility.Visible, nbt.getBoolean("visible"));
+            setValue(Visibility.Frontier, nbt.getBoolean("visible"));
             if (splitVisibility)
             {
-                setValue(Visibility.FullscreenVisible, nbt.getBoolean("fullscreenVisible"));
-                setValue(Visibility.FullscreenNameVisible, nbt.getBoolean("fullscreenNameVisible"));
-                setValue(Visibility.FullscreenOwnerVisible, nbt.getBoolean("fullscreenOwnerVisible"));
-                setValue(Visibility.MinimapVisible, nbt.getBoolean("minimapVisible"));
-                setValue(Visibility.MinimapNameVisible, nbt.getBoolean("minimapNameVisible"));
-                setValue(Visibility.MinimapOwnerVisible, nbt.getBoolean("minimapOwnerVisible"));
+                setValue(Visibility.Fullscreen, nbt.getBoolean("fullscreenVisible"));
+                setValue(Visibility.FullscreenName, nbt.getBoolean("fullscreenNameVisible"));
+                setValue(Visibility.FullscreenOwner, nbt.getBoolean("fullscreenOwnerVisible"));
+                setValue(Visibility.FullscreenDay, nbt.contains("fullscreenDay") ? nbt.getBoolean("fullscreenDay") : true);
+                setValue(Visibility.FullscreenNight, nbt.contains("fullscreenNight") ? nbt.getBoolean("fullscreenNight") : true);
+                setValue(Visibility.FullscreenUnderground, nbt.contains("fullscreenUnderground") ? nbt.getBoolean("fullscreenUnderground") : true);
+                setValue(Visibility.FullscreenTopo, nbt.contains("fullscreenTopo") ? nbt.getBoolean("fullscreenTopo") : true);
+                setValue(Visibility.FullscreenBiome, nbt.contains("fullscreenBiome") ? nbt.getBoolean("fullscreenBiome") : true);
+                setValue(Visibility.Minimap, nbt.getBoolean("minimapVisible"));
+                setValue(Visibility.MinimapName, nbt.getBoolean("minimapNameVisible"));
+                setValue(Visibility.MinimapOwner, nbt.getBoolean("minimapOwnerVisible"));
+                setValue(Visibility.MinimapDay, nbt.contains("minimapDay") ? nbt.getBoolean("minimapDay") : true);
+                setValue(Visibility.MinimapNight, nbt.contains("minimapNight") ? nbt.getBoolean("minimapNight") : true);
+                setValue(Visibility.MinimapUnderground, nbt.contains("minimapUnderground") ? nbt.getBoolean("minimapUnderground") : true);
+                setValue(Visibility.MinimapTopo, nbt.contains("minimapTopo") ? nbt.getBoolean("minimapTopo") : true);
+                setValue(Visibility.MinimapBiome, nbt.contains("minimapBiome") ? nbt.getBoolean("minimapBiome") : true);
             }
             else
             {
-                setValue(Visibility.FullscreenVisible, nbt.getBoolean("visible"));
-                setValue(Visibility.FullscreenNameVisible, nbt.getBoolean("visible"));
-                setValue(Visibility.FullscreenOwnerVisible, nbt.getBoolean("nameVisible"));
-                setValue(Visibility.MinimapVisible, nbt.getBoolean("nameVisible"));
-                setValue(Visibility.MinimapNameVisible, nbt.getBoolean("ownerVisible"));
-                setValue(Visibility.MinimapOwnerVisible, nbt.getBoolean("ownerVisible"));
+                setValue(Visibility.Fullscreen, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenName, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenOwner, nbt.getBoolean("nameVisible"));
+                setValue(Visibility.FullscreenDay, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenNight, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenUnderground, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenTopo, nbt.getBoolean("visible"));
+                setValue(Visibility.FullscreenBiome, nbt.getBoolean("visible"));
+                setValue(Visibility.Minimap, nbt.getBoolean("visible"));
+                setValue(Visibility.MinimapName, nbt.getBoolean("nameVisible"));
+                setValue(Visibility.MinimapOwner, nbt.getBoolean("ownerVisible"));
+                setValue(Visibility.MinimapDay, nbt.getBoolean("visible"));
+                setValue(Visibility.MinimapNight, nbt.getBoolean("visible"));
+                setValue(Visibility.MinimapUnderground, nbt.getBoolean("visible"));
+                setValue(Visibility.MinimapTopo, nbt.getBoolean("visible"));
+                setValue(Visibility.MinimapBiome, nbt.getBoolean("visible"));
             }
 
             if (nbt.contains("announceInChat")) {
@@ -1042,39 +1172,69 @@ public class FrontierData {
         }
 
         public void writeToNBT(CompoundTag nbt) {
-            nbt.putBoolean("visible", getValue(Visibility.Visible));
-            nbt.putBoolean("fullscreenVisible", getValue(Visibility.FullscreenVisible));
-            nbt.putBoolean("fullscreenNameVisible", getValue(Visibility.FullscreenNameVisible));
-            nbt.putBoolean("fullscreenOwnerVisible", getValue(Visibility.FullscreenOwnerVisible));
-            nbt.putBoolean("minimapVisible", getValue(Visibility.MinimapVisible));
-            nbt.putBoolean("minimapNameVisible", getValue(Visibility.MinimapNameVisible));
-            nbt.putBoolean("minimapOwnerVisible", getValue(Visibility.MinimapOwnerVisible));
+            nbt.putBoolean("visible", getValue(Visibility.Frontier));
             nbt.putBoolean("announceInChat", getValue(Visibility.AnnounceInChat));
             nbt.putBoolean("announceInTitle", getValue(Visibility.AnnounceInTitle));
+            nbt.putBoolean("fullscreenVisible", getValue(Visibility.Fullscreen));
+            nbt.putBoolean("fullscreenNameVisible", getValue(Visibility.FullscreenName));
+            nbt.putBoolean("fullscreenOwnerVisible", getValue(Visibility.FullscreenOwner));
+            nbt.putBoolean("fullscreenDay", getValue(Visibility.FullscreenDay));
+            nbt.putBoolean("fullscreenNight", getValue(Visibility.FullscreenNight));
+            nbt.putBoolean("fullscreenUnderground", getValue(Visibility.FullscreenUnderground));
+            nbt.putBoolean("fullscreenTopo", getValue(Visibility.FullscreenTopo));
+            nbt.putBoolean("fullscreenBiome", getValue(Visibility.FullscreenBiome));
+            nbt.putBoolean("minimapVisible", getValue(Visibility.Minimap));
+            nbt.putBoolean("minimapNameVisible", getValue(Visibility.MinimapName));
+            nbt.putBoolean("minimapOwnerVisible", getValue(Visibility.MinimapOwner));
+            nbt.putBoolean("minimapDay", getValue(Visibility.MinimapDay));
+            nbt.putBoolean("minimapNight", getValue(Visibility.MinimapNight));
+            nbt.putBoolean("minimapUnderground", getValue(Visibility.MinimapUnderground));
+            nbt.putBoolean("minimapTopo", getValue(Visibility.MinimapTopo));
+            nbt.putBoolean("minimapBiome", getValue(Visibility.MinimapBiome));
         }
 
         public void fromBytes(FriendlyByteBuf buf) {
-            setValue(Visibility.Visible, buf.readBoolean());
-            setValue(Visibility.FullscreenVisible, buf.readBoolean());
-            setValue(Visibility.FullscreenNameVisible, buf.readBoolean());
-            setValue(Visibility.FullscreenOwnerVisible, buf.readBoolean());
-            setValue(Visibility.MinimapVisible, buf.readBoolean());
-            setValue(Visibility.MinimapNameVisible, buf.readBoolean());
-            setValue(Visibility.MinimapOwnerVisible, buf.readBoolean());
+            setValue(Visibility.Frontier, buf.readBoolean());
             setValue(Visibility.AnnounceInChat, buf.readBoolean());
             setValue(Visibility.AnnounceInTitle, buf.readBoolean());
+            setValue(Visibility.Fullscreen, buf.readBoolean());
+            setValue(Visibility.FullscreenName, buf.readBoolean());
+            setValue(Visibility.FullscreenOwner, buf.readBoolean());
+            setValue(Visibility.FullscreenDay, buf.readBoolean());
+            setValue(Visibility.FullscreenNight, buf.readBoolean());
+            setValue(Visibility.FullscreenUnderground, buf.readBoolean());
+            setValue(Visibility.FullscreenTopo, buf.readBoolean());
+            setValue(Visibility.FullscreenBiome, buf.readBoolean());
+            setValue(Visibility.Minimap, buf.readBoolean());
+            setValue(Visibility.MinimapName, buf.readBoolean());
+            setValue(Visibility.MinimapOwner, buf.readBoolean());
+            setValue(Visibility.MinimapDay, buf.readBoolean());
+            setValue(Visibility.MinimapNight, buf.readBoolean());
+            setValue(Visibility.MinimapUnderground, buf.readBoolean());
+            setValue(Visibility.MinimapTopo, buf.readBoolean());
+            setValue(Visibility.MinimapBiome, buf.readBoolean());
         }
 
         public void toBytes(FriendlyByteBuf buf) {
-            buf.writeBoolean(getValue(Visibility.Visible));
-            buf.writeBoolean(getValue(Visibility.FullscreenVisible));
-            buf.writeBoolean(getValue(Visibility.FullscreenNameVisible));
-            buf.writeBoolean(getValue(Visibility.FullscreenOwnerVisible));
-            buf.writeBoolean(getValue(Visibility.MinimapVisible));
-            buf.writeBoolean(getValue(Visibility.MinimapNameVisible));
-            buf.writeBoolean(getValue(Visibility.MinimapOwnerVisible));
+            buf.writeBoolean(getValue(Visibility.Frontier));
             buf.writeBoolean(getValue(Visibility.AnnounceInChat));
             buf.writeBoolean(getValue(Visibility.AnnounceInTitle));
+            buf.writeBoolean(getValue(Visibility.Fullscreen));
+            buf.writeBoolean(getValue(Visibility.FullscreenName));
+            buf.writeBoolean(getValue(Visibility.FullscreenOwner));
+            buf.writeBoolean(getValue(Visibility.FullscreenDay));
+            buf.writeBoolean(getValue(Visibility.FullscreenNight));
+            buf.writeBoolean(getValue(Visibility.FullscreenUnderground));
+            buf.writeBoolean(getValue(Visibility.FullscreenTopo));
+            buf.writeBoolean(getValue(Visibility.FullscreenBiome));
+            buf.writeBoolean(getValue(Visibility.Minimap));
+            buf.writeBoolean(getValue(Visibility.MinimapName));
+            buf.writeBoolean(getValue(Visibility.MinimapOwner));
+            buf.writeBoolean(getValue(Visibility.MinimapDay));
+            buf.writeBoolean(getValue(Visibility.MinimapNight));
+            buf.writeBoolean(getValue(Visibility.MinimapUnderground));
+            buf.writeBoolean(getValue(Visibility.MinimapTopo));
+            buf.writeBoolean(getValue(Visibility.MinimapBiome));
         }
     }
 }
