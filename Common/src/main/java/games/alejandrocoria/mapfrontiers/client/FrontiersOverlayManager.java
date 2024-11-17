@@ -51,7 +51,6 @@ public class FrontiersOverlayManager {
     private final HashMap<ResourceKey<Level>, MarkerOverlay> markersSelected;
     private final boolean personal;
     private File ModDir;
-    public static final int dataVersion = 10;
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     private static final MapImage markerDotSelected = new MapImage(
@@ -275,7 +274,7 @@ public class FrontiersOverlayManager {
         ArrayList<FrontierOverlay> frontiers = dimensionsFrontiers.get(dimension);
         if (frontiers != null) {
             for (FrontierOverlay frontier : frontiers) {
-                if (frontier.getVisible() && frontier.pointIsInside(pos, maxDistanceToOpen)) {
+                if (frontier.getVisibility(FrontierData.VisibilityData.Visibility.Frontier) && frontier.pointIsInside(pos, maxDistanceToOpen)) {
                     return frontier;
                 }
             }
@@ -289,7 +288,7 @@ public class FrontiersOverlayManager {
         ArrayList<FrontierOverlay> frontiers = dimensionsFrontiers.get(dimension);
         if (frontiers != null) {
             for (FrontierOverlay frontier : frontiers) {
-                if ((frontier.getAnnounceInChat() || frontier.getAnnounceInTitle()) && frontier.pointIsInside(pos, 0.0)) {
+                if ((frontier.getVisibility(FrontierData.VisibilityData.Visibility.AnnounceInChat) || frontier.getVisibility(FrontierData.VisibilityData.Visibility.AnnounceInTitle)) && frontier.pointIsInside(pos, 0.0)) {
                     inPosition.add(frontier);
                 }
             }
@@ -338,9 +337,9 @@ public class FrontiersOverlayManager {
     private void readFromNBT(CompoundTag nbt) {
         int version = nbt.getInt("Version");
         if (version == 0) {
-            MapFrontiers.LOGGER.warn("Data version in personal_frontiers not found, expected " + dataVersion);
-        } else if (version > dataVersion) {
-            MapFrontiers.LOGGER.warn("Data version in personal_frontiers higher than expected. The mod uses " + dataVersion);
+            MapFrontiers.LOGGER.warn("Data version in personal_frontiers not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
+        } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
+            MapFrontiers.LOGGER.warn("Data version in personal_frontiers higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
         }
 
         ListTag frontiersTagList = nbt.getList("frontiers", Tag.TAG_COMPOUND);
@@ -370,7 +369,7 @@ public class FrontiersOverlayManager {
         }
         nbt.put("frontiers", frontiersTagList);
 
-        nbt.putInt("Version", dataVersion);
+        nbt.putInt("Version", MapFrontiers.FRONTIER_DATA_VERSION);
     }
 
     private void ensureLoadData() {

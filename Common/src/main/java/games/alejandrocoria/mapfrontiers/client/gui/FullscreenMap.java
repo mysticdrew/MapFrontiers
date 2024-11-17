@@ -188,12 +188,12 @@ public class FullscreenMap {
         buttonFrontiers.setEnabled(!editing);
         buttonNew.setEnabled(!editing);
         buttonInfo.setEnabled(frontierHighlighted != null && !editing);
-        buttonEdit.setEnabled(actions.canUpdate && frontierHighlighted.getVisible() && frontierHighlighted.getFullscreenVisible());
+        buttonEdit.setEnabled(actions.canUpdate && frontierHighlighted.getVisibility(FrontierData.VisibilityData.Visibility.Frontier) && frontierHighlighted.getVisibility(FrontierData.VisibilityData.Visibility.Fullscreen));
         buttonVisible.setEnabled(actions.canUpdate && !editing);
         buttonDelete.setEnabled(actions.canDelete && !editing);
 
         if (frontierHighlighted != null) {
-            buttonVisible.setToggled(frontierHighlighted.getVisible() && frontierHighlighted.getFullscreenVisible());
+            buttonVisible.setToggled(frontierHighlighted.getVisibility(FrontierData.VisibilityData.Visibility.Frontier) && frontierHighlighted.getVisibility(FrontierData.VisibilityData.Visibility.Fullscreen));
         } else {
             buttonVisible.setToggled(false);
         }
@@ -232,7 +232,7 @@ public class FullscreenMap {
     }
 
     private void buttonVisibleToggled() {
-        frontierHighlighted.setVisible(!buttonVisible.getToggled());
+        frontierHighlighted.setVisibility(FrontierData.VisibilityData.Visibility.Frontier, !buttonVisible.getToggled());
 
         boolean personalFrontier = frontierHighlighted.getPersonal();
         FrontiersOverlayManager frontierManager = MapFrontiersClient.getFrontiersOverlayManager(personalFrontier);

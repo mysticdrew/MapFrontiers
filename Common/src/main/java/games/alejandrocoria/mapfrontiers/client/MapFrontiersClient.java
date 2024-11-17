@@ -27,9 +27,10 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public class MapFrontiersClient {
     private static IClientAPI jmAPI;
-    private static boolean handshakeSended = false;
+    private static boolean handshakeSent = false;
     private static FrontiersOverlayManager frontiersOverlayManager;
     private static FrontiersOverlayManager personalFrontiersOverlayManager;
+    private static FrontierLocalOverrides localOverrides;
     private static SettingsProfile settingsProfile;
     private static ModSettings.Tab lastSettingsTab = ModSettings.Tab.Credits;
 
@@ -49,8 +50,8 @@ public class MapFrontiersClient {
                 return;
             }
 
-            if (!handshakeSended) {
-                handshakeSended = true;
+            if (!handshakeSent) {
+                handshakeSent = true;
                 PacketHandler.sendToServer(new PacketHandshake());
             }
 
@@ -91,7 +92,7 @@ public class MapFrontiersClient {
                 for (Iterator<FrontierOverlay> i = insideFrontiers.iterator(); i.hasNext();) {
                     FrontierOverlay inside = i.next();
                     if (frontiers.stream().noneMatch(f -> f.getId().equals(inside.getId()))) {
-                        if (inside.getAnnounceInChat() && (inside.isNamed() || Config.announceUnnamedFrontiers)) {
+                        if (inside.getVisibility(FrontierData.VisibilityData.Visibility.AnnounceInChat) && (inside.isNamed() || Config.announceUnnamedFrontiers)) {
                             player.displayClientMessage(Component.translatable("mapfrontiers.chat.leaving", createAnnounceTextWithName(inside)), false);
                         }
                         i.remove();
@@ -101,10 +102,10 @@ public class MapFrontiersClient {
                 for (FrontierOverlay frontier : frontiers) {
                     if (insideFrontiers.add(frontier) && (frontier.isNamed() || Config.announceUnnamedFrontiers)) {
                         Component text = createAnnounceTextWithName(frontier);
-                        if (frontier.getAnnounceInChat()) {
+                        if (frontier.getVisibility(FrontierData.VisibilityData.Visibility.AnnounceInChat)) {
                             player.displayClientMessage(Component.translatable("mapfrontiers.chat.entering", text), false);
                         }
-                        if (frontier.getAnnounceInTitle()) {
+                        if (frontier.getVisibility(FrontierData.VisibilityData.Visibility.AnnounceInTitle)) {
                             if (Config.titleAnnouncementAboveHotbar) {
                                 client.gui.setOverlayMessage(text, false);
                             } else {
@@ -135,6 +136,7 @@ public class MapFrontiersClient {
                 frontiersOverlayManager = null;
                 personalFrontiersOverlayManager.close();
                 personalFrontiersOverlayManager = null;
+                localOverrides = null;
             }
 
             if (hud != null) {
@@ -142,7 +144,7 @@ public class MapFrontiersClient {
             }
 
             settingsProfile = null;
-            handshakeSended = false;
+            handshakeSent = false;
 
             MapFrontiers.LOGGER.info("ClientDisconnectedEvent done");
         });
@@ -185,6 +187,10 @@ public class MapFrontiersClient {
         if (personalFrontiersOverlayManager == null) {
             personalFrontiersOverlayManager = new FrontiersOverlayManager(jmAPI, true);
         }
+
+        if (localOverrides == null) {
+            localOverrides = new FrontierLocalOverrides();
+        }
     }
 
     public static void setFrontiersFromServer(List<FrontierData> globalFrontiers, List<FrontierData> personalFrontiers) {
@@ -204,6 +210,10 @@ public class MapFrontiersClient {
         } else {
             return frontiersOverlayManager;
         }
+    }
+
+    public static FrontierLocalOverrides getLocalOverrides() {
+        return localOverrides;
     }
 
     public static SettingsProfile getSettingsProfile() {

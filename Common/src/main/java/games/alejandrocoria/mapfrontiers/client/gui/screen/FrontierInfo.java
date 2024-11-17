@@ -22,6 +22,7 @@ import games.alejandrocoria.mapfrontiers.common.settings.SettingsProfile;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsUser;
 import games.alejandrocoria.mapfrontiers.common.util.ColorHelper;
 import games.alejandrocoria.mapfrontiers.platform.Services;
+import it.unimi.dsi.fastutil.Pair;
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.display.Context;
 import journeymap.api.v2.client.util.UIState;
@@ -69,6 +70,7 @@ public class FrontierInfo extends AutoScaledScreen {
     private static final String createdKey = "mapfrontiers.created";
     private static final String modifiedKey = "mapfrontiers.modified";
     private static final Component visibilityLabel = Component.translatable("mapfrontiers.visibility");
+    private static final Component visibilityOverrideLabel = Component.translatable("mapfrontiers.visibility_override");
     private static final Component colorLabel = Component.translatable("mapfrontiers.color");
     private static final Component rLabel = Component.literal("R");
     private static final Component gLabel = Component.literal("G");
@@ -100,6 +102,7 @@ public class FrontierInfo extends AutoScaledScreen {
     private TextBox textName1;
     private TextBox textName2;
     private SimpleButton buttonVisibility;
+    private SimpleButton buttonVisibilityOverride;
     private TextBoxInt textRed;
     private TextBoxInt textGreen;
     private TextBoxInt textBlue;
@@ -264,6 +267,18 @@ public class FrontierInfo extends AutoScaledScreen {
             }).display();
         });
         mainLayout.addChild(buttonVisibility, 2, 1);
+
+        buttonVisibilityOverride = new SimpleButton(font, 144, visibilityOverrideLabel, (b) -> {
+            Pair<FrontierData.VisibilityData, FrontierData.VisibilityData> override = MapFrontiersClient.getLocalOverrides().getVisibility(frontier.getId());
+            new VisibilityDialog(override.first(), override.second(), (newVisibilityData, newVisibilityMask) -> {
+                if (!newVisibilityData.equals(override.first()) || !newVisibilityMask.equals(override.second())) {
+                    Pair<FrontierData.VisibilityData, FrontierData.VisibilityData> newOverride = Pair.of(newVisibilityData, newVisibilityMask);
+                    MapFrontiersClient.getLocalOverrides().setVisibility(frontier.getId(), newOverride);
+                    frontier.setVisibilityOverride(newOverride);
+                }
+            }).display();
+        });
+        mainLayout.addChild(buttonVisibilityOverride, 2, 2);
 
         colorPicker = new ColorPicker(frontier.getColor(), (color, dragging) -> {
             colorPalette.setColor(color);
@@ -534,15 +549,7 @@ public class FrontierInfo extends AutoScaledScreen {
             frontier.setName2(other.getName2());
         }
         if (visibility) {
-            frontier.setVisible(other.getVisible());
-            frontier.setAnnounceInChat(other.getAnnounceInChat());
-            frontier.setAnnounceInTitle(other.getAnnounceInTitle());
-            frontier.setFullscreenVisible(other.getFullscreenVisible());
-            frontier.setFullscreenNameVisible(other.getFullscreenNameVisible());
-            frontier.setFullscreenOwnerVisible(other.getFullscreenOwnerVisible());
-            frontier.setMinimapVisible(other.getMinimapVisible());
-            frontier.setMinimapNameVisible(other.getMinimapNameVisible());
-            frontier.setMinimapOwnerVisible(other.getMinimapOwnerVisible());
+            frontier.setVisibilityData(other.getVisibilityData());
         }
         if (color) {
             frontier.setColor(other.getColor());
@@ -648,15 +655,7 @@ public class FrontierInfo extends AutoScaledScreen {
             FrontierData u = undoStack.peek();
             if (!Objects.equals(u.getName1(), (frontier.getName1()))
                     || !Objects.equals(u.getName2(), (frontier.getName2()))
-                    || u.getVisible() != frontier.getVisible()
-                    || u.getFullscreenVisible() != frontier.getFullscreenVisible()
-                    || u.getFullscreenNameVisible() != frontier.getFullscreenNameVisible()
-                    || u.getFullscreenOwnerVisible() != frontier.getFullscreenOwnerVisible()
-                    || u.getMinimapVisible() != frontier.getMinimapVisible()
-                    || u.getMinimapNameVisible() != frontier.getMinimapNameVisible()
-                    || u.getMinimapOwnerVisible() != frontier.getMinimapOwnerVisible()
-                    || u.getAnnounceInChat() != frontier.getAnnounceInChat()
-                    || u.getAnnounceInTitle() != frontier.getAnnounceInTitle()
+                    || !Objects.equals(u.getVisibilityData(), (frontier.getVisibilityData()))
                     || u.getColor() != frontier.getColor()
                     || !Objects.equals(u.getbannerData(), frontier.getbannerData())) {
                 add = true;

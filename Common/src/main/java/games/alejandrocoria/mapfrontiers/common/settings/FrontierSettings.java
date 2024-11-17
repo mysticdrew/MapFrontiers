@@ -43,8 +43,6 @@ public class FrontierSettings {
     private List<SettingsGroup> customGroups;
     private int changeCounter = 1;
 
-    private static final int dataVersion = 4;
-
     public FrontierSettings() {
         OPs = new SettingsGroup("OPs", true);
         owners = new SettingsGroup("Owner", true);
@@ -152,11 +150,11 @@ public class FrontierSettings {
     public void readFromNBT(CompoundTag nbt) {
         int version = nbt.getInt("Version");
         if (version == 0) {
-            MapFrontiers.LOGGER.warn("Data version in settings not found, expected " + dataVersion);
+            MapFrontiers.LOGGER.warn("Data version in settings not found, expected " + MapFrontiers.SETTINGS_DATA_VERSION);
         } else if (version < 3) {
-            MapFrontiers.LOGGER.warn("Data version in settings lower than expected. The mod uses " + dataVersion);
-        } else if (version > dataVersion) {
-            MapFrontiers.LOGGER.warn("Data version in settings higher than expected. The mod uses " + dataVersion);
+            MapFrontiers.LOGGER.warn("Data version in settings lower than expected. The mod uses " + MapFrontiers.SETTINGS_DATA_VERSION);
+        } else if (version > MapFrontiers.SETTINGS_DATA_VERSION) {
+            MapFrontiers.LOGGER.warn("Data version in settings higher than expected. The mod uses " + MapFrontiers.SETTINGS_DATA_VERSION);
         }
 
         CompoundTag OPsTag = nbt.getCompound("OPs");
@@ -201,7 +199,7 @@ public class FrontierSettings {
         }
         nbt.put("customGroups", customGroupsTagList);
 
-        nbt.putInt("Version", dataVersion);
+        nbt.putInt("Version", MapFrontiers.SETTINGS_DATA_VERSION);
     }
 
     public void fromBytes(FriendlyByteBuf buf) {

@@ -289,175 +289,18 @@ public class FrontierData {
         return !StringUtils.isBlank(name1) || !StringUtils.isBlank(name2);
     }
 
-    public void setVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.Frontier, visible);
+    public void setVisibility(VisibilityData.Visibility visibility, boolean enable) {
+        this.visibilityData.setValue(visibility, enable);
         changes.add(Change.Visibility);
     }
 
-    public boolean getVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.Frontier);
-    }
-
-    public void setAnnounceInChat(boolean announceInChat) {
-        this.visibilityData.setValue(VisibilityData.Visibility.AnnounceInChat, announceInChat);
+    public void toggleVisibility(VisibilityData.Visibility visibility) {
+        this.visibilityData.setValue(visibility, !this.visibilityData.getValue(visibility));
         changes.add(Change.Visibility);
     }
 
-    public boolean getAnnounceInChat() {
-        return visibilityData.getValue(VisibilityData.Visibility.AnnounceInChat);
-    }
-
-    public void setAnnounceInTitle(boolean announceInTitle) {
-        this.visibilityData.setValue(VisibilityData.Visibility.AnnounceInTitle, announceInTitle);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getAnnounceInTitle() {
-        return visibilityData.getValue(VisibilityData.Visibility.AnnounceInTitle);
-    }
-
-    public void setFullscreenVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.Fullscreen, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.Fullscreen);
-    }
-
-    public void setFullscreenNameVisible(boolean nameVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenName, nameVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenNameVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenName);
-    }
-
-    public void setFullscreenOwnerVisible(boolean ownerVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenOwner, ownerVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenOwnerVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenOwner);
-    }
-
-    public void setFullscreenDayVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenDay, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenDayVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenDay);
-    }
-
-    public void setFullscreenNightVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenNight, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenNightVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenNight);
-    }
-
-    public void setFullscreenUndergroundVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenUnderground, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenUndergroundVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenUnderground);
-    }
-
-    public void setFullscreenTopoVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenTopo, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenTopoVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenTopo);
-    }
-
-    public void setFullscreenBiomeVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.FullscreenBiome, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getFullscreenBiomeVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.FullscreenBiome);
-    }
-
-    public void setMinimapVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.Minimap, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.Minimap);
-    }
-
-    public void setMinimapNameVisible(boolean nameVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapName, nameVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapNameVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapName);
-    }
-
-    public void setMinimapOwnerVisible(boolean ownerVisible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapOwner, ownerVisible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapOwnerVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapOwner);
-    }
-
-    public void setMinimapDayVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapDay, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapDayVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapDay);
-    }
-
-    public void setMinimapNightVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapNight, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapNightVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapNight);
-    }
-
-    public void setMinimapUndergroundVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapUnderground, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapUndergroundVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapUnderground);
-    }
-
-    public void setMinimapTopoVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapTopo, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapTopoVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapTopo);
-    }
-
-    public void setMinimapBiomeVisible(boolean visible) {
-        this.visibilityData.setValue(VisibilityData.Visibility.MinimapBiome, visible);
-        changes.add(Change.Visibility);
-    }
-
-    public boolean getMinimapBiomeVisible() {
-        return visibilityData.getValue(VisibilityData.Visibility.MinimapBiome);
+    public boolean getVisibility(VisibilityData.Visibility visibility) {
+        return visibilityData.getValue(visibility);
     }
 
     public void setVisibilityData(VisibilityData visibilityData) {
@@ -1118,6 +961,10 @@ public class FrontierData {
 
         public boolean getValue(Visibility value) {
             return values.contains(value);
+        }
+
+        public boolean hasSome() {
+            return !values.isEmpty();
         }
 
         public void readFromNBT(CompoundTag nbt, int version) {

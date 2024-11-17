@@ -85,7 +85,7 @@ public class FrontierListElement extends ScrollBox.ScrollElement {
 
         int hiddenColor = ColorConstants.TEXT_DARK;
 
-        if (frontier.getVisible()) {
+        if (frontier.getVisibility(FrontierData.VisibilityData.Visibility.Frontier)) {
             graphics.drawString(font, name1, x + 26, y + 4, color);
             graphics.drawString(font, name2, x + 26, y + 14, color);
         } else {

@@ -8,6 +8,7 @@
   "mapfrontiers.unnamed_1": "%1$s未命名",
   "mapfrontiers.unnamed_2": "%1$s领地",
   "mapfrontiers.visibility": "Visibility",
+  "mapfrontiers.visibility_override": "Visibility Override",
   "mapfrontiers.fullscreen": "Fullscreen map",
   "mapfrontiers.minimap": "Minimap",
   "mapfrontiers.show_frontier": "Show frontier",

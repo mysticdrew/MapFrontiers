@@ -13,6 +13,7 @@ import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
 import games.alejandrocoria.mapfrontiers.common.Config;
 import games.alejandrocoria.mapfrontiers.common.FrontierData;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsUserShared;
+import it.unimi.dsi.fastutil.Pair;
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.display.Context;
 import journeymap.api.v2.client.display.MarkerOverlay;
@@ -71,6 +72,7 @@ public class FrontierOverlay extends FrontierData {
     public float perimeter = 0.f;
     public float area = 0.f;
     private int vertexSelected = -1;
+    protected VisibilityData effectiveVisibilityData;
 
     private boolean highlighted = false;
 
@@ -88,6 +90,7 @@ public class FrontierOverlay extends FrontierData {
     public FrontierOverlay(FrontierData data, @Nullable IClientAPI jmAPI) {
         super(data);
         this.jmAPI = jmAPI;
+        setVisibilityOverride(MapFrontiersClient.getLocalOverrides().getVisibility(id));
         updateOverlay();
 
         if (banner != null) {
@@ -98,12 +101,13 @@ public class FrontierOverlay extends FrontierData {
     @Override
     public void updateFromData(FrontierData other) {
         super.updateFromData(other);
+        setVisibilityOverride(MapFrontiersClient.getLocalOverrides().getVisibility(id));
 
         if (vertexSelected >= vertices.size()) {
             vertexSelected = vertices.size() - 1;
         }
 
-        if (other.hasChange(Change.Name) || other.hasChange(Change.Vertices) || other.hasChange(Change.Color)) {
+        if (other.hasChange(Change.Name) || other.hasChange(Change.Vertices) || other.hasChange(Change.Color) || other.hasChange(Change.Visibility)) {
             updateOverlay();
         }
 
@@ -156,7 +160,7 @@ public class FrontierOverlay extends FrontierData {
         removeOverlay();
         recalculateOverlays();
 
-        if (Config.getVisibilityValue(Config.frontierVisibility, getVisible())) {
+        if (Config.getVisibilityValue(Config.frontierVisibility, getVisibility(VisibilityData.Visibility.Frontier))) {
             try {
                 for (PolygonOverlay polygon : polygonOverlays) {
                     jmAPI.show(polygon);
@@ -399,114 +403,37 @@ public class FrontierOverlay extends FrontierData {
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
+    public void setVisibility(VisibilityData.Visibility visibility, boolean enable) {
+        super.setVisibility(visibility, enable);
+        setVisibilityOverride(MapFrontiersClient.getLocalOverrides().getVisibility(id));
+        needUpdateOverlay = true;
+    }
 
-        if (!visible) {
-            vertexSelected = -1;
+    @Override
+    public void toggleVisibility(VisibilityData.Visibility visibility) {
+        super.toggleVisibility(visibility);
+        setVisibilityOverride(MapFrontiersClient.getLocalOverrides().getVisibility(id));
+        needUpdateOverlay = true;
+    }
+
+    public void setVisibilityOverride(Pair<VisibilityData, VisibilityData> visibilityOverride) {
+        effectiveVisibilityData = new VisibilityData(visibilityData);
+        for (VisibilityData.Visibility visibility : VisibilityData.Visibility.values()) {
+            if (visibilityOverride.second().getValue(visibility)) {
+                effectiveVisibilityData.setValue(visibility, visibilityOverride.first().getValue(visibility));
+            }
         }
-
         needUpdateOverlay = true;
     }
 
     @Override
-    public void setFullscreenVisible(boolean visible) {
-        super.setFullscreenVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setFullscreenNameVisible(boolean nameVisible) {
-        super.setFullscreenNameVisible(nameVisible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setFullscreenOwnerVisible(boolean ownerVisible) {
-        super.setFullscreenOwnerVisible(ownerVisible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setFullscreenDayVisible(boolean visible) {
-        super.setFullscreenDayVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setFullscreenNightVisible(boolean visible) {
-        super.setFullscreenNightVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setFullscreenUndergroundVisible(boolean visible) {
-        super.setFullscreenUndergroundVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setFullscreenTopoVisible(boolean visible) {
-        super.setFullscreenTopoVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setFullscreenBiomeVisible(boolean visible) {
-        super.setFullscreenBiomeVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapVisible(boolean visible) {
-        super.setMinimapVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapNameVisible(boolean nameVisible) {
-        super.setMinimapNameVisible(nameVisible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapOwnerVisible(boolean ownerVisible) {
-        super.setMinimapOwnerVisible(ownerVisible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapDayVisible(boolean visible) {
-        super.setMinimapDayVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapNightVisible(boolean visible) {
-        super.setMinimapNightVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapUndergroundVisible(boolean visible) {
-        super.setMinimapUndergroundVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapTopoVisible(boolean visible) {
-        super.setMinimapTopoVisible(visible);
-        needUpdateOverlay = true;
-    }
-
-    @Override
-    public void setMinimapBiomeVisible(boolean visible) {
-        super.setMinimapBiomeVisible(visible);
-        needUpdateOverlay = true;
+    public boolean getVisibility(VisibilityData.Visibility visibility) {
+        return effectiveVisibilityData.getValue(visibility);
     }
 
     public void setVisibilityData(VisibilityData visibilityData) {
         super.setVisibilityData(visibilityData);
+        setVisibilityOverride(MapFrontiersClient.getLocalOverrides().getVisibility(id));
         needUpdateOverlay = true;
     }
 
@@ -747,22 +674,22 @@ public class FrontierOverlay extends FrontierData {
         PolygonOverlay polygonOverlayFullscreen = null;
         PolygonOverlay polygonOverlayMinimap = null;
 
-        boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, getFullscreenVisible());
-        boolean fullscreenNameV = Config.getVisibilityValue(Config.fullscreenNameVisibility, getFullscreenNameVisible());
-        boolean fullscreenOwnerV = Config.getVisibilityValue(Config.fullscreenOwnerVisibility, getFullscreenOwnerVisible());
-        boolean fullscreenDayV = Config.getVisibilityValue(Config.fullscreenDayVisibility, getFullscreenDayVisible());
-        boolean fullscreenNightV = Config.getVisibilityValue(Config.fullscreenNightVisibility, getFullscreenNightVisible());
-        boolean fullscreenUndergroundV = Config.getVisibilityValue(Config.fullscreenUndergroundVisibility, getFullscreenUndergroundVisible());
-        boolean fullscreenTopoV = Config.getVisibilityValue(Config.fullscreenTopoVisibility, getFullscreenTopoVisible());
-        boolean fullscreenBiomeV = Config.getVisibilityValue(Config.fullscreenBiomeVisibility, getFullscreenBiomeVisible());
-        boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, getMinimapVisible());
-        boolean minimapNameV = Config.getVisibilityValue(Config.minimapNameVisibility, getMinimapNameVisible());
-        boolean minimapOwnerV = Config.getVisibilityValue(Config.minimapOwnerVisibility, getMinimapOwnerVisible());
-        boolean minimapDayV = Config.getVisibilityValue(Config.minimapDayVisibility, getMinimapDayVisible());
-        boolean minimapNightV = Config.getVisibilityValue(Config.minimapNightVisibility, getMinimapNightVisible());
-        boolean minimapUndergroundV = Config.getVisibilityValue(Config.minimapUndergroundVisibility, getMinimapUndergroundVisible());
-        boolean minimapTopoV = Config.getVisibilityValue(Config.minimapTopoVisibility, getMinimapTopoVisible());
-        boolean minimapBiomeV = Config.getVisibilityValue(Config.minimapBiomeVisibility, getMinimapBiomeVisible());
+        boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, getVisibility(VisibilityData.Visibility.Fullscreen));
+        boolean fullscreenNameV = Config.getVisibilityValue(Config.fullscreenNameVisibility, getVisibility(VisibilityData.Visibility.FullscreenName));
+        boolean fullscreenOwnerV = Config.getVisibilityValue(Config.fullscreenOwnerVisibility, getVisibility(VisibilityData.Visibility.FullscreenOwner));
+        boolean fullscreenDayV = Config.getVisibilityValue(Config.fullscreenDayVisibility, getVisibility(VisibilityData.Visibility.FullscreenDay));
+        boolean fullscreenNightV = Config.getVisibilityValue(Config.fullscreenNightVisibility, getVisibility(VisibilityData.Visibility.FullscreenNight));
+        boolean fullscreenUndergroundV = Config.getVisibilityValue(Config.fullscreenUndergroundVisibility, getVisibility(VisibilityData.Visibility.FullscreenUnderground));
+        boolean fullscreenTopoV = Config.getVisibilityValue(Config.fullscreenTopoVisibility, getVisibility(VisibilityData.Visibility.FullscreenTopo));
+        boolean fullscreenBiomeV = Config.getVisibilityValue(Config.fullscreenBiomeVisibility, getVisibility(VisibilityData.Visibility.FullscreenBiome));
+        boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, getVisibility(VisibilityData.Visibility.Minimap));
+        boolean minimapNameV = Config.getVisibilityValue(Config.minimapNameVisibility, getVisibility(VisibilityData.Visibility.MinimapName));
+        boolean minimapOwnerV = Config.getVisibilityValue(Config.minimapOwnerVisibility, getVisibility(VisibilityData.Visibility.MinimapOwner));
+        boolean minimapDayV = Config.getVisibilityValue(Config.minimapDayVisibility, getVisibility(VisibilityData.Visibility.MinimapDay));
+        boolean minimapNightV = Config.getVisibilityValue(Config.minimapNightVisibility, getVisibility(VisibilityData.Visibility.MinimapNight));
+        boolean minimapUndergroundV = Config.getVisibilityValue(Config.minimapUndergroundVisibility, getVisibility(VisibilityData.Visibility.MinimapUnderground));
+        boolean minimapTopoV = Config.getVisibilityValue(Config.minimapTopoVisibility, getVisibility(VisibilityData.Visibility.MinimapTopo));
+        boolean minimapBiomeV = Config.getVisibilityValue(Config.minimapBiomeVisibility, getVisibility(VisibilityData.Visibility.MinimapBiome));
 
         if (fullscreenV && minimapV
                 && (fullscreenNameV == minimapNameV)
@@ -817,18 +744,18 @@ public class FrontierOverlay extends FrontierData {
                 }
                 area = abs(area);
             } else {
-                boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, getFullscreenVisible());
-                boolean fullscreenDayV = Config.getVisibilityValue(Config.fullscreenDayVisibility, getFullscreenDayVisible());
-                boolean fullscreenNightV = Config.getVisibilityValue(Config.fullscreenNightVisibility, getFullscreenNightVisible());
-                boolean fullscreenUndergroundV = Config.getVisibilityValue(Config.fullscreenUndergroundVisibility, getFullscreenUndergroundVisible());
-                boolean fullscreenTopoV = Config.getVisibilityValue(Config.fullscreenTopoVisibility, getFullscreenTopoVisible());
-                boolean fullscreenBiomeV = Config.getVisibilityValue(Config.fullscreenBiomeVisibility, getFullscreenBiomeVisible());
-                boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, getMinimapVisible());
-                boolean minimapDayV = Config.getVisibilityValue(Config.minimapDayVisibility, getMinimapDayVisible());
-                boolean minimapNightV = Config.getVisibilityValue(Config.minimapNightVisibility, getMinimapNightVisible());
-                boolean minimapUndergroundV = Config.getVisibilityValue(Config.minimapUndergroundVisibility, getMinimapUndergroundVisible());
-                boolean minimapTopoV = Config.getVisibilityValue(Config.minimapTopoVisibility, getMinimapTopoVisible());
-                boolean minimapBiomeV = Config.getVisibilityValue(Config.minimapBiomeVisibility, getMinimapBiomeVisible());
+                boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, getVisibility(VisibilityData.Visibility.Fullscreen));
+                boolean fullscreenDayV = Config.getVisibilityValue(Config.fullscreenDayVisibility, getVisibility(VisibilityData.Visibility.FullscreenDay));
+                boolean fullscreenNightV = Config.getVisibilityValue(Config.fullscreenNightVisibility, getVisibility(VisibilityData.Visibility.FullscreenNight));
+                boolean fullscreenUndergroundV = Config.getVisibilityValue(Config.fullscreenUndergroundVisibility, getVisibility(VisibilityData.Visibility.FullscreenUnderground));
+                boolean fullscreenTopoV = Config.getVisibilityValue(Config.fullscreenTopoVisibility, getVisibility(VisibilityData.Visibility.FullscreenTopo));
+                boolean fullscreenBiomeV = Config.getVisibilityValue(Config.fullscreenBiomeVisibility, getVisibility(VisibilityData.Visibility.FullscreenBiome));
+                boolean minimapV = Config.getVisibilityValue(Config.minimapVisibility, getVisibility(VisibilityData.Visibility.Minimap));
+                boolean minimapDayV = Config.getVisibilityValue(Config.minimapDayVisibility, getVisibility(VisibilityData.Visibility.MinimapDay));
+                boolean minimapNightV = Config.getVisibilityValue(Config.minimapNightVisibility, getVisibility(VisibilityData.Visibility.MinimapNight));
+                boolean minimapUndergroundV = Config.getVisibilityValue(Config.minimapUndergroundVisibility, getVisibility(VisibilityData.Visibility.MinimapUnderground));
+                boolean minimapTopoV = Config.getVisibilityValue(Config.minimapTopoVisibility, getVisibility(VisibilityData.Visibility.MinimapTopo));
+                boolean minimapBiomeV = Config.getVisibilityValue(Config.minimapBiomeVisibility, getVisibility(VisibilityData.Visibility.MinimapBiome));
                 if (fullscreenV || minimapV) {
                     if (fullscreenV && minimapV
                             && (fullscreenDayV == minimapDayV)

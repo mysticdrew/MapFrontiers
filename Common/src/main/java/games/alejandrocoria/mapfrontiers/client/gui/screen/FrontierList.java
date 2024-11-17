@@ -209,7 +209,7 @@ public class FrontierList extends AutoScaledScreen {
         buttonDelete.setTextColors(ColorConstants.SIMPLE_BUTTON_TEXT_DELETE, ColorConstants.SIMPLE_BUTTON_TEXT_DELETE_HIGHLIGHT);
         buttonVisible = bottomButtons.addChild(new SimpleButton(font, 110, hideLabel, (b) -> {
             FrontierOverlay frontier = ((FrontierListElement) frontiers.getSelectedElement()).getFrontier();
-            frontier.setVisible(!frontier.getVisible());
+            frontier.toggleVisibility(FrontierData.VisibilityData.Visibility.Frontier);
             FrontiersOverlayManager frontierManager = MapFrontiersClient.getFrontiersOverlayManager(frontier.getPersonal());
             frontierManager.clientUpdateFrontier(frontier);
             updateButtons();
@@ -355,7 +355,7 @@ public class FrontierList extends AutoScaledScreen {
         buttonDelete.active = actions.canDelete;
         buttonVisible.active = actions.canUpdate;
 
-        if (frontier != null && frontier.getVisible()) {
+        if (frontier != null && frontier.getVisibility(FrontierData.VisibilityData.Visibility.Frontier)) {
             buttonVisible.setMessage(Component.translatable("mapfrontiers.hide"));
         } else {
             buttonVisible.setMessage(Component.translatable("mapfrontiers.show"));

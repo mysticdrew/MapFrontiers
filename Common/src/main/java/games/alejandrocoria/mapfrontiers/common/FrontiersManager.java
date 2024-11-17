@@ -48,7 +48,6 @@ public class FrontiersManager {
     private File ModDir;
     private boolean frontierOwnersChecked = false;
 
-    public static final int dataVersion = 10;
     private static int pendingShareFrontierID = 0;
     private static final int pendingShareFrontierTickDuration = 1200;
 
@@ -323,11 +322,11 @@ public class FrontiersManager {
     private void readFromNBT(CompoundTag nbt) {
         int version = nbt.getInt("Version");
         if (version == 0) {
-            MapFrontiers.LOGGER.warn("Data version in frontiers not found, expected " + dataVersion);
+            MapFrontiers.LOGGER.warn("Data version in frontiers not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
         } else if (version < 5) {
-            MapFrontiers.LOGGER.warn("Data version in frontiers lower than expected. The mod support from 5 to " + dataVersion);
-        } else if (version > dataVersion) {
-            MapFrontiers.LOGGER.warn("Data version in frontiers higher than expected. The mod uses " + dataVersion);
+            MapFrontiers.LOGGER.warn("Data version in frontiers lower than expected. The mod support from 5 to " + MapFrontiers.FRONTIER_DATA_VERSION);
+        } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
+            MapFrontiers.LOGGER.warn("Data version in frontiers higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
         }
 
         ListTag allFrontiersTagList = nbt.getList("frontiers", Tag.TAG_COMPOUND);
@@ -361,7 +360,7 @@ public class FrontiersManager {
         }
         nbt.put("frontiers", allFrontiersTagList);
 
-        nbt.putInt("Version", dataVersion);
+        nbt.putInt("Version", MapFrontiers.FRONTIER_DATA_VERSION);
     }
 
     public void loadOrCreateData(MinecraftServer server) {

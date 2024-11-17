@@ -8,6 +8,7 @@
     "mapfrontiers.unnamed_1": "%1$sFronteira",
     "mapfrontiers.unnamed_2": "%1$ssem nome",
     "mapfrontiers.visibility": "Visibilidade",
+    "mapfrontiers.visibility_override": "Sobrescrever visibilidade",
     "mapfrontiers.fullscreen": "Mapa de tela cheia",
     "mapfrontiers.minimap": "Minimap",
     "mapfrontiers.show_frontier": "Mostrar fronteira",
