@@ -334,23 +334,32 @@ public class FrontiersOverlayManager {
         }
     }
 
-    private void readFromNBT(CompoundTag nbt) {
-        int version = nbt.getInt("Version");
-        if (version == 0) {
-            MapFrontiers.LOGGER.warn("Data version in personal_frontiers not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
-        } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
-            MapFrontiers.LOGGER.warn("Data version in personal_frontiers higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
+    private boolean readFromNBT(CompoundTag nbt) {
+        boolean needBackup = false;
+        try {
+            int version = nbt.getInt("Version");
+            if (version == 0) {
+                MapFrontiers.LOGGER.warn("Data version in personal_frontiers not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
+                needBackup = true;
+            } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
+                MapFrontiers.LOGGER.warn("Data version in personal_frontiers higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
+                needBackup = true;
+            }
+
+            ListTag frontiersTagList = nbt.getList("frontiers", Tag.TAG_COMPOUND);
+            for (int i = 0; i < frontiersTagList.size(); ++i) {
+                FrontierData frontier = new FrontierData();
+                CompoundTag frontierTag = frontiersTagList.getCompound(i);
+                frontier.readFromNBT(frontierTag, version);
+                List<FrontierOverlay> frontiers = getAllFrontiers(frontier.getDimension());
+                FrontierOverlay frontierOverlay = new FrontierOverlay(frontier, jmAPI);
+                frontiers.add(frontierOverlay);
+            }
+        } catch (Exception ignored) {
+            return true;
         }
 
-        ListTag frontiersTagList = nbt.getList("frontiers", Tag.TAG_COMPOUND);
-        for (int i = 0; i < frontiersTagList.size(); ++i) {
-            FrontierData frontier = new FrontierData();
-            CompoundTag frontierTag = frontiersTagList.getCompound(i);
-            frontier.readFromNBT(frontierTag, version);
-            List<FrontierOverlay> frontiers = getAllFrontiers(frontier.getDimension());
-            FrontierOverlay frontierOverlay = new FrontierOverlay(frontier, jmAPI);
-            frontiers.add(frontierOverlay);
-        }
+        return needBackup;
     }
 
     private void writeToNBT(CompoundTag nbt) {
@@ -387,7 +396,10 @@ public class FrontiersOverlayManager {
 
             CompoundTag nbtFrontiers = loadFile("personal_frontiers.dat");
             if (!nbtFrontiers.isEmpty()) {
-                readFromNBT(nbtFrontiers);
+                if (readFromNBT(nbtFrontiers)) {
+                    MapFrontiers.createBackup(ModDir, "personal_frontiers.dat");
+                    saveData();
+                }
             }
         } catch (Exception e) {
             MapFrontiers.LOGGER.error(e.getMessage(), e);

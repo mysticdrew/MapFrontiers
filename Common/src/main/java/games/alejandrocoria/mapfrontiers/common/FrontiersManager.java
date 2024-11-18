@@ -94,7 +94,7 @@ public class FrontiersManager {
 
     public void setSettings(FrontierSettings frontierSettings) {
         this.frontierSettings = frontierSettings;
-        saveData();
+        saveSettingsData();
     }
 
     public FrontierSettings getSettings() {
@@ -161,7 +161,7 @@ public class FrontiersManager {
 
         frontiers.add(frontier);
         allFrontiers.put(frontier.getId(), frontier);
-        saveData();
+        saveFrontierData();
 
         return frontier;
     }
@@ -175,13 +175,13 @@ public class FrontiersManager {
         frontiers.add(frontier);
         allFrontiers.put(frontier.getId(), frontier);
 
-        saveData();
+        saveFrontierData();
     }
 
     public void addPersonalFrontier(SettingsUser user, FrontierData frontier) {
         List<FrontierData> frontiers = this.getAllPersonalFrontiers(user, frontier.getDimension());
         frontiers.add(frontier);
-        saveData();
+        saveFrontierData();
     }
 
     public boolean deleteGlobalFrontier(ResourceKey<Level> dimension, UUID id) {
@@ -192,7 +192,7 @@ public class FrontiersManager {
 
         boolean deleted = frontiers.removeIf(x -> x.id.equals(id));
         deleted |= allFrontiers.remove(id) != null;
-        saveData();
+        saveFrontierData();
 
         return deleted;
     }
@@ -217,7 +217,7 @@ public class FrontiersManager {
 
         boolean deleted = frontiers.removeIf(x -> x.id.equals(id));
 
-        saveData();
+        saveFrontierData();
 
         return deleted;
     }
@@ -239,7 +239,7 @@ public class FrontiersManager {
         FrontierData frontier = frontiers.get(index);
         frontier.updateFromData(updatedFrontier);
 
-        saveData();
+        saveFrontierData();
 
         return true;
     }
@@ -266,7 +266,7 @@ public class FrontiersManager {
         FrontierData frontier = frontiers.get(index);
         frontier.updateFromData(updatedFrontier);
 
-        saveData();
+        saveFrontierData();
 
         return true;
     }
@@ -319,36 +319,46 @@ public class FrontiersManager {
         frontierOwnersChecked = true;
     }
 
-    private void readFromNBT(CompoundTag nbt) {
-        int version = nbt.getInt("Version");
-        if (version == 0) {
-            MapFrontiers.LOGGER.warn("Data version in frontiers not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
-        } else if (version < 5) {
-            MapFrontiers.LOGGER.warn("Data version in frontiers lower than expected. The mod support from 5 to " + MapFrontiers.FRONTIER_DATA_VERSION);
-        } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
-            MapFrontiers.LOGGER.warn("Data version in frontiers higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
-        }
-
-        ListTag allFrontiersTagList = nbt.getList("frontiers", Tag.TAG_COMPOUND);
-        for (int i = 0; i < allFrontiersTagList.size(); ++i) {
-            FrontierData frontier = new FrontierData();
-            CompoundTag frontierTag = allFrontiersTagList.getCompound(i);
-            frontier.readFromNBT(frontierTag, version);
-            frontier.removePendingUsersShared();
-            allFrontiers.put(frontier.getId(), frontier);
-
-            if (frontier.getPersonal()) {
-                getAllPersonalFrontiers(frontier.getOwner(), frontier.getDimension()).add(frontier);
-
-                if (frontier.getUsersShared() != null) {
-                    for (SettingsUserShared sharedUser : frontier.getUsersShared()) {
-                        getAllPersonalFrontiers(sharedUser.getUser(), frontier.getDimension()).add(frontier);
-                    }
-                }
-            } else {
-                getAllGlobalFrontiers(frontier.getDimension()).add(frontier);
+    private boolean readFromNBT(CompoundTag nbt) {
+        boolean needBackup = false;
+        try {
+            int version = nbt.getInt("Version");
+            if (version == 0) {
+                MapFrontiers.LOGGER.warn("Data version in frontiers not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
+                needBackup = true;
+            } else if (version < 5) {
+                MapFrontiers.LOGGER.warn("Data version in frontiers lower than expected. The mod support from 5 to " + MapFrontiers.FRONTIER_DATA_VERSION);
+                needBackup = true;
+            } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
+                MapFrontiers.LOGGER.warn("Data version in frontiers higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
+                needBackup = true;
             }
+
+            ListTag allFrontiersTagList = nbt.getList("frontiers", Tag.TAG_COMPOUND);
+            for (int i = 0; i < allFrontiersTagList.size(); ++i) {
+                FrontierData frontier = new FrontierData();
+                CompoundTag frontierTag = allFrontiersTagList.getCompound(i);
+                frontier.readFromNBT(frontierTag, version);
+                frontier.removePendingUsersShared();
+                allFrontiers.put(frontier.getId(), frontier);
+
+                if (frontier.getPersonal()) {
+                    getAllPersonalFrontiers(frontier.getOwner(), frontier.getDimension()).add(frontier);
+
+                    if (frontier.getUsersShared() != null) {
+                        for (SettingsUserShared sharedUser : frontier.getUsersShared()) {
+                            getAllPersonalFrontiers(sharedUser.getUser(), frontier.getDimension()).add(frontier);
+                        }
+                    }
+                } else {
+                    getAllGlobalFrontiers(frontier.getDimension()).add(frontier);
+                }
+            }
+        } catch (Exception ignored) {
+            return true;
         }
+
+        return needBackup;
     }
 
     private void writeToNBT(CompoundTag nbt) {
@@ -386,7 +396,10 @@ public class FrontiersManager {
                 writeToNBT(nbtFrontiers);
                 saveFile("frontiers.dat", nbtFrontiers);
             } else {
-                readFromNBT(nbtFrontiers);
+                if (readFromNBT(nbtFrontiers)) {
+                    MapFrontiers.createBackup(ModDir, "frontiers.dat");
+                    saveFrontierData();
+                }
             }
 
             CompoundTag nbtSettings = loadFile("settings.dat");
@@ -395,18 +408,23 @@ public class FrontiersManager {
                 frontierSettings.writeToNBT(nbtSettings);
                 saveFile("settings.dat", nbtSettings);
             } else {
-                frontierSettings.readFromNBT(nbtSettings);
+                if (frontierSettings.readFromNBT(nbtSettings)) {
+                    MapFrontiers.createBackup(ModDir, "settings.dat");
+                    saveSettingsData();
+                }
             }
         } catch (Exception e) {
             MapFrontiers.LOGGER.error(e.getMessage(), e);
         }
     }
 
-    public void saveData() {
+    private void saveFrontierData() {
         CompoundTag nbtFrontiers = new CompoundTag();
         writeToNBT(nbtFrontiers);
         saveFile("frontiers.dat", nbtFrontiers);
+    }
 
+    private void saveSettingsData() {
         CompoundTag nbtSettings = new CompoundTag();
         frontierSettings.writeToNBT(nbtSettings);
         saveFile("settings.dat", nbtSettings);

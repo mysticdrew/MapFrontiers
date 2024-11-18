@@ -22,22 +22,8 @@ public class FrontierLocalOverrides {
     private final Map<UUID, Pair<FrontierData.VisibilityData, FrontierData.VisibilityData>> overrides = new HashMap<>();
     private File ModDir;
 
-    private static final Minecraft minecraft = Minecraft.getInstance();
-
     public FrontierLocalOverrides() {
-        try {
-            File jmDir = Services.JOURNEYMAP.getJMWorldDir(Minecraft.getInstance());
-            ModDir = new File(jmDir, "mapfrontier");
-            //noinspection ResultOfMethodCallIgnored
-            ModDir.mkdirs();
-
-            CompoundTag nbtFrontiers = loadFile("frontier_overrides.dat");
-            if (!nbtFrontiers.isEmpty()) {
-                readFromNBT(nbtFrontiers);
-            }
-        } catch (Exception e) {
-            MapFrontiers.LOGGER.error(e.getMessage(), e);
-        }
+        loadData();
     }
 
     public Pair<FrontierData.VisibilityData, FrontierData.VisibilityData> getVisibility(UUID id) {
@@ -57,31 +43,40 @@ public class FrontierLocalOverrides {
         saveData();
     }
 
-    private void readFromNBT(CompoundTag nbt) {
-        int version = nbt.getInt("Version");
-        if (version == 0) {
-            MapFrontiers.LOGGER.warn("Data version in frontier_overrides not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
-        } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
-            MapFrontiers.LOGGER.warn("Data version in frontier_overrides higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
-        }
-
-        ListTag overridesTagList = nbt.getList("overrides", Tag.TAG_COMPOUND);
-        for (int i = 0; i < overridesTagList.size(); ++i) {
-            CompoundTag overrideTag = overridesTagList.getCompound(i);
-            UUID id = UUID.fromString(overrideTag.getString("id"));
-
-            CompoundTag dataTag = overrideTag.getCompound("data");
-            FrontierData.VisibilityData data = new FrontierData.VisibilityData();
-            data.readFromNBT(dataTag, version);
-
-            CompoundTag maskTag = overrideTag.getCompound("mask");
-            FrontierData.VisibilityData mask = new FrontierData.VisibilityData(false);
-            mask.readFromNBT(maskTag, version);
-
-            if (mask.hasSome()) {
-                overrides.put(id, Pair.of(data, mask));
+    private boolean readFromNBT(CompoundTag nbt) {
+        boolean needBackup = false;
+        try {
+            int version = nbt.getInt("Version");
+            if (version == 0) {
+                MapFrontiers.LOGGER.warn("Data version in frontier_overrides not found, expected " + MapFrontiers.FRONTIER_DATA_VERSION);
+                needBackup = true;
+            } else if (version > MapFrontiers.FRONTIER_DATA_VERSION) {
+                MapFrontiers.LOGGER.warn("Data version in frontier_overrides higher than expected. The mod uses " + MapFrontiers.FRONTIER_DATA_VERSION);
+                needBackup = true;
             }
+
+            ListTag overridesTagList = nbt.getList("overrides", Tag.TAG_COMPOUND);
+            for (int i = 0; i < overridesTagList.size(); ++i) {
+                CompoundTag overrideTag = overridesTagList.getCompound(i);
+                UUID id = UUID.fromString(overrideTag.getString("id"));
+
+                CompoundTag dataTag = overrideTag.getCompound("data");
+                FrontierData.VisibilityData data = new FrontierData.VisibilityData();
+                data.readFromNBT(dataTag, version);
+
+                CompoundTag maskTag = overrideTag.getCompound("mask");
+                FrontierData.VisibilityData mask = new FrontierData.VisibilityData(false);
+                mask.readFromNBT(maskTag, version);
+
+                if (mask.hasSome()) {
+                    overrides.put(id, Pair.of(data, mask));
+                }
+            }
+        } catch (Exception ignored) {
+            return true;
         }
+
+        return needBackup;
     }
 
     private void writeToNBT(CompoundTag nbt) {
@@ -103,6 +98,25 @@ public class FrontierLocalOverrides {
         nbt.put("overrides", overridesTagList);
 
         nbt.putInt("Version", MapFrontiers.FRONTIER_DATA_VERSION);
+    }
+
+    private void loadData() {
+        try {
+            File jmDir = Services.JOURNEYMAP.getJMWorldDir(Minecraft.getInstance());
+            ModDir = new File(jmDir, "mapfrontier");
+            //noinspection ResultOfMethodCallIgnored
+            ModDir.mkdirs();
+
+            CompoundTag nbtFrontiers = loadFile("frontier_overrides.dat");
+            if (!nbtFrontiers.isEmpty()) {
+                if (readFromNBT(nbtFrontiers)) {
+                    MapFrontiers.createBackup(ModDir, "frontier_overrides.dat");
+                    saveData();
+                }
+            }
+        } catch (Exception e) {
+            MapFrontiers.LOGGER.error(e.getMessage(), e);
+        }
     }
 
     private void saveData() {

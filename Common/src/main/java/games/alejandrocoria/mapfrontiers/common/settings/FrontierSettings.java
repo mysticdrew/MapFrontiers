@@ -147,35 +147,45 @@ public class FrontierSettings {
         return profile;
     }
 
-    public void readFromNBT(CompoundTag nbt) {
-        int version = nbt.getInt("Version");
-        if (version == 0) {
-            MapFrontiers.LOGGER.warn("Data version in settings not found, expected " + MapFrontiers.SETTINGS_DATA_VERSION);
-        } else if (version < 3) {
-            MapFrontiers.LOGGER.warn("Data version in settings lower than expected. The mod uses " + MapFrontiers.SETTINGS_DATA_VERSION);
-        } else if (version > MapFrontiers.SETTINGS_DATA_VERSION) {
-            MapFrontiers.LOGGER.warn("Data version in settings higher than expected. The mod uses " + MapFrontiers.SETTINGS_DATA_VERSION);
+    public boolean readFromNBT(CompoundTag nbt) {
+        boolean needBackup = false;
+        try {
+            int version = nbt.getInt("Version");
+            if (version == 0) {
+                MapFrontiers.LOGGER.warn("Data version in settings not found, expected " + MapFrontiers.SETTINGS_DATA_VERSION);
+                needBackup = true;
+            } else if (version < 3) {
+                MapFrontiers.LOGGER.warn("Data version in settings lower than expected. The mod uses " + MapFrontiers.SETTINGS_DATA_VERSION);
+                needBackup = true;
+            } else if (version > MapFrontiers.SETTINGS_DATA_VERSION) {
+                MapFrontiers.LOGGER.warn("Data version in settings higher than expected. The mod uses " + MapFrontiers.SETTINGS_DATA_VERSION);
+                needBackup = true;
+            }
+
+            CompoundTag OPsTag = nbt.getCompound("OPs");
+            OPs.readFromNBT(OPsTag, version);
+
+            CompoundTag ownersTag = nbt.getCompound("Owners");
+            owners.readFromNBT(ownersTag, version);
+
+            CompoundTag everyoneTag = nbt.getCompound("Everyone");
+            everyone.readFromNBT(everyoneTag, version);
+
+            customGroups.clear();
+            ListTag customGroupsTagList = nbt.getList("customGroups", Tag.TAG_COMPOUND);
+            for (int i = 0; i < customGroupsTagList.size(); ++i) {
+                SettingsGroup group = new SettingsGroup();
+                CompoundTag groupTag = customGroupsTagList.getCompound(i);
+                group.readFromNBT(groupTag, version);
+                customGroups.add(group);
+            }
+
+            ensureUpdateSettingsAction();
+        } catch (Exception ignored) {
+            return true;
         }
 
-        CompoundTag OPsTag = nbt.getCompound("OPs");
-        OPs.readFromNBT(OPsTag, version);
-
-        CompoundTag ownersTag = nbt.getCompound("Owners");
-        owners.readFromNBT(ownersTag, version);
-
-        CompoundTag everyoneTag = nbt.getCompound("Everyone");
-        everyone.readFromNBT(everyoneTag, version);
-
-        customGroups.clear();
-        ListTag customGroupsTagList = nbt.getList("customGroups", Tag.TAG_COMPOUND);
-        for (int i = 0; i < customGroupsTagList.size(); ++i) {
-            SettingsGroup group = new SettingsGroup();
-            CompoundTag groupTag = customGroupsTagList.getCompound(i);
-            group.readFromNBT(groupTag, version);
-            customGroups.add(group);
-        }
-
-        ensureUpdateSettingsAction();
+        return needBackup;
     }
 
     public void writeToNBT(CompoundTag nbt) {
