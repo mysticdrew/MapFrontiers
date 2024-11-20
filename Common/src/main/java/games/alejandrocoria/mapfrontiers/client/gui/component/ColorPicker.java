@@ -2,11 +2,14 @@ package games.alejandrocoria.mapfrontiers.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.Color;
 import java.util.function.BiConsumer;
@@ -45,6 +48,11 @@ public class ColorPicker extends AbstractWidgetNoNarration {
 
     public int getColor() {
         return color;
+    }
+
+    @Nullable
+    public ComponentPath nextFocusPath(FocusNavigationEvent navigationEvent) {
+        return null;
     }
 
     @Override

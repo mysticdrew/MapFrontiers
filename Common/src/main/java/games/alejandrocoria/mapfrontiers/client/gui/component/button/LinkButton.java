@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class LinkButton extends Button {
+public class LinkButton extends ButtonBase {
     private final Font font;
 
     public LinkButton(Font font, Component text, OnPress pressedAction) {
@@ -19,6 +19,6 @@ public class LinkButton extends Button {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.drawString(font, getMessage(), getX(), getY() + 2, isHovered ? ColorConstants.LINK_HIGHLIGHT : ColorConstants.LINK);
+        graphics.drawString(font, getMessage(), getX(), getY() + 2, isHoveredOrKeyboardFocused() ? ColorConstants.LINK_HIGHLIGHT : ColorConstants.LINK);
     }
 }

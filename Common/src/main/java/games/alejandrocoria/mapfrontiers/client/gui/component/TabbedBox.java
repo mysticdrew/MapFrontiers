@@ -1,6 +1,7 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component;
 
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
+import games.alejandrocoria.mapfrontiers.client.gui.component.button.ButtonBase;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -148,7 +149,7 @@ public class TabbedBox implements Layout {
         graphics.vLine(getX() + width, getY() + 16, getY() + height, ColorConstants.TAB_BORDER);
     }
 
-    private static class Tab extends Button {
+    private static class Tab extends ButtonBase {
         private final Font font;
         private boolean selected = false;
 
@@ -166,14 +167,14 @@ public class TabbedBox implements Layout {
         public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             graphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ColorConstants.SCREEN_BG);
 
-            graphics.hLine(getX(), getX() + getWidth(), getY(), ColorConstants.TAB_BORDER);
+            graphics.hLine(getX(), getX() + getWidth(), getY(), isKeyboardFocused() ? ColorConstants.TAB_BORDER_FOCUSED : ColorConstants.TAB_BORDER);
             graphics.vLine(getX(), getY(), getY() + getHeight(), ColorConstants.TAB_BORDER);
             graphics.vLine(getX() + getWidth(), getY(), getY() + getHeight(), ColorConstants.TAB_BORDER);
 
             int labelColor = ColorConstants.TAB_TEXT;
             if (!active) {
                 labelColor = ColorConstants.TAB_TEXT_DISABLED;
-            } else if (selected || isHovered) {
+            } else if (selected || isHoveredOrKeyboardFocused()) {
                 labelColor = ColorConstants.TAB_TEXT_HIGHLIGHT;
             }
 

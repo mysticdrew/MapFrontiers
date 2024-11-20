@@ -41,12 +41,14 @@ import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.layouts.SpacerElement;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -226,7 +228,11 @@ public class ModSettings extends AutoScaledScreen {
         buttonWeb = creditsLayout.addChild(new LinkButton(font, webLinkLabel, (b) -> {
             MapFrontiersClient.setLastSettingsTab(tabSelected);
             ConfirmLinkScreen.confirmLinkNow(this, webURL, false);
-        }));
+        }) {
+            public @NotNull ScreenRectangle getRectangle() {
+                return new ScreenRectangle(this.getX() - 100, this.getY(), this.getWidth() + 200, this.getHeight());
+            }
+        });
         creditsLayout.addChild(SpacerElement.height(16));
 
         creditsLayout.addChild(new StringWidget(manyThanksLabel, font).setColor(ColorConstants.TEXT_MEDIUM));
@@ -263,7 +269,11 @@ public class ModSettings extends AutoScaledScreen {
 
         labelTitleAnnouncementAboveHotbar = miscLayout.addChild(new StringWidget(titleAnnouncementAboveHotbarLabel, font).setColor(ColorConstants.TEXT), row, 0);
         labelTitleAnnouncementAboveHotbar.setTooltip(titleAnnouncementAboveHotbarTooltip);
-        buttonTitleAnnouncementAboveHotbar = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.titleAnnouncementAboveHotbar = b.getSelected() == 0), row++, 1);
+        buttonTitleAnnouncementAboveHotbar = miscLayout.addChild(new OptionButton(font, 40, (b) -> Config.titleAnnouncementAboveHotbar = b.getSelected() == 0) {
+            public @NotNull ScreenRectangle getRectangle() {
+                return new ScreenRectangle(this.getX() - 300, this.getY(), this.getWidth() + 300, this.getHeight());
+            }
+        }, row++, 1);
         buttonTitleAnnouncementAboveHotbar.addOption(onLabel);
         buttonTitleAnnouncementAboveHotbar.addOption(offLabel);
         buttonTitleAnnouncementAboveHotbar.setSelected(Config.titleAnnouncementAboveHotbar ? 0 : 1);
@@ -298,7 +308,11 @@ public class ModSettings extends AutoScaledScreen {
 
         SimpleButton buttonVisibility = new SimpleButton(font, 144, forcedVisibilityLabel, (b) -> {
             new VisibilityDialog(createForcedVisibility(), createForcedVisibilityMask(), this::setForcedVisibility).display();
-        });
+        }) {
+            public @NotNull ScreenRectangle getRectangle() {
+                return new ScreenRectangle(this.getX(), this.getY(), getWidth() + 100, this.getHeight());
+            }
+        };
         miscLayout.addChild(buttonVisibility, row++, 0, 1, 2, LayoutSettings.defaults().alignHorizontallyCenter());
 
         miscLayout.addChild(SpacerElement.height(4), row++, 0);
@@ -348,7 +362,11 @@ public class ModSettings extends AutoScaledScreen {
         buttonEditHUD = generalLayout.addChild(new SimpleButton(font, 100, editHudLabel, (b) -> {
             MapFrontiersClient.setLastSettingsTab(tabSelected);
             new HUDSettings().display();
-        }));
+        }) {
+            public @NotNull ScreenRectangle getRectangle() {
+                return new ScreenRectangle(this.getX(), this.getY(), getWidth() + 100, this.getHeight());
+            }
+        });
 
         LinearLayout groupsLayout = LinearLayout.horizontal().spacing(4);
         groupsLayout.defaultCellSetting().alignHorizontallyLeft();

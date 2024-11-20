@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class CheckBoxButton extends Button {
+public class CheckBoxButton extends ButtonBase {
     private boolean checked;
 
     public CheckBoxButton(boolean initialValue, OnPress pressedAction) {
@@ -26,7 +26,7 @@ public class CheckBoxButton extends Button {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.fill(getX(), getY(), getX() + 12, getY() + 12, isFocused() ? ColorConstants.WHITE : ColorConstants.CHECKBOX_BORDER);
+        graphics.fill(getX(), getY(), getX() + 12, getY() + 12, isHoveredOrKeyboardFocused() ? ColorConstants.CHECKBOX_BORDER_FOCUSED : ColorConstants.CHECKBOX_BORDER);
         graphics.fill(getX() + 1, getY() + 1, getX() + 11, getY() + 11, ColorConstants.CHECKBOX_BG);
         if (checked) {
             graphics.fill(getX() + 2, getY() + 2, getX() + 10, getY() + 10, ColorConstants.CHECKBOX_CHECK);
@@ -34,9 +34,9 @@ public class CheckBoxButton extends Button {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onPress() {
         toggle();
-        onPress();
+        super.onPress();
     }
 
 

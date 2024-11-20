@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class IconButton extends Button {
+public class IconButton extends ButtonBase {
     private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(MapFrontiers.MODID, "textures/gui/buttons.png");
     private static final int textureSizeX = 34;
     private static final int textureSizeY = 111;
@@ -64,7 +64,7 @@ public class IconButton extends Button {
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
 
-        if (isHovered) {
+        if (isHoveredOrKeyboardFocused()) {
             graphics.blit(texture, getX(), getY(), type.texHoverX, type.texHoverY, width, height, textureSizeX, textureSizeY);
         } else {
             graphics.blit(texture, getX(), getY(), type.texX, type.texY, width, height, textureSizeX, textureSizeY);

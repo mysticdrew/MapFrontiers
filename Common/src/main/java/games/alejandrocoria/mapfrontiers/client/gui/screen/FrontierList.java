@@ -123,12 +123,11 @@ public class FrontierList extends AutoScaledScreen {
 
         rightColumn.addChild(SpacerElement.height(4));
         rightColumn.addChild(new StringWidget(filterTypeLabel, font).setColor(ColorConstants.TEXT));
-        filterType = new ScrollBox(48, 200, 16);
+        filterType = new ScrollBox(52, 200, 16);
         filterType.addElement(new RadioListElement(font, Config.getTranslatedEnum(Config.FilterFrontierType.All), Config.FilterFrontierType.All.ordinal()));
         filterType.addElement(new RadioListElement(font, Config.getTranslatedEnum(Config.FilterFrontierType.Global), Config.FilterFrontierType.Global.ordinal()));
         filterType.addElement(new RadioListElement(font, Config.getTranslatedEnum(Config.FilterFrontierType.Personal), Config.FilterFrontierType.Personal.ordinal()));
         filterType.selectElementIf((element) -> ((RadioListElement) element).getId() == Config.filterFrontierType.ordinal());
-        filterType.setElementDeletedCallback(element -> updateButtons());
         filterType.setElementClickedCallback(element -> {
             int selected = ((RadioListElement) element).getId();
             Config.filterFrontierType = Config.FilterFrontierType.values()[selected];
@@ -140,12 +139,11 @@ public class FrontierList extends AutoScaledScreen {
 
         rightColumn.addChild(SpacerElement.height(4));
         rightColumn.addChild(new StringWidget(filterOwnerLabel, font).setColor(ColorConstants.TEXT));
-        filterOwner = new ScrollBox(48, 200, 16);
+        filterOwner = new ScrollBox(52, 200, 16);
         filterOwner.addElement(new RadioListElement(font, Config.getTranslatedEnum(Config.FilterFrontierOwner.All), Config.FilterFrontierOwner.All.ordinal()));
         filterOwner.addElement(new RadioListElement(font, Config.getTranslatedEnum(Config.FilterFrontierOwner.You), Config.FilterFrontierOwner.You.ordinal()));
         filterOwner.addElement(new RadioListElement(font, Config.getTranslatedEnum(Config.FilterFrontierOwner.Others), Config.FilterFrontierOwner.Others.ordinal()));
         filterOwner.selectElementIf((element) -> ((RadioListElement) element).getId() == Config.filterFrontierOwner.ordinal());
-        filterOwner.setElementDeletedCallback(element -> updateButtons());
         filterOwner.setElementClickedCallback(element -> {
             int selected = ((RadioListElement) element).getId();
             Config.filterFrontierOwner = Config.FilterFrontierOwner.values()[selected];
@@ -157,7 +155,7 @@ public class FrontierList extends AutoScaledScreen {
 
         rightColumn.addChild(SpacerElement.height(4));
         rightColumn.addChild(new StringWidget(filterDimensionLabel, font).setColor(ColorConstants.TEXT));
-        filterDimension = new ScrollBox(actualHeight - 269, 200, 16);
+        filterDimension = new ScrollBox(actualHeight - 274, 200, 16);
         filterDimension.addElement(new RadioListElement(font, configAllLabel, "all".hashCode()));
         filterDimension.addElement(new RadioListElement(font, configCurrentLabel, "current".hashCode()));
         filterDimension.addElement(new RadioListElement(font, overworldLabel, "minecraft:overworld".hashCode()));
@@ -165,7 +163,6 @@ public class FrontierList extends AutoScaledScreen {
         filterDimension.addElement(new RadioListElement(font, theEndLabel, "minecraft:the_end".hashCode()));
         addDimensionsToFilter();
         filterDimension.selectElementIf((element) -> ((RadioListElement) element).getId() == Config.filterFrontierDimension.hashCode());
-        filterDimension.setElementDeletedCallback(element -> updateButtons());
         filterDimension.setElementClickedCallback(element -> {
             int selected = ((RadioListElement) element).getId();
             if (selected == "all".hashCode()) {

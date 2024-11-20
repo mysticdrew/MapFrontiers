@@ -76,6 +76,13 @@ public class ConfirmationDialog extends AutoScaledScreen {
     }
 
     @Override
+    protected void setInitialFocus() {
+        if (minecraft.getLastInputType().isKeyboard()) {
+            setInitialFocus(cancelButton);
+        }
+    }
+
+    @Override
     public void renderScaledBackgroundScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         drawCenteredBoxBackground(graphics, content.getWidth() + 20, content.getHeight() + 20);
     }

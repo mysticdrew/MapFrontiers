@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class OptionButton extends Button {
+public class OptionButton extends ButtonBase {
     public static final OnPress DO_NOTHING = (b) -> {};
 
     protected final Font font;
@@ -70,7 +70,7 @@ public class OptionButton extends Button {
             }
 
             playDownSound(Minecraft.getInstance().getSoundManager());
-            onPress();
+            super.onPress();
             return true;
         }
 
@@ -82,24 +82,25 @@ public class OptionButton extends Button {
         int c = color;
         if (!active) {
             c = ColorConstants.TEXT_DARK;
-        } else if (isHovered) {
+        } else if (isHoveredOrKeyboardFocused()) {
             c = highlightedColor;
         }
 
-        graphics.fill(getX(), getY(), getX() + width, getY() + height, ColorConstants.OPTION_BORDER);
+        int borderColor = isKeyboardFocused() ? ColorConstants.OPTION_BORDER_FOCUSED : active ? ColorConstants.OPTION_BORDER : ColorConstants.OPTION_BORDER_DISABLED;
+        graphics.fill(getX(), getY(), getX() + width, getY() + height, borderColor);
         graphics.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, ColorConstants.OPTION_BG);
 
         graphics.drawString(font, options.get(selected), getX() + 4, getY() + 2, c);
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onPress() {
         ++selected;
         if (selected >= options.size()) {
             selected = 0;
         }
 
-        onPress();
+        super.onPress();
     }
 
 

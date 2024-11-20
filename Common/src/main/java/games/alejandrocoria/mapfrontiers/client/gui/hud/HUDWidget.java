@@ -3,10 +3,13 @@ package games.alejandrocoria.mapfrontiers.client.gui.hud;
 import games.alejandrocoria.mapfrontiers.client.gui.component.AbstractWidgetNoNarration;
 import games.alejandrocoria.mapfrontiers.common.Config;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
@@ -37,6 +40,11 @@ public class HUDWidget extends AbstractWidgetNoNarration {
         int yScaled = (int) mouseY * factor;
 
         return this.active && this.visible && hud.isInside(xScaled, yScaled);
+    }
+
+    @Nullable
+    public ComponentPath nextFocusPath(FocusNavigationEvent navigationEvent) {
+        return null;
     }
 
     @Override

@@ -1,10 +1,15 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component;
 
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
+@ParametersAreNonnullByDefault
 public class ColorPaletteWidget extends AbstractWidgetNoNarration {
     private static final int[] palette = {
             0xffff0000, 0xffff8000, 0xffffff00, 0xff80ff00, 0xff00ff00, 0xff00ff80,
@@ -27,6 +32,11 @@ public class ColorPaletteWidget extends AbstractWidgetNoNarration {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    @Nullable
+    public ComponentPath nextFocusPath(FocusNavigationEvent navigationEvent) {
+        return null;
     }
 
     @Override

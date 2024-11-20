@@ -400,6 +400,9 @@ public class FrontierInfo extends AutoScaledScreen {
                 sendChangesToServer();
                 rebuildWidgets();
                 repositionElements();
+                if (minecraft.getLastInputType().isKeyboard()) {
+                    setInitialFocus(buttonPaste);
+                }
             }
         }));
         buttonPaste.setTooltip(pasteTooltip);
@@ -529,6 +532,13 @@ public class FrontierInfo extends AutoScaledScreen {
         sendChangesToServer();
         rebuildWidgets();
         repositionElements();
+        if (minecraft.getLastInputType().isKeyboard()) {
+            if (undoStack.size() == 1) {
+                setInitialFocus(buttonRedo);
+            } else {
+                setInitialFocus(buttonUndo);
+            }
+        }
     }
 
     private void redo() {
@@ -541,6 +551,13 @@ public class FrontierInfo extends AutoScaledScreen {
         sendChangesToServer();
         rebuildWidgets();
         repositionElements();
+        if (minecraft.getLastInputType().isKeyboard()) {
+            if (redoStack.empty()) {
+                setInitialFocus(buttonUndo);
+            } else {
+                setInitialFocus(buttonRedo);
+            }
+        }
     }
 
     private void setFrontier(FrontierData other, boolean name, boolean visibility, boolean color, boolean banner) {
@@ -653,9 +670,9 @@ public class FrontierInfo extends AutoScaledScreen {
         boolean add = undoStack.empty();
         if (!add) {
             FrontierData u = undoStack.peek();
-            if (!Objects.equals(u.getName1(), (frontier.getName1()))
-                    || !Objects.equals(u.getName2(), (frontier.getName2()))
-                    || !Objects.equals(u.getVisibilityData(), (frontier.getVisibilityData()))
+            if (!Objects.equals(u.getName1(), frontier.getName1())
+                    || !Objects.equals(u.getName2(), frontier.getName2())
+                    || !Objects.equals(u.getVisibilityData(), frontier.getVisibilityData())
                     || u.getColor() != frontier.getColor()
                     || !Objects.equals(u.getbannerData(), frontier.getbannerData())) {
                 add = true;

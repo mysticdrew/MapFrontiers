@@ -943,12 +943,17 @@ public class FrontierData {
             return values.hashCode();
         }
 
-        public boolean equals(VisibilityData other) {
+        @Override
+        public boolean equals(Object other) {
             if (this == other) {
                 return true;
             }
 
-            return values.equals(other.values);
+            if (other instanceof VisibilityData otherVisibility) {
+                return values.equals(otherVisibility.values);
+            }
+
+            return false;
         }
 
         public void setValue(Visibility value, boolean set) {
