@@ -433,7 +433,7 @@ public class ModSettings extends AutoScaledScreen {
 
         labelGroupDesc = usersCol.addChild(new MultiLineTextWidget(groupOpsDescLabel, font).setColor(ColorConstants.TEXT));
 
-        users = usersCol.addChild(new ScrollBox(actualHeight - 150, 258, 16));
+        users = usersCol.addChild(new ScrollBox(actualHeight - 160, 258, 16));
         users.setElementDeletePressedCallback(element -> {
             SettingsGroup group = ((GroupElement) groups.getSelectedElement()).getGroup();
             if (Config.askConfirmationUserDelete) {
@@ -500,9 +500,12 @@ public class ModSettings extends AutoScaledScreen {
     public void repositionElements() {
         tabbedBox.setSize(actualWidth - 80, actualHeight - 64);
         groups.setHeight(actualHeight - 120);
-        users.setHeight(actualHeight - 150);
+        users.setHeight(actualHeight - 160);
         groupsActions.setHeight(actualHeight - 128);
         super.repositionElements();
+
+        textNewUser.setY(textNewGroupName.getY());
+        buttonNewUser.setY(buttonNewGroup.getY());
 
         labelCreateFrontier.setX(groupsActions.getX() + 160 - labelCreateFrontier.getWidth() / 2);
         labelDeleteFrontier.setX(groupsActions.getX() + 220 - labelDeleteFrontier.getWidth() / 2);

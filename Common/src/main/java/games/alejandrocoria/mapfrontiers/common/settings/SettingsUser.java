@@ -58,7 +58,9 @@ public class SettingsUser {
 
     public void writeToNBT(CompoundTag nbt) {
         nbt.putString("username", username);
-        nbt.putString("UUID", uuid.toString());
+        if (uuid != null) {
+            nbt.putString("UUID", uuid.toString());
+        }
     }
 
     public void fromBytes(FriendlyByteBuf buf) {

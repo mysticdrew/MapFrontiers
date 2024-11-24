@@ -26,6 +26,10 @@ public class CheckBoxButton extends ButtonBase {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        if (!visible || !active) {
+            return;
+        }
+
         graphics.fill(getX(), getY(), getX() + 12, getY() + 12, isHoveredOrKeyboardFocused() ? ColorConstants.CHECKBOX_BORDER_FOCUSED : ColorConstants.CHECKBOX_BORDER);
         graphics.fill(getX() + 1, getY() + 1, getX() + 11, getY() + 11, ColorConstants.CHECKBOX_BG);
         if (checked) {

@@ -31,7 +31,7 @@ public class GroupElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public void setX(int x) {
+    protected void setX(int x) {
         super.setX(x);
         if (buttonDelete != null) {
             buttonDelete.setX(this.x + 145);
@@ -39,7 +39,7 @@ public class GroupElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public void setY(int y) {
+    protected void setY(int y) {
         super.setY(y);
         if (buttonDelete != null) {
             buttonDelete.setY(this.y + 1);
@@ -47,7 +47,7 @@ public class GroupElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected, boolean focused) {
         int color = ColorConstants.TEXT;
         if (selected) {
             color = ColorConstants.TEXT_HIGHLIGHT;
@@ -55,9 +55,10 @@ public class GroupElement extends ScrollBox.ScrollElement {
 
         if (isHovered) {
             graphics.fill(x, y, x + width, y + height, ColorConstants.SCROLL_ELEMENT_HOVERED);
-            if (buttonDelete != null) {
-                buttonDelete.render(graphics, mouseX, mouseY, partialTicks);
-            }
+        }
+
+        if (buttonDelete != null && (isHovered || focused)) {
+            buttonDelete.render(graphics, mouseX, mouseY, partialTicks);
         }
 
         String text = group.getName();
@@ -69,7 +70,7 @@ public class GroupElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public ScrollBox.ScrollElement.Action mousePressed(double mouseX, double mouseY) {
+    protected ScrollBox.ScrollElement.Action mousePressed(double mouseX, double mouseY) {
         if (visible && isHovered) {
             if (buttonDelete != null && buttonDelete.isMouseOver(mouseX, mouseY)) {
                 return ScrollBox.ScrollElement.Action.Deleted;
@@ -79,5 +80,10 @@ public class GroupElement extends ScrollBox.ScrollElement {
         }
 
         return ScrollBox.ScrollElement.Action.None;
+    }
+
+    @Override
+    protected boolean canBeDeleted() {
+        return true;
     }
 }

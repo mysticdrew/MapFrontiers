@@ -31,19 +31,19 @@ public class RadioListElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public void setX(int x) {
+    protected void setX(int x) {
         super.setX(x);
         label.setX(x + 20);
     }
 
     @Override
-    public void setY(int y) {
+    protected void setY(int y) {
         super.setY(y);
         label.setY(y + 4);
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected, boolean focused) {
         if (isHovered) {
             graphics.fill(x, y, x + width, y + height, ColorConstants.SCROLL_ELEMENT_HOVERED);
         }
@@ -54,7 +54,7 @@ public class RadioListElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public Action mousePressed(double mouseX, double mouseY) {
+    protected Action mousePressed(double mouseX, double mouseY) {
         if (visible && isHovered) {
             return Action.Clicked;
         }

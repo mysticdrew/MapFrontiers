@@ -1,25 +1,32 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component.scroll;
 
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
-import games.alejandrocoria.mapfrontiers.client.gui.component.AbstractWidgetNoNarration;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.CommonInputs;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.navigation.ScreenAxis;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
-public class ScrollBox extends AbstractWidgetNoNarration {
+@MethodsReturnNonnullByDefault
+public class ScrollBox extends AbstractContainerWidget {
     private final int elementHeight;
     private int scrollStart = 0;
     private int scrollHeight;
@@ -75,6 +82,7 @@ public class ScrollBox extends AbstractWidgetNoNarration {
         focused = selected;
     }
 
+    @Nullable
     public ScrollElement getSelectedElement() {
         if (selected >= 0 && selected < elements.size()) {
             return elements.get(selected);
@@ -153,17 +161,40 @@ public class ScrollBox extends AbstractWidgetNoNarration {
 
     @Nullable
     public ComponentPath nextFocusPath(FocusNavigationEvent navigationEvent) {
-        if (elements.isEmpty()) {
+        if (!visible || !active || elements.isEmpty()) {
             return null;
+        }
+
+        int focusedChild = -1;
+        List<GuiEventListener> children = focused == -1 ? null : elements.get(focused).children();
+        if (children != null) {
+            if (children.isEmpty()) {
+                children = null;
+            } else {
+                for (int i = 0; i < children.size(); ++i) {
+                    if (children.get(i).isFocused()) {
+                        focusedChild = i;
+                        break;
+                    }
+                }
+            }
         }
 
         if (isFocused()) {
             boolean forward = true;
             if (navigationEvent instanceof FocusNavigationEvent.ArrowNavigation arrowNavigation) {
+                forward = arrowNavigation.direction().isPositive();
                 if (arrowNavigation.direction().getAxis() == ScreenAxis.HORIZONTAL) {
+                    if (children != null) {
+                        focusedChild += forward ? 1 : -1;
+                        if (focusedChild < 0 || focusedChild >= children.size()) {
+                            return null;
+                        } else {
+                            return ComponentPath.path(this, elements.get(focused).focusPathAtIndex(navigationEvent, focusedChild));
+                        }
+                    }
                     return null;
                 }
-                forward = arrowNavigation.direction().isPositive();
             } else if (navigationEvent instanceof FocusNavigationEvent.TabNavigation tabNavigation) {
                 forward = tabNavigation.forward();
             }
@@ -184,9 +215,10 @@ public class ScrollBox extends AbstractWidgetNoNarration {
                 }
             }
         } else {
-            focused = selected;
-            if (focused == -1) {
+            if (navigationEvent.getVerticalDirectionForInitialFocus().isPositive()) {
                 focused = 0;
+            } else {
+                focused = elements.size() - 1;
             }
         }
 
@@ -200,7 +232,14 @@ public class ScrollBox extends AbstractWidgetNoNarration {
             updateScrollBar();
         }
 
-        return ComponentPath.leaf(this);
+        if (!elements.get(focused).children().isEmpty()) {
+            if (focusedChild == -1) {
+                focusedChild = 0;
+            }
+            return ComponentPath.path(this, elements.get(focused).focusPathAtIndex(navigationEvent, focusedChild));
+        }
+
+        return ComponentPath.path(this, ComponentPath.leaf(elements.get(focused)));
     }
 
     @Override
@@ -237,6 +276,15 @@ public class ScrollBox extends AbstractWidgetNoNarration {
         this.height = scrollHeight * elementHeight;
         updateScrollWindow();
         updateScrollBar();
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    }
+
+    @Override
+    public List<? extends GuiEventListener> children() {
+        return elements;
     }
 
     @Override
@@ -291,8 +339,8 @@ public class ScrollBox extends AbstractWidgetNoNarration {
     }
 
     @Override
-    public boolean clicked(double mouseX, double mouseY) {
-        if (visible) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (active && visible && isValidClickButton(button)) {
             if (scrollBarHeight > 0 && mouseX >= getX() + width - 10 && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height) {
                 if (mouseY < getY() + scrollBarPos) {
                     mouseScrolled(mouseX, mouseY, 0, 1);
@@ -348,11 +396,26 @@ public class ScrollBox extends AbstractWidgetNoNarration {
             if (CommonInputs.selected(keyCode)) {
                 selectIndex(focused);
                 if (selected != -1) {
-                    if (elementClickedCallback != null) {
+                    ScrollElement focusedElement = elements.get(focused);
+                    if (!focusedElement.children().isEmpty()) {
+                        focusedElement.keyPressed(keyCode, scanCode, modifiers);
+                    } else if (elementClickedCallback != null) {
                         elementClickedCallback.accept(getSelectedElement());
                     }
                 }
                 return true;
+            }
+
+            if (keyCode == GLFW.GLFW_KEY_DELETE && focused != -1) {
+                ScrollElement element = elements.get(focused);
+                if (element.canBeDeleted()) {
+                    if (elementDeletePressedCallback != null) {
+                        elementDeletePressedCallback.accept(element);
+                    } else {
+                        removeElement(element);
+                    }
+                    return true;
+                }
             }
         }
 
@@ -431,35 +494,37 @@ public class ScrollBox extends AbstractWidgetNoNarration {
         }
     }
 
-    public static class ScrollElement {
+    public static class ScrollElement implements ContainerEventHandler {
         public enum Action {
             None, Clicked, Deleted
         }
 
-        public boolean visible = true;
+        protected boolean visible = true;
         protected int x = 0;
         protected int y = 0;
         protected boolean isHovered = false;
+        protected GuiEventListener focused;
+        protected boolean dragging;
         protected final int height;
         protected final int width;
 
-        public ScrollElement(int width, int height) {
+        protected ScrollElement(int width, int height) {
             this.width = width;
             this.height = height;
         }
 
-        public void setX(int x) {
+        protected void setX(int x) {
             this.x = x;
         }
 
-        public void setY(int y) {
+        protected void setY(int y) {
             this.y = y;
         }
 
-        public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected, boolean focused) {
+        protected void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected, boolean focused) {
             if (visible) {
                 isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-                renderWidget(graphics, mouseX, mouseY, partialTicks, selected);
+                renderWidget(graphics, mouseX, mouseY, partialTicks, selected, focused);
                 if (focused) {
                     graphics.hLine(x - 1, x + width, y - 1, ColorConstants.WHITE);
                     graphics.hLine(x - 1, x + width, y + height, ColorConstants.WHITE);
@@ -471,11 +536,75 @@ public class ScrollBox extends AbstractWidgetNoNarration {
             }
         }
 
-        public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected) {
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected, boolean focused) {
         }
 
-        public Action mousePressed(double mouseX, double mouseY) {
+        protected Action mousePressed(double mouseX, double mouseY) {
             return Action.None;
+        }
+
+        protected boolean canBeDeleted() {
+            return false;
+        }
+
+        public List<GuiEventListener> children() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public boolean isDragging() {
+            return dragging;
+        }
+
+        @Override
+        public void setDragging(boolean dragging) {
+            this.dragging = dragging;
+        }
+
+        @Override
+        public GuiEventListener getFocused() {
+            return focused;
+        }
+
+        @Override
+        public void setFocused(@Nullable GuiEventListener guiEventListener) {
+            if (this.focused != null) {
+                this.focused.setFocused(false);
+            }
+
+            this.focused = guiEventListener;
+        }
+
+        @Nullable
+        public ComponentPath focusPathAtIndex(FocusNavigationEvent navigationEvent, int index) {
+            if (this.children().isEmpty()) {
+                return null;
+            } else {
+                ComponentPath path = this.children().get(Math.min(index, this.children().size() - 1)).nextFocusPath(navigationEvent);
+                for (int i = index; i < this.children().size() && path == null; ++i) {
+                    if (this.children().get(i).isFocused()) {
+                        break;
+                    }
+                    path = this.children().get(i).nextFocusPath(navigationEvent);
+                }
+                for (int i = index - 1; i > 0 && path == null; --i) {
+                    if (this.children().get(i).isFocused()) {
+                        break;
+                    }
+                    path = this.children().get(i).nextFocusPath(navigationEvent);
+                }
+
+                return ComponentPath.path(this, path);
+            }
+        }
+
+        @Override
+        public ComponentPath getCurrentFocusPath() {
+            if (this.children().isEmpty()) {
+                return ComponentPath.leaf(this);
+            } else {
+                return this.getFocused() != null ? ComponentPath.path(this, this.getFocused().getCurrentFocusPath()) : ComponentPath.leaf(this);
+            }
         }
     }
 }

@@ -1,24 +1,29 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component.scroll;
 
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
+import games.alejandrocoria.mapfrontiers.client.gui.component.button.CheckBoxButton;
 import games.alejandrocoria.mapfrontiers.client.gui.component.button.IconButton;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsUser;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsUserShared;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.resources.language.I18n;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class UserSharedElement extends ScrollBox.ScrollElement {
     private final Font font;
     private final SettingsUserShared user;
-    private final ActionChangedConsumer actionChangedCallback;
-    private boolean updateFrontier;
-    private boolean updateSettings;
+    private final CheckBoxButton updateFrontier;
+    private final CheckBoxButton updateSettings;
     private IconButton buttonDelete;
+    private final List<GuiEventListener> children;
     private final boolean enabled;
     private int pingBar = 0;
 
@@ -26,14 +31,20 @@ public class UserSharedElement extends ScrollBox.ScrollElement {
         super(430, 16);
         this.font = font;
         this.user = user;
-        this.actionChangedCallback = actionChangedCallback;
-        updateFrontier = user.hasAction(SettingsUserShared.Action.UpdateFrontier);
-        updateSettings = user.hasAction(SettingsUserShared.Action.UpdateSettings);
+        updateFrontier = new CheckBoxButton(user.hasAction(SettingsUserShared.Action.UpdateFrontier),
+                (b) -> actionChangedCallback.accept(user, SettingsUserShared.Action.UpdateFrontier, b.isChecked()));
+        updateFrontier.active = enabled;
+        updateSettings = new CheckBoxButton(user.hasAction(SettingsUserShared.Action.UpdateSettings),
+                (b) -> actionChangedCallback.accept(user, SettingsUserShared.Action.UpdateSettings, b.isChecked()));
+        updateSettings.active = enabled;
+
         this.enabled = enabled;
 
         if (removable && enabled) {
             buttonDelete = new IconButton(IconButton.Type.Remove, (button) -> {});
         }
+
+        children = List.of(updateFrontier, updateSettings);
     }
 
     public SettingsUser getUser() {
@@ -51,25 +62,32 @@ public class UserSharedElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public void setX(int x) {
+    protected void setX(int x) {
         super.setX(x);
+        updateFrontier.setX(x + 244);
+        updateSettings.setX(x + 304);
         if (buttonDelete != null) {
             buttonDelete.setX(this.x + 413);
         }
     }
 
     @Override
-    public void setY(int y) {
+    protected void setY(int y) {
         super.setY(y);
+        updateFrontier.setY(y + 2);
+        updateSettings.setY(y + 2);
         if (buttonDelete != null) {
             buttonDelete.setY(this.y + 1);
         }
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected, boolean focused) {
         if (isHovered) {
             graphics.fill(x, y, x + width, y + height, ColorConstants.SCROLL_ELEMENT_HOVERED);
+        }
+
+        if (isHovered || focused) {
             if (buttonDelete != null) {
                 buttonDelete.render(graphics, mouseX, mouseY, partialTicks);
             }
@@ -77,8 +95,8 @@ public class UserSharedElement extends ScrollBox.ScrollElement {
 
         graphics.drawString(font, user.getUser().toString(), x + 16, y + 4, ColorConstants.TEXT_HIGHLIGHT);
 
-        drawBox(graphics, x + 244, y + 2, updateFrontier);
-        drawBox(graphics, x + 304, y + 2, updateSettings);
+        updateFrontier.render(graphics, mouseX, mouseY, partialTicks);
+        updateSettings.render(graphics, mouseX, mouseY, partialTicks);
 
         if (user.isPending()) {
             graphics.drawString(font, I18n.get("mapfrontiers.pending", ChatFormatting.ITALIC), x + 350, y + 4, ColorConstants.TEXT_PENDING);
@@ -106,32 +124,35 @@ public class UserSharedElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public ScrollBox.ScrollElement.Action mousePressed(double mouseX, double mouseY) {
-        if (enabled && visible && isHovered && actionChangedCallback != null) {
-            if (mouseX >= x + 220 && mouseX <= x + 280) {
-                updateFrontier = !updateFrontier;
-                actionChangedCallback.accept(user, SettingsUserShared.Action.UpdateFrontier, updateFrontier);
-            } else if (mouseX >= x + 280 && mouseX <= x + 340) {
-                updateSettings = !updateSettings;
-                actionChangedCallback.accept(user, SettingsUserShared.Action.UpdateSettings, updateSettings);
+    protected ScrollBox.ScrollElement.Action mousePressed(double mouseX, double mouseY) {
+        if (enabled && visible && isHovered) {
+            for (GuiEventListener checkBox : children) {
+                if (checkBox.mouseClicked(mouseX, mouseY, 0)) {
+                    return ScrollBox.ScrollElement.Action.None;
+                }
             }
-        }
 
-        if (enabled && visible && isHovered && buttonDelete != null) {
-            if (buttonDelete.isMouseOver(mouseX, mouseY)) {
-                return ScrollBox.ScrollElement.Action.Deleted;
+            if (buttonDelete != null) {
+                if (buttonDelete.isMouseOver(mouseX, mouseY)) {
+                    return ScrollBox.ScrollElement.Action.Deleted;
+                }
             }
         }
 
         return ScrollBox.ScrollElement.Action.None;
     }
 
-    private void drawBox(GuiGraphics graphics, int x, int y, boolean checked) {
-        graphics.fill(x, y, x + 12, y + 12, ColorConstants.CHECKBOX_BORDER);
-        graphics.fill(x + 1, y + 1, x + 11, y + 11, ColorConstants.CHECKBOX_BG);
-        if (checked) {
-            graphics.fill(x + 2, y + 2, x + 10, y + 10, ColorConstants.CHECKBOX_CHECK);
+    @Override
+    public List<GuiEventListener> children() {
+        if (enabled) {
+            return children;
         }
+        return super.children();
+    }
+
+    @Override
+    protected boolean canBeDeleted() {
+        return true;
     }
 
     @FunctionalInterface

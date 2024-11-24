@@ -64,17 +64,17 @@ public class FrontierListElement extends ScrollBox.ScrollElement {
     }
 
     @Override
-    public void setX(int x) {
+    protected void setX(int x) {
         super.setX(x);
     }
 
     @Override
-    public void setY(int y) {
+    protected void setY(int y) {
         super.setY(y);
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, boolean selected, boolean focused) {
         int color = ColorConstants.TEXT;
         if (selected) {
             color = ColorConstants.TEXT_HIGHLIGHT;
