@@ -13,6 +13,7 @@ import journeymap.api.v2.client.event.FullscreenMapEvent;
 import journeymap.api.v2.client.fullscreen.ModPopupMenu;
 import journeymap.api.v2.client.fullscreen.ThemeButtonDisplay;
 import journeymap.api.v2.common.event.ClientEventRegistry;
+import journeymap.api.v2.common.event.FullscreenEventRegistry;
 import net.minecraft.client.gui.screens.Screen;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,7 +27,7 @@ public class MapFrontiersPlugin implements IClientPlugin {
     public void initialize(final IClientAPI jmAPI) {
         MapFrontiersClient.setjmAPI(jmAPI);
 
-        ClientEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(MapFrontiers.MODID, (clickEvent) -> {
+        FullscreenEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(MapFrontiers.MODID, (clickEvent) -> {
             if (!Config.fullscreenButtons) {
                 return;
             }
@@ -48,7 +49,7 @@ public class MapFrontiersPlugin implements IClientPlugin {
             }
         });
 
-        ClientEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(MapFrontiers.MODID, (mouseDraggedEvent) -> {
+        FullscreenEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(MapFrontiers.MODID, (mouseDraggedEvent) -> {
             if (!Config.fullscreenButtons) {
                 return;
             }
@@ -64,7 +65,7 @@ public class MapFrontiersPlugin implements IClientPlugin {
             }
         });
 
-        ClientEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(MapFrontiers.MODID, (mouseMoveEvent) -> {
+        FullscreenEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(MapFrontiers.MODID, (mouseMoveEvent) -> {
             if (!Config.fullscreenButtons) {
                 return;
             }
@@ -95,13 +96,13 @@ public class MapFrontiersPlugin implements IClientPlugin {
             }
         });
 
-        ClientEventRegistry.ADDON_BUTTON_DISPLAY_EVENT.subscribe(MapFrontiers.MODID, (addonButtonDisplayEvent) -> {
+        FullscreenEventRegistry.ADDON_BUTTON_DISPLAY_EVENT.subscribe(MapFrontiers.MODID, (addonButtonDisplayEvent) -> {
             ThemeButtonDisplay buttonDisplay = addonButtonDisplayEvent.getThemeButtonDisplay();
             Screen fullscreen = addonButtonDisplayEvent.getFullscreen().getScreen();
             ClientEventHandler.postAddonButtonDisplayEvent(buttonDisplay, fullscreen);
         });
 
-        ClientEventRegistry.FULLSCREEN_POPUP_MENU_EVENT.subscribe(MapFrontiers.MODID, (fullscreenPopupMenuEvent) -> {
+        FullscreenEventRegistry.FULLSCREEN_POPUP_MENU_EVENT.subscribe(MapFrontiers.MODID, (fullscreenPopupMenuEvent) -> {
             ModPopupMenu popupMenu = fullscreenPopupMenuEvent.getPopupMenu();
             ClientEventHandler.postFullscreenPopupMenuEvent(popupMenu);
         });

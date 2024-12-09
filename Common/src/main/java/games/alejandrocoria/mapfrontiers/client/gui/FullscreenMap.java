@@ -32,6 +32,7 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class FullscreenMap {
@@ -157,10 +158,24 @@ public class FullscreenMap {
     }
 
     public void addPopupMenu(ModPopupMenu popupMenu) {
-        if (editing && frontierHighlighted.getMode() == FrontierData.Mode.Vertex) {
-            popupMenu.addMenuItem(I18n.get("mapfrontiers.add_vertex"), this::buttonAddVertex);
-            if (frontierHighlighted.getSelectedVertexIndex() != -1) {
-                popupMenu.addMenuItem(I18n.get("mapfrontiers.remove_vertex"), p -> buttonRemoveVertex());
+        if (editing) {
+            if (frontierHighlighted.getMode() == FrontierData.Mode.Vertex) {
+                popupMenu.addMenuItem(I18n.get("mapfrontiers.add_vertex"), this::buttonAddVertex);
+                if (frontierHighlighted.getSelectedVertexIndex() != -1) {
+                    popupMenu.addMenuItem(I18n.get("mapfrontiers.remove_vertex"), p -> buttonRemoveVertex());
+                }
+            } else {
+                if (frontierHighlighted.hasChunk(lastEditedChunk)) {
+                    List<ChunkPos> chunksToRemove = frontierHighlighted.getConnectedChunks(lastEditedChunk);
+                    if (!chunksToRemove.isEmpty()) {
+                        popupMenu.addMenuItem(I18n.get("mapfrontiers.remove_connected_chunks"), p -> buttonRemoveConnected(chunksToRemove));
+                    }
+                } else {
+                    List<ChunkPos> chunksToFill = frontierHighlighted.getClosedRegion(lastEditedChunk);
+                    if (!chunksToFill.isEmpty()) {
+                        popupMenu.addMenuItem(I18n.get("mapfrontiers.fill_region_of_chunks"), p -> buttonFillRegion(chunksToFill));
+                    }
+                }
             }
         }
     }
@@ -266,6 +281,18 @@ public class FullscreenMap {
         updateButtons();
     }
 
+    private void buttonRemoveConnected(List<ChunkPos> chunks) {
+        for (ChunkPos chunk : chunks) {
+            frontierHighlighted.removeChunk(chunk);
+        }
+    }
+
+    private void buttonFillRegion(List<ChunkPos> chunks) {
+        for (ChunkPos chunk : chunks) {
+            frontierHighlighted.addChunk(chunk);
+        }
+    }
+
     public boolean isEditingVertices() {
         return editing && frontierHighlighted.getMode() == FrontierData.Mode.Vertex;
     }
@@ -310,10 +337,14 @@ public class FullscreenMap {
                 frontierHighlighted.selectClosestVertex(position, maxDistanceToClosest);
             } else if (button == 1) {
                 lastEditedChunk = new ChunkPos(position);
-                if (frontierHighlighted.toggleChunk(lastEditedChunk)) {
-                    drawingChunk = ChunkDrawing.Adding;
-                } else {
-                    drawingChunk = ChunkDrawing.Removing;
+                if (Screen.hasShiftDown()) {
+                    return false;
+                }else {
+                    if (frontierHighlighted.toggleChunk(lastEditedChunk)) {
+                        drawingChunk = ChunkDrawing.Adding;
+                    } else {
+                        drawingChunk = ChunkDrawing.Removing;
+                    }
                 }
                 return true;
             }

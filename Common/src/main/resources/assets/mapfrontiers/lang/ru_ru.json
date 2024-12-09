@@ -85,6 +85,8 @@
   "mapfrontiers.button_delete_frontier": "Удалить границу",
   "mapfrontiers.add_vertex": "Добавить точку",
   "mapfrontiers.remove_vertex": "Убрать точку",
+  "mapfrontiers.remove_connected_chunks": "Remove connected chunks",
+  "mapfrontiers.fill_region_of_chunks": "Fill inner region of chunks",
 
   "mapfrontiers.title_info": "Информация о границе",
   "mapfrontiers.title_frontiers": "Границы",

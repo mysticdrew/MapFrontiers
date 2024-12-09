@@ -83,6 +83,8 @@
   "mapfrontiers.button_delete_frontier": "删除领地",
   "mapfrontiers.add_vertex": "添加顶点",
   "mapfrontiers.remove_vertex": "删除顶点",
+  "mapfrontiers.remove_connected_chunks": "Remove connected chunks",
+  "mapfrontiers.fill_region_of_chunks": "Fill inner region of chunks",
 
   "mapfrontiers.title_info": "领地详情",
   "mapfrontiers.title_frontiers": "领地",

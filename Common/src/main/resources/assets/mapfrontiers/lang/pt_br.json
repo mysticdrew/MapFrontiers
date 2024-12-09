@@ -83,6 +83,8 @@
     "mapfrontiers.button_delete_frontier": "Excluir Fronteira",
     "mapfrontiers.add_vertex": "Adicionar vértice",
     "mapfrontiers.remove_vertex": "Remover vértice",
+    "mapfrontiers.remove_connected_chunks": "Remove connected chunks",
+    "mapfrontiers.fill_region_of_chunks": "Fill inner region of chunks",
 
     "mapfrontiers.title_info": "Informações Fronteiriças",
     "mapfrontiers.title_frontiers": "Fronteiras",

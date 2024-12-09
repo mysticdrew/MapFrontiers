@@ -48,9 +48,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.lang.Math.abs;
@@ -374,6 +376,119 @@ public class FrontierOverlay extends FrontierData {
         }
 
         return false;
+    }
+
+    public boolean hasChunk(ChunkPos chunk) {
+        return chunks.contains(chunk);
+    }
+
+    public List<ChunkPos> getConnectedChunks(ChunkPos chunk) {
+        List<ChunkPos> connected = new ArrayList<>();
+
+        if (!hasChunk(chunk)) {
+            return connected;
+        }
+
+        Set<ChunkPos> visited = new HashSet<>();
+        visited.add(chunk);
+        Set<ChunkPos> toCheck = new HashSet<>();
+        toCheck.add(chunk);
+
+        while (!toCheck.isEmpty()) {
+            ChunkPos pos = toCheck.iterator().next();
+            toCheck.remove(pos);
+            connected.add(pos);
+
+            ChunkPos posUp = new ChunkPos(pos.x, pos.z - 1);
+            if (!visited.contains(posUp) && hasChunk(posUp)) {
+                toCheck.add(posUp);
+            }
+            visited.add(posUp);
+
+            ChunkPos posDown = new ChunkPos(pos.x, pos.z + 1);
+            if (!visited.contains(posDown) && hasChunk(posDown)) {
+                toCheck.add(posDown);
+            }
+            visited.add(posDown);
+
+            ChunkPos posRight = new ChunkPos(pos.x + 1, pos.z);
+            if (!visited.contains(posRight) && hasChunk(posRight)) {
+                toCheck.add(posRight);
+            }
+            visited.add(posRight);
+
+            ChunkPos posLeft = new ChunkPos(pos.x - 1, pos.z);
+            if (!visited.contains(posLeft) && hasChunk(posLeft)) {
+                toCheck.add(posLeft);
+            }
+            visited.add(posLeft);
+        }
+
+        return connected;
+    }
+
+    public List<ChunkPos> getClosedRegion(ChunkPos chunk) {
+        List<ChunkPos> region = new ArrayList<>();
+
+        if (hasChunk(chunk) || chunks.isEmpty()) {
+            return region;
+        }
+
+        ChunkPos topLeft = new ChunkPos(this.topLeft);
+        ChunkPos bottomRight = new ChunkPos(this.bottomRight);
+
+        if (chunk.x <= topLeft.x || chunk.x >= bottomRight.x || chunk.z <= topLeft.z || chunk.z >= bottomRight.z) {
+            return region;
+        }
+
+        Set<ChunkPos> visited = new HashSet<>();
+        visited.add(chunk);
+        Set<ChunkPos> toCheck = new HashSet<>();
+        toCheck.add(chunk);
+
+        while (!toCheck.isEmpty()) {
+            ChunkPos pos = toCheck.iterator().next();
+            toCheck.remove(pos);
+            region.add(pos);
+
+            ChunkPos posUp = new ChunkPos(pos.x, pos.z - 1);
+            if (!visited.contains(posUp) && !hasChunk(posUp)) {
+                if (posUp.z == topLeft.z) {
+                    return new ArrayList<>();
+                }
+                toCheck.add(posUp);
+            }
+            visited.add(posUp);
+
+            ChunkPos posDown = new ChunkPos(pos.x, pos.z + 1);
+            if (!visited.contains(posDown) && !hasChunk(posDown)) {
+                if (posUp.z == bottomRight.z) {
+                    return new ArrayList<>();
+                }
+                toCheck.add(posDown);
+            }
+            visited.add(posDown);
+
+            ChunkPos posRight = new ChunkPos(pos.x + 1, pos.z);
+            if (!visited.contains(posRight) && !hasChunk(posRight)) {
+                if (posUp.x == bottomRight.x) {
+                    return new ArrayList<>();
+                }
+                toCheck.add(posRight);
+            }
+            visited.add(posRight);
+
+            ChunkPos posLeft = new ChunkPos(pos.x - 1, pos.z);
+            if (!visited.contains(posLeft) && !hasChunk(posLeft)) {
+                if (posUp.x == topLeft.x) {
+                    return new ArrayList<>();
+                }
+                toCheck.add(posLeft);
+            }
+            visited.add(posLeft);
+        }
+
+        return region;
     }
 
     public void moveSelectedVertex(BlockPos pos, float snapDistance) {
