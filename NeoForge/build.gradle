@@ -1,53 +1,99 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.moddev'
 }
 
 archivesBaseName = "${project.mod_name}-${project.minecraft_version}"
 
-jarJar.enable()
+jarJar.setEnabled(true)
 tasks.jarJar.configure {
-    archiveClassifier.set('neoforge')
+    jar.archiveClassifier.set('neoforge')
 }
 
 java {
     sourcesJar.enabled = false
 }
+//
+//// Automatically enable neoforge AccessTransformers if the file exists
+//// This location is hardcoded in FML and can not be changed.
+//// https://github.com/neoforged/FancyModLoader/blob/a952595eaaddd571fbc53f43847680b00894e0c1/loader/src/main/java/net/neoforged/fml/loading/moddiscovery/ModFile.java#L118
+//def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+//if (at.exists()) {
+//    minecraft.accessTransformers.file at
+//}
+//runs {
+//    configureEach {
+//        systemProperty "mixin.debug.export", "true"
+//        systemProperty "forge.logging.console.level", "info"
+//        modSource project.sourceSets.main
+//    }
+//    client {
+//        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+//    }
+//    server {
+//        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+//    }
+//    data {
+//        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+//    }
+//}
+//
+//sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-// Automatically enable neoforge AccessTransformers if the file exists
-// This location is hardcoded in FML and can not be changed.
-// https://github.com/neoforged/FancyModLoader/blob/a952595eaaddd571fbc53f43847680b00894e0c1/loader/src/main/java/net/neoforged/fml/loading/moddiscovery/ModFile.java#L118
-def at = file('src/main/resources/META-INF/accesstransformer.cfg')
-if (at.exists()) {
-    minecraft.accessTransformers.file at
-}
-runs {
-    configureEach {
-        systemProperty "mixin.debug.export", "true"
-        systemProperty "forge.logging.console.level", "info"
-        modSource project.sourceSets.main
+//dependencies {
+//    implementation "net.neoforged:neoforge:${neoforge_version}"
+//
+//    implementation group: "mysticdrew", name: "common-networking-neoforge", version: project.common_networking_version
+//    jarJar (group: "mysticdrew", name: "common-networking-neoforge", version: project.common_networking_version) {
+//        jarJar.pin(it, project.common_networking_version)
+//    }
+//    api "fuzs.forgeconfigapiport:forgeconfigapiport-neoforge:${forge_config_api_port_version}"
+//    api group: 'info.journeymap', name: 'journeymap-api-neoforge', version: project.journeymap_api_version, changing: true
+//    implementation "curse.maven:journeymap-${project.jm_project_id}:${project.jm_neoforge_file_id}"
+//}
+
+neoForge {
+    version = neoforge_version
+    // Automatically enable neoforge AccessTransformers if the file exists
+    def at = project(':Common').file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers.from(at.absolutePath)
     }
-    client {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
     }
-    server {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+    runs {
+        configureEach {
+            systemProperty "mixin.debug.export", "true"
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+        }
+        client {
+            client()
+            gameDirectory = project.file('runs/client')
+        }
+        data {
+            data()
+            gameDirectory = project.file('runs/data')
+        }
+        server {
+            server()
+            gameDirectory = project.file('runs/server')
+        }
     }
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+
+    dependencies {
+        implementation group: "mysticdrew", name: "common-networking-neoforge", version: project.common_networking_version
+        jarJar (group: "mysticdrew", name: "common-networking-neoforge", version: project.common_networking_version)
+        api "fuzs.forgeconfigapiport:forgeconfigapiport-neoforge:${forge_config_api_port_version}"
+        api group: 'info.journeymap', name: 'journeymap-api-neoforge', version: project.journeymap_api_version, changing: true
+        implementation "curse.maven:journeymap-${project.jm_project_id}:${project.jm_neoforge_file_id}"
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-dependencies {
-    implementation "net.neoforged:neoforge:${neoforge_version}"
-
-    implementation group: "mysticdrew", name: "common-networking-neoforge", version: project.common_networking_version
-    jarJar (group: "mysticdrew", name: "common-networking-neoforge", version: project.common_networking_version) {
-        jarJar.pin(it, project.common_networking_version)
-    }
-    api "fuzs.forgeconfigapiport:forgeconfigapiport-neoforge:${forge_config_api_port_version}"
-    api group: 'info.journeymap', name: 'journeymap-api-neoforge', version: project.journeymap_api_version, changing: true
-    implementation "curse.maven:journeymap-${project.jm_project_id}:${project.jm_neoforge_file_id}"
-}
