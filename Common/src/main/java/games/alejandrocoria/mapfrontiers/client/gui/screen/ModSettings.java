@@ -623,6 +623,14 @@ public class ModSettings extends AutoScaledScreen {
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapUnderground, Config.minimapUndergroundVisibility != Config.Visibility.Never);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapTopo, Config.minimapTopoVisibility != Config.Visibility.Never);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapBiome, Config.minimapBiomeVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Webmap, Config.webmapVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapName, Config.webmapNameVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapOwner, Config.webmapOwnerVisibility == Config.Visibility.Always);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapDay, Config.webmapDayVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapNight, Config.webmapNightVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapUnderground, Config.webmapUndergroundVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapTopo, Config.webmapTopoVisibility != Config.Visibility.Never);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapBiome, Config.webmapBiomeVisibility != Config.Visibility.Never);
         return visibilityData;
     }
 
@@ -647,6 +655,14 @@ public class ModSettings extends AutoScaledScreen {
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapUnderground, Config.minimapUndergroundVisibility != Config.Visibility.Custom);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapTopo, Config.minimapTopoVisibility != Config.Visibility.Custom);
         visibilityData.setValue(FrontierData.VisibilityData.Visibility.MinimapBiome, Config.minimapBiomeVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.Webmap, Config.webmapVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapName, Config.webmapNameVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapOwner, Config.webmapOwnerVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapDay, Config.webmapDayVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapNight, Config.webmapNightVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapUnderground, Config.webmapUndergroundVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapTopo, Config.webmapTopoVisibility != Config.Visibility.Custom);
+        visibilityData.setValue(FrontierData.VisibilityData.Visibility.WebmapBiome, Config.webmapBiomeVisibility != Config.Visibility.Custom);
         return visibilityData;
     }
 
@@ -670,6 +686,14 @@ public class ModSettings extends AutoScaledScreen {
         Config.minimapUndergroundVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapUnderground);
         Config.minimapTopoVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapTopo);
         Config.minimapBiomeVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.MinimapBiome);
+        Config.webmapVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.Webmap);
+        Config.webmapNameVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.WebmapName);
+        Config.webmapOwnerVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.WebmapOwner);
+        Config.webmapDayVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.WebmapDay);
+        Config.webmapNightVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.WebmapNight);
+        Config.webmapUndergroundVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.WebmapUnderground);
+        Config.webmapTopoVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.WebmapTopo);
+        Config.webmapBiomeVisibility = getVisibilityValue(visibilityData, visibilityDataMask, FrontierData.VisibilityData.Visibility.WebmapBiome);
     }
 
     private Config.Visibility getVisibilityValue(FrontierData.VisibilityData visibilityData, FrontierData.VisibilityData visibilityDataMask, FrontierData.VisibilityData.Visibility visibility) {

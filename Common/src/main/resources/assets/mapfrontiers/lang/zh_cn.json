@@ -11,6 +11,7 @@
   "mapfrontiers.visibility_override": "Visibility Override",
   "mapfrontiers.fullscreen": "Fullscreen map",
   "mapfrontiers.minimap": "Minimap",
+  "mapfrontiers.webmap": "Webmap",
   "mapfrontiers.show_frontier": "Show frontier",
   "mapfrontiers.show_name": "显示名称",
   "mapfrontiers.show_owner": "显示所有者",

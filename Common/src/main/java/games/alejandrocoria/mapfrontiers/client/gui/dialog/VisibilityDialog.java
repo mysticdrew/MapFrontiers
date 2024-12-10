@@ -27,6 +27,7 @@ public class VisibilityDialog extends AutoScaledScreen {
     private static final Component showNameLabel = Component.translatable("mapfrontiers.show_name");
     private static final Component showOwnerLabel = Component.translatable("mapfrontiers.show_owner");
     private static final Component minimapLabel = Component.translatable("mapfrontiers.minimap");
+    private static final Component webmapLabel = Component.translatable("mapfrontiers.webmap");
     private static final Component dayLabel = Component.translatable("mapfrontiers.day");
     private static final Component nightLabel = Component.translatable("mapfrontiers.night");
     private static final Component undergroundLabel = Component.translatable("mapfrontiers.underground");
@@ -43,14 +44,14 @@ public class VisibilityDialog extends AutoScaledScreen {
     protected SimpleButton doneButton;
 
     public VisibilityDialog(FrontierData.VisibilityData visibilityData, BiConsumer<FrontierData.VisibilityData, FrontierData.VisibilityData> afterDoneCallback) {
-        super(Component.empty());
+        super(Component.empty(), 554, 191);
         this.visibilityData = new FrontierData.VisibilityData(visibilityData);
         this.visibilityMask = null;
         this.afterDoneCallback = afterDoneCallback;
     }
 
     public VisibilityDialog(FrontierData.VisibilityData visibilityData, FrontierData.VisibilityData visibilityDataMask, BiConsumer<FrontierData.VisibilityData, FrontierData.VisibilityData> afterDoneCallback) {
-        super(Component.empty());
+        super(Component.empty(), 554, 191);
         this.visibilityData = new FrontierData.VisibilityData(visibilityData);
         this.visibilityMask = new FrontierData.VisibilityData(visibilityDataMask);
         this.afterDoneCallback = afterDoneCallback;
@@ -107,6 +108,22 @@ public class VisibilityDialog extends AutoScaledScreen {
         createWidgets(minimapGrid, 6, undergroundLabel, FrontierData.VisibilityData.Visibility.MinimapUnderground);
         createWidgets(minimapGrid, 7, topoLabel, FrontierData.VisibilityData.Visibility.MinimapTopo);
         createWidgets(minimapGrid, 8, biomeLabel, FrontierData.VisibilityData.Visibility.MinimapBiome);
+
+        LinearLayout webmapColumn = LinearLayout.vertical().spacing(6);
+        webmapColumn.defaultCellSetting().alignHorizontallyCenter();
+        mainColumns.addChild(webmapColumn);
+        webmapColumn.addChild(new StringWidget(webmapLabel.copy().withStyle(Style.EMPTY.withBold(true)), font).setColor(ColorConstants.TEXT));
+
+        GridLayout webmapGrid = new GridLayout().spacing(4);
+        webmapColumn.addChild(webmapGrid);
+        createWidgets(webmapGrid, 1, showFrontierLabel, FrontierData.VisibilityData.Visibility.Webmap);
+        createWidgets(webmapGrid, 2, showNameLabel, FrontierData.VisibilityData.Visibility.WebmapName);
+        createWidgets(webmapGrid, 3, showOwnerLabel, FrontierData.VisibilityData.Visibility.WebmapOwner);
+        createWidgets(webmapGrid, 4, dayLabel, FrontierData.VisibilityData.Visibility.WebmapDay);
+        createWidgets(webmapGrid, 5, nightLabel, FrontierData.VisibilityData.Visibility.WebmapNight);
+        createWidgets(webmapGrid, 6, undergroundLabel, FrontierData.VisibilityData.Visibility.WebmapUnderground);
+        createWidgets(webmapGrid, 7, topoLabel, FrontierData.VisibilityData.Visibility.WebmapTopo);
+        createWidgets(webmapGrid, 8, biomeLabel, FrontierData.VisibilityData.Visibility.WebmapBiome);
 
         doneButton = mainLayout.addChild(new SimpleButton(font, 100, doneLabel, (b) -> onClose()));
     }

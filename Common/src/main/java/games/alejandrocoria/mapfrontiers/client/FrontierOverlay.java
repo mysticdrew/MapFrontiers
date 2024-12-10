@@ -785,10 +785,6 @@ public class FrontierOverlay extends FrontierData {
     }
 
     private void addPolygonOverlays(ShapeProperties shapeProps, MapPolygon polygon, @Nullable List<MapPolygon> polygonHoles) {
-        PolygonOverlay polygonOverlay = null;
-        PolygonOverlay polygonOverlayFullscreen = null;
-        PolygonOverlay polygonOverlayMinimap = null;
-
         boolean fullscreenV = Config.getVisibilityValue(Config.fullscreenVisibility, getVisibility(VisibilityData.Visibility.Fullscreen));
         boolean fullscreenNameV = Config.getVisibilityValue(Config.fullscreenNameVisibility, getVisibility(VisibilityData.Visibility.FullscreenName));
         boolean fullscreenOwnerV = Config.getVisibilityValue(Config.fullscreenOwnerVisibility, getVisibility(VisibilityData.Visibility.FullscreenOwner));
@@ -805,43 +801,35 @@ public class FrontierOverlay extends FrontierData {
         boolean minimapUndergroundV = Config.getVisibilityValue(Config.minimapUndergroundVisibility, getVisibility(VisibilityData.Visibility.MinimapUnderground));
         boolean minimapTopoV = Config.getVisibilityValue(Config.minimapTopoVisibility, getVisibility(VisibilityData.Visibility.MinimapTopo));
         boolean minimapBiomeV = Config.getVisibilityValue(Config.minimapBiomeVisibility, getVisibility(VisibilityData.Visibility.MinimapBiome));
+        boolean webmapV = Config.getVisibilityValue(Config.webmapVisibility, getVisibility(VisibilityData.Visibility.Webmap));
+        boolean webmapNameV = Config.getVisibilityValue(Config.webmapNameVisibility, getVisibility(VisibilityData.Visibility.WebmapName));
+        boolean webmapOwnerV = Config.getVisibilityValue(Config.webmapOwnerVisibility, getVisibility(VisibilityData.Visibility.WebmapOwner));
+        boolean webmapDayV = Config.getVisibilityValue(Config.webmapDayVisibility, getVisibility(VisibilityData.Visibility.WebmapDay));
+        boolean webmapNightV = Config.getVisibilityValue(Config.webmapNightVisibility, getVisibility(VisibilityData.Visibility.WebmapNight));
+        boolean webmapUndergroundV = Config.getVisibilityValue(Config.webmapUndergroundVisibility, getVisibility(VisibilityData.Visibility.WebmapUnderground));
+        boolean webmapTopoV = Config.getVisibilityValue(Config.webmapTopoVisibility, getVisibility(VisibilityData.Visibility.WebmapTopo));
+        boolean webmapBiomeV = Config.getVisibilityValue(Config.webmapBiomeVisibility, getVisibility(VisibilityData.Visibility.WebmapBiome));
 
-        if (fullscreenV && minimapV
-                && (fullscreenNameV == minimapNameV)
-                && (fullscreenOwnerV == minimapOwnerV)
-                && (fullscreenDayV == minimapDayV)
-                && (fullscreenNightV == minimapNightV)
-                && (fullscreenUndergroundV == minimapUndergroundV)
-                && (fullscreenTopoV == minimapTopoV)
-                && (fullscreenBiomeV == minimapBiomeV)) {
-            polygonOverlay = new PolygonOverlay(MapFrontiers.MODID, dimension, shapeProps, polygon, polygonHoles);
-            polygonOverlay.setActiveUIs(Context.UI.Fullscreen, Context.UI.Minimap, Context.UI.Webmap);
-            polygonOverlay.setActiveMapTypes(getActiveMapTypes(fullscreenDayV, fullscreenNightV, fullscreenUndergroundV, fullscreenTopoV, fullscreenBiomeV));
-        } else {
-            if (fullscreenV) {
-                polygonOverlayFullscreen = new PolygonOverlay(MapFrontiers.MODID, dimension, shapeProps, polygon, polygonHoles);
-                polygonOverlayFullscreen.setActiveUIs(Context.UI.Fullscreen);
-                polygonOverlayFullscreen.setActiveMapTypes(getActiveMapTypes(fullscreenDayV, fullscreenNightV, fullscreenUndergroundV, fullscreenTopoV, fullscreenBiomeV));
-            }
-            if (minimapV) {
-                polygonOverlayMinimap = new PolygonOverlay(MapFrontiers.MODID, dimension, shapeProps, polygon, polygonHoles);
-                polygonOverlayMinimap.setActiveUIs(Context.UI.Minimap, Context.UI.Webmap);
-                polygonOverlayMinimap.setActiveMapTypes(getActiveMapTypes(minimapDayV, minimapNightV, minimapUndergroundV, minimapTopoV, minimapBiomeV));
-            }
+        if (fullscreenV) {
+            PolygonOverlay overlay = new PolygonOverlay(MapFrontiers.MODID, dimension, shapeProps, polygon, polygonHoles);
+            overlay.setActiveUIs(Context.UI.Fullscreen);
+            overlay.setActiveMapTypes(getActiveMapTypes(fullscreenDayV, fullscreenNightV, fullscreenUndergroundV, fullscreenTopoV, fullscreenBiomeV));
+            addNameAndOwner(overlay, fullscreenNameV, fullscreenOwnerV);
+            polygonOverlays.add(overlay);
         }
-
-        if (polygonOverlay != null) {
-            addNameAndOwner(polygonOverlay, fullscreenNameV, fullscreenOwnerV);
-            polygonOverlays.add(polygonOverlay);
-        } else {
-            if (polygonOverlayFullscreen != null) {
-                addNameAndOwner(polygonOverlayFullscreen, fullscreenNameV, fullscreenOwnerV);
-                polygonOverlays.add(polygonOverlayFullscreen);
-            }
-            if (polygonOverlayMinimap != null) {
-                addNameAndOwner(polygonOverlayMinimap, minimapNameV, minimapOwnerV);
-                polygonOverlays.add(polygonOverlayMinimap);
-            }
+        if (minimapV) {
+            PolygonOverlay overlay = new PolygonOverlay(MapFrontiers.MODID, dimension, shapeProps, polygon, polygonHoles);
+            overlay.setActiveUIs(Context.UI.Minimap);
+            overlay.setActiveMapTypes(getActiveMapTypes(minimapDayV, minimapNightV, minimapUndergroundV, minimapTopoV, minimapBiomeV));
+            addNameAndOwner(overlay, minimapNameV, minimapOwnerV);
+            polygonOverlays.add(overlay);
+        }
+        if (webmapV) {
+            PolygonOverlay overlay = new PolygonOverlay(MapFrontiers.MODID, dimension, shapeProps, polygon, polygonHoles);
+            overlay.setActiveUIs(Context.UI.Webmap);
+            overlay.setActiveMapTypes(getActiveMapTypes(webmapDayV, webmapNightV, webmapUndergroundV, webmapTopoV, webmapBiomeV));
+            addNameAndOwner(overlay, webmapNameV, webmapOwnerV);
+            polygonOverlays.add(overlay);
         }
     }
 
@@ -871,28 +859,27 @@ public class FrontierOverlay extends FrontierData {
                 boolean minimapUndergroundV = Config.getVisibilityValue(Config.minimapUndergroundVisibility, getVisibility(VisibilityData.Visibility.MinimapUnderground));
                 boolean minimapTopoV = Config.getVisibilityValue(Config.minimapTopoVisibility, getVisibility(VisibilityData.Visibility.MinimapTopo));
                 boolean minimapBiomeV = Config.getVisibilityValue(Config.minimapBiomeVisibility, getVisibility(VisibilityData.Visibility.MinimapBiome));
-                if (fullscreenV || minimapV) {
-                    if (fullscreenV && minimapV
-                            && (fullscreenDayV == minimapDayV)
-                            && (fullscreenNightV == minimapNightV)
-                            && (fullscreenUndergroundV == minimapUndergroundV)
-                            && (fullscreenTopoV == minimapTopoV)
-                            && (fullscreenBiomeV == minimapBiomeV)) {
-                        createMarkersFromVertices(
-                                new Context.UI[]{Context.UI.Fullscreen, Context.UI.Minimap, Context.UI.Webmap},
-                                getActiveMapTypes(fullscreenDayV, fullscreenNightV, fullscreenUndergroundV, fullscreenTopoV, fullscreenBiomeV)
-                        );
-                    } else if (fullscreenV) {
-                        createMarkersFromVertices(
-                                new Context.UI[]{Context.UI.Fullscreen},
-                                getActiveMapTypes(fullscreenDayV, fullscreenNightV, fullscreenUndergroundV, fullscreenTopoV, fullscreenBiomeV)
-                        );
-                    } else {
-                        createMarkersFromVertices(
-                                new Context.UI[]{Context.UI.Minimap, Context.UI.Webmap},
-                                getActiveMapTypes(minimapDayV, minimapNightV, minimapUndergroundV, minimapTopoV, minimapBiomeV)
-                        );
-                    }
+                boolean webmapV = Config.getVisibilityValue(Config.webmapVisibility, getVisibility(VisibilityData.Visibility.Webmap));
+                boolean webmapDayV = Config.getVisibilityValue(Config.webmapDayVisibility, getVisibility(VisibilityData.Visibility.WebmapDay));
+                boolean webmapNightV = Config.getVisibilityValue(Config.webmapNightVisibility, getVisibility(VisibilityData.Visibility.WebmapNight));
+                boolean webmapUndergroundV = Config.getVisibilityValue(Config.webmapUndergroundVisibility, getVisibility(VisibilityData.Visibility.WebmapUnderground));
+                boolean webmapTopoV = Config.getVisibilityValue(Config.webmapTopoVisibility, getVisibility(VisibilityData.Visibility.WebmapTopo));
+                boolean webmapBiomeV = Config.getVisibilityValue(Config.webmapBiomeVisibility, getVisibility(VisibilityData.Visibility.WebmapBiome));
+
+                if (fullscreenV) {
+                    createMarkersFromVertices(Context.UI.Fullscreen,
+                            getActiveMapTypes(fullscreenDayV, fullscreenNightV, fullscreenUndergroundV, fullscreenTopoV, fullscreenBiomeV)
+                    );
+                }
+                if (minimapV){
+                    createMarkersFromVertices(Context.UI.Minimap,
+                            getActiveMapTypes(minimapDayV, minimapNightV, minimapUndergroundV, minimapTopoV, minimapBiomeV)
+                    );
+                }
+                if (webmapV){
+                    createMarkersFromVertices(Context.UI.Webmap,
+                            getActiveMapTypes(webmapDayV, webmapNightV, webmapUndergroundV, webmapTopoV, webmapBiomeV)
+                    );
                 }
             }
 
@@ -926,7 +913,7 @@ public class FrontierOverlay extends FrontierData {
         return mapTypes.toArray(new Context.MapType[0]);
     }
 
-    private void createMarkersFromVertices(Context.UI[] uiArray, Context.MapType[] mapTypesArray) {
+    private void createMarkersFromVertices(Context.UI uiArray, Context.MapType[] mapTypesArray) {
         for (int i = 0; i < vertices.size(); ++i) {
             MarkerOverlay marker = new MarkerOverlay(MapFrontiers.MODID, vertices.get(i), markerVertex);
             marker.setDimension(dimension);
@@ -1192,7 +1179,7 @@ public class FrontierOverlay extends FrontierData {
     //
     // Functions adapted from https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
     //
-    private void addMarkerDots(BlockPos from, BlockPos to, Context.UI[] uiArray, Context.MapType[] mapTypesArray) {
+    private void addMarkerDots(BlockPos from, BlockPos to, Context.UI uiArray, Context.MapType[] mapTypesArray) {
         if (abs(to.getZ() - from.getZ()) < abs(to.getX() - from.getX())) {
             if (from.getX() > to.getX()) {
                 addLineMarkerDots(to.getX(), to.getZ(), from.getX(), from.getZ(), uiArray, mapTypesArray);
@@ -1208,7 +1195,7 @@ public class FrontierOverlay extends FrontierData {
         }
     }
 
-    private void addLineMarkerDots(int x0, int z0, int x1, int z1, Context.UI[] uiArray, Context.MapType[] mapTypesArray) {
+    private void addLineMarkerDots(int x0, int z0, int x1, int z1, Context.UI uiArray, Context.MapType[] mapTypesArray) {
         int dx = abs(x1 - x0);
         int sx = x0 < x1 ? 1 : -1;
         int dz = -abs(z1 - z0);

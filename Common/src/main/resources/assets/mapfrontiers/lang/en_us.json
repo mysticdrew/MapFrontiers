@@ -11,6 +11,7 @@
   "mapfrontiers.visibility_override": "Visibility Override",
   "mapfrontiers.fullscreen": "Fullscreen map",
   "mapfrontiers.minimap": "Minimap",
+  "mapfrontiers.webmap": "Webmap",
   "mapfrontiers.show_frontier": "Show frontier",
   "mapfrontiers.show_name": "Show name",
   "mapfrontiers.show_owner": "Show owner",

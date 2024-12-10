@@ -97,6 +97,14 @@ public class Config {
     public static Visibility minimapUndergroundVisibility;
     public static Visibility minimapTopoVisibility;
     public static Visibility minimapBiomeVisibility;
+    public static Visibility webmapVisibility;
+    public static Visibility webmapNameVisibility;
+    public static Visibility webmapOwnerVisibility;
+    public static Visibility webmapDayVisibility;
+    public static Visibility webmapNightVisibility;
+    public static Visibility webmapUndergroundVisibility;
+    public static Visibility webmapTopoVisibility;
+    public static Visibility webmapBiomeVisibility;
 
     public static boolean titleAnnouncementAboveHotbar;
     public static boolean announceUnnamedFrontiers;
@@ -163,6 +171,14 @@ public class Config {
         minimapUndergroundVisibility = CLIENT.minimapUndergroundVisibility.get();
         minimapTopoVisibility = CLIENT.minimapTopoVisibility.get();
         minimapBiomeVisibility = CLIENT.minimapBiomeVisibility.get();
+        webmapVisibility = CLIENT.webmapVisibility.get();
+        webmapNameVisibility = CLIENT.webmapNameVisibility.get();
+        webmapOwnerVisibility = CLIENT.webmapOwnerVisibility.get();
+        webmapDayVisibility = CLIENT.webmapDayVisibility.get();
+        webmapNightVisibility = CLIENT.webmapNightVisibility.get();
+        webmapUndergroundVisibility = CLIENT.webmapUndergroundVisibility.get();
+        webmapTopoVisibility = CLIENT.webmapTopoVisibility.get();
+        webmapBiomeVisibility = CLIENT.webmapBiomeVisibility.get();
 
         titleAnnouncementAboveHotbar = CLIENT.titleAnnouncementAboveHotbar.get();
         announceUnnamedFrontiers = CLIENT.announceUnnamedFrontiers.get();
@@ -227,6 +243,14 @@ public class Config {
         public final EnumValue<Visibility> minimapUndergroundVisibility;
         public final EnumValue<Visibility> minimapTopoVisibility;
         public final EnumValue<Visibility> minimapBiomeVisibility;
+        public final EnumValue<Visibility> webmapVisibility;
+        public final EnumValue<Visibility> webmapNameVisibility;
+        public final EnumValue<Visibility> webmapOwnerVisibility;
+        public final EnumValue<Visibility> webmapDayVisibility;
+        public final EnumValue<Visibility> webmapNightVisibility;
+        public final EnumValue<Visibility> webmapUndergroundVisibility;
+        public final EnumValue<Visibility> webmapTopoVisibility;
+        public final EnumValue<Visibility> webmapBiomeVisibility;
 
         public final BooleanValue titleAnnouncementAboveHotbar;
         public final BooleanValue announceUnnamedFrontiers;
@@ -347,6 +371,38 @@ public class Config {
                             "Force all frontier to be shown or hidden on the biome minimap. In Custom you can decide for each frontier.")
                     .translation(MapFrontiers.MODID + ".config." + "minimapBiomeVisibility")
                     .defineEnum("minimapBiomeVisibility", Visibility.Custom);
+            webmapVisibility = builder.comment(
+                    "Force all frontier to be shown or hidden on the webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapVisibility")
+                    .defineEnum("webmapVisibility", Visibility.Custom);
+            webmapNameVisibility = builder.comment(
+                    "Force all frontier names to be shown or hidden on the webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapNameVisibility")
+                    .defineEnum("webmapNameVisibility", Visibility.Custom);
+            webmapOwnerVisibility = builder.comment(
+                    "Force all frontier owners to be shown or hidden on the webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapOwnerVisibility")
+                    .defineEnum("webmapOwnerVisibility", Visibility.Custom);
+            webmapDayVisibility = builder.comment(
+                            "Force all frontier to be shown or hidden on the day webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapDayVisibility")
+                    .defineEnum("webmapDayVisibility", Visibility.Custom);
+            webmapNightVisibility = builder.comment(
+                            "Force all frontier to be shown or hidden on the night webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapNightVisibility")
+                    .defineEnum("webmapNightVisibility", Visibility.Custom);
+            webmapUndergroundVisibility = builder.comment(
+                            "Force all frontier to be shown or hidden on the underground webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapUndergroundVisibility")
+                    .defineEnum("webmapUndergroundVisibility", Visibility.Custom);
+            webmapTopoVisibility = builder.comment(
+                            "Force all frontier to be shown or hidden on the topo webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapTopoVisibility")
+                    .defineEnum("webmapTopoVisibility", Visibility.Custom);
+            webmapBiomeVisibility = builder.comment(
+                            "Force all frontier to be shown or hidden on the biome webmap. In Custom you can decide for each frontier.")
+                    .translation(MapFrontiers.MODID + ".config." + "webmapBiomeVisibility")
+                    .defineEnum("webmapBiomeVisibility", Visibility.Custom);
 
             titleAnnouncementAboveHotbar = builder.comment(
                     "Show the frontier announcement above the hotbar instead of showing it as a title.")
@@ -447,6 +503,14 @@ public class Config {
         CLIENT.minimapUndergroundVisibility.set(minimapUndergroundVisibility);
         CLIENT.minimapTopoVisibility.set(minimapTopoVisibility);
         CLIENT.minimapBiomeVisibility.set(minimapBiomeVisibility);
+        CLIENT.webmapVisibility.set(webmapVisibility);
+        CLIENT.webmapNameVisibility.set(webmapNameVisibility);
+        CLIENT.webmapOwnerVisibility.set(webmapOwnerVisibility);
+        CLIENT.webmapDayVisibility.set(webmapDayVisibility);
+        CLIENT.webmapNightVisibility.set(webmapNightVisibility);
+        CLIENT.webmapUndergroundVisibility.set(webmapUndergroundVisibility);
+        CLIENT.webmapTopoVisibility.set(webmapTopoVisibility);
+        CLIENT.webmapBiomeVisibility.set(webmapBiomeVisibility);
 
         CLIENT.titleAnnouncementAboveHotbar.set(titleAnnouncementAboveHotbar);
         CLIENT.announceUnnamedFrontiers.set(announceUnnamedFrontiers);

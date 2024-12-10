@@ -12,6 +12,7 @@
   "mapfrontiers.visibility_override": "Sobrescribir visibilidad",
   "mapfrontiers.fullscreen": "Mapa pantalla completa",
   "mapfrontiers.minimap": "Minimapa",
+  "mapfrontiers.webmap": "Webmap",
   "mapfrontiers.show_frontier": "Mostrar frontera",
   "mapfrontiers.show_owner": "Mostrar dueño",
   "mapfrontiers.announce_in_chat": "Anunciar en el chat",

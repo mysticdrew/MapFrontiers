@@ -13,6 +13,7 @@
   "mapfrontiers.visibility_override": "Visibility Override",
   "mapfrontiers.fullscreen": "Полноэкранная карта",
   "mapfrontiers.minimap": "Миникарта",
+  "mapfrontiers.webmap": "Webmap",
   "mapfrontiers.show_frontier": "Показать границу",
   "mapfrontiers.show_name": "Показать имя",
   "mapfrontiers.show_owner": "Показать владельца",

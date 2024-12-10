@@ -246,7 +246,7 @@ public class FrontierData {
     public boolean removeChunk(ChunkPos chunk) {
         synchronized (chunks) {
             if (chunks.remove(chunk)) {
-                changes.remove(Change.Vertices);
+                changes.add(Change.Vertices);
                 return true;
             }
         }
@@ -903,6 +903,14 @@ public class FrontierData {
             MinimapUnderground,
             MinimapTopo,
             MinimapBiome,
+            Webmap,
+            WebmapName,
+            WebmapOwner,
+            WebmapDay,
+            WebmapNight,
+            WebmapUnderground,
+            WebmapTopo,
+            WebmapBiome,
         }
 
         private final EnumSet<Visibility> values;
@@ -923,7 +931,14 @@ public class FrontierData {
                     Visibility.MinimapNight,
                     Visibility.MinimapUnderground,
                     Visibility.MinimapTopo,
-                    Visibility.MinimapBiome
+                    Visibility.MinimapBiome,
+                    Visibility.Webmap,
+                    Visibility.WebmapName,
+                    Visibility.WebmapDay,
+                    Visibility.WebmapNight,
+                    Visibility.WebmapUnderground,
+                    Visibility.WebmapTopo,
+                    Visibility.WebmapBiome
             );
         }
 
@@ -994,6 +1009,14 @@ public class FrontierData {
                 setValue(Visibility.MinimapUnderground, nbt.contains("minimapUnderground") ? nbt.getBoolean("minimapUnderground") : true);
                 setValue(Visibility.MinimapTopo, nbt.contains("minimapTopo") ? nbt.getBoolean("minimapTopo") : true);
                 setValue(Visibility.MinimapBiome, nbt.contains("minimapBiome") ? nbt.getBoolean("minimapBiome") : true);
+                setValue(Visibility.Webmap, nbt.contains("webmapVisible") ? nbt.getBoolean("webmapVisible") : getValue(Visibility.Minimap));
+                setValue(Visibility.WebmapName, nbt.contains("webmapNameVisible") ? nbt.getBoolean("webmapNameVisible") : getValue(Visibility.MinimapName));
+                setValue(Visibility.WebmapOwner, nbt.contains("webmapOwnerVisible") ? nbt.getBoolean("webmapOwnerVisible") : getValue(Visibility.MinimapOwner));
+                setValue(Visibility.WebmapDay, nbt.contains("webmapDay") ? nbt.getBoolean("webmapDay") : getValue(Visibility.MinimapDay));
+                setValue(Visibility.WebmapNight, nbt.contains("webmapNight") ? nbt.getBoolean("webmapNight") : getValue(Visibility.MinimapNight));
+                setValue(Visibility.WebmapUnderground, nbt.contains("webmapUnderground") ? nbt.getBoolean("webmapUnderground") : getValue(Visibility.MinimapUnderground));
+                setValue(Visibility.WebmapTopo, nbt.contains("webmapTopo") ? nbt.getBoolean("webmapTopo") : getValue(Visibility.MinimapTopo));
+                setValue(Visibility.WebmapBiome, nbt.contains("webmapBiome") ? nbt.getBoolean("webmapBiome") : getValue(Visibility.MinimapBiome));
             }
             else
             {
@@ -1013,6 +1036,14 @@ public class FrontierData {
                 setValue(Visibility.MinimapUnderground, nbt.getBoolean("visible"));
                 setValue(Visibility.MinimapTopo, nbt.getBoolean("visible"));
                 setValue(Visibility.MinimapBiome, nbt.getBoolean("visible"));
+                setValue(Visibility.Webmap, nbt.getBoolean("visible"));
+                setValue(Visibility.WebmapName, nbt.getBoolean("nameVisible"));
+                setValue(Visibility.WebmapOwner, nbt.getBoolean("ownerVisible"));
+                setValue(Visibility.WebmapDay, nbt.getBoolean("visible"));
+                setValue(Visibility.WebmapNight, nbt.getBoolean("visible"));
+                setValue(Visibility.WebmapUnderground, nbt.getBoolean("visible"));
+                setValue(Visibility.WebmapTopo, nbt.getBoolean("visible"));
+                setValue(Visibility.WebmapBiome, nbt.getBoolean("visible"));
             }
 
             if (nbt.contains("announceInChat")) {
@@ -1043,6 +1074,14 @@ public class FrontierData {
             nbt.putBoolean("minimapUnderground", getValue(Visibility.MinimapUnderground));
             nbt.putBoolean("minimapTopo", getValue(Visibility.MinimapTopo));
             nbt.putBoolean("minimapBiome", getValue(Visibility.MinimapBiome));
+            nbt.putBoolean("webmapVisible", getValue(Visibility.Webmap));
+            nbt.putBoolean("webmapNameVisible", getValue(Visibility.WebmapName));
+            nbt.putBoolean("webmapOwnerVisible", getValue(Visibility.WebmapOwner));
+            nbt.putBoolean("webmapDay", getValue(Visibility.WebmapDay));
+            nbt.putBoolean("webmapNight", getValue(Visibility.WebmapNight));
+            nbt.putBoolean("webmapUnderground", getValue(Visibility.WebmapUnderground));
+            nbt.putBoolean("webmapTopo", getValue(Visibility.WebmapTopo));
+            nbt.putBoolean("webmapBiome", getValue(Visibility.WebmapBiome));
         }
 
         public void fromBytes(FriendlyByteBuf buf) {
@@ -1065,6 +1104,14 @@ public class FrontierData {
             setValue(Visibility.MinimapUnderground, buf.readBoolean());
             setValue(Visibility.MinimapTopo, buf.readBoolean());
             setValue(Visibility.MinimapBiome, buf.readBoolean());
+            setValue(Visibility.Webmap, buf.readBoolean());
+            setValue(Visibility.WebmapName, buf.readBoolean());
+            setValue(Visibility.WebmapOwner, buf.readBoolean());
+            setValue(Visibility.WebmapDay, buf.readBoolean());
+            setValue(Visibility.WebmapNight, buf.readBoolean());
+            setValue(Visibility.WebmapUnderground, buf.readBoolean());
+            setValue(Visibility.WebmapTopo, buf.readBoolean());
+            setValue(Visibility.WebmapBiome, buf.readBoolean());
         }
 
         public void toBytes(FriendlyByteBuf buf) {
@@ -1087,6 +1134,14 @@ public class FrontierData {
             buf.writeBoolean(getValue(Visibility.MinimapUnderground));
             buf.writeBoolean(getValue(Visibility.MinimapTopo));
             buf.writeBoolean(getValue(Visibility.MinimapBiome));
+            buf.writeBoolean(getValue(Visibility.Webmap));
+            buf.writeBoolean(getValue(Visibility.WebmapName));
+            buf.writeBoolean(getValue(Visibility.WebmapOwner));
+            buf.writeBoolean(getValue(Visibility.WebmapDay));
+            buf.writeBoolean(getValue(Visibility.WebmapNight));
+            buf.writeBoolean(getValue(Visibility.WebmapUnderground));
+            buf.writeBoolean(getValue(Visibility.WebmapTopo));
+            buf.writeBoolean(getValue(Visibility.WebmapBiome));
         }
     }
 }
