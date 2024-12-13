@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
+import games.alejandrocoria.mapfrontiers.client.mixin.TextureAtlasInvoker;
 import games.alejandrocoria.mapfrontiers.common.Config;
 import games.alejandrocoria.mapfrontiers.common.FrontierData;
 import games.alejandrocoria.mapfrontiers.common.settings.SettingsUserShared;
@@ -647,18 +648,22 @@ public class FrontierOverlay extends FrontierData {
             return;
         }
 
-        renderBannerLayer(graphics, x, y, scale, Sheets.BANNER_BASE.atlasLocation(), Sheets.BANNER_BASE.sprite(), banner.baseColor);
+        TextureAtlasInvoker atlas = (TextureAtlasInvoker) Minecraft.getInstance().getTextureManager().getTexture(Sheets.BANNER_BASE.atlasLocation());
+        int atlasWidth = atlas.mapfrontiers$getWidth();
+        int atlasHeight = atlas.mapfrontiers$getHeight();
+
+        renderBannerLayer(graphics, x, y, atlasWidth, atlasHeight, scale, Sheets.BANNER_BASE.atlasLocation(), Sheets.BANNER_BASE.sprite(), banner.baseColor);
 
         for (int i = 0; i < bannerDisplay.patternLayers.layers().size(); ++i) {
             BannerPatternLayers.Layer layer = bannerDisplay.patternLayers.layers().get(i);
             ResourceLocation patternTextureLocation = layer.pattern().value().assetId().withPrefix("entity/banner/");
             TextureAtlasSprite sprite = mc.getTextureAtlas(Sheets.BANNER_SHEET).apply(patternTextureLocation);
 
-            renderBannerLayer(graphics, x, y, scale, Sheets.BANNER_SHEET, sprite, layer.color());
+            renderBannerLayer(graphics, x, y, atlasWidth, atlasHeight, scale, Sheets.BANNER_SHEET, sprite, layer.color());
         }
     }
 
-    private void renderBannerLayer(GuiGraphics graphics, int x, int y, int scale, ResourceLocation sheet, TextureAtlasSprite sprite, DyeColor dye) {
+    private void renderBannerLayer(GuiGraphics graphics, int x, int y, int atlasWidth, int atlasHeight, int scale, ResourceLocation sheet, TextureAtlasSprite sprite, DyeColor dye) {
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, sheet);
         RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
@@ -672,9 +677,9 @@ public class FrontierOverlay extends FrontierData {
         int height = 40 * scale;
         float zLevel = 0.f;
         float u1 = sprite.getU0();
-        float u2 = sprite.getU0() + 22.f / 512.f;
-        float v1 = sprite.getV0() + 1.f / 512.f;
-        float v2 = sprite.getV0() + 41.f / 512.f;
+        float u2 = sprite.getU0() + 22.f / atlasWidth;
+        float v1 = sprite.getV0() + 1.f / atlasHeight;
+        float v2 = sprite.getV0() + 41.f / atlasHeight;
         Matrix4f matrix = graphics.pose().last().pose();
         buf.addVertex(matrix, x, y + height, zLevel).setUv(u1, v2).setColor(color);
         buf.addVertex(matrix, x + width, y + height, zLevel).setUv(u2, v2).setColor(color);

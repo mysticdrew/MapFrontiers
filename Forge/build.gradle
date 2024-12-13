@@ -21,7 +21,10 @@ java {
 }
 
 mixin {
+    add sourceSets.main, "mapfrontiers-refmap.json"
+
     config("${mod_id}.forge.mixins.json")
+    config("${mod_id}.mixins.json")
 }
 
 minecraft {

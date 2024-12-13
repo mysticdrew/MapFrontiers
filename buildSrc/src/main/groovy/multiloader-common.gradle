@@ -71,6 +71,17 @@ repositories {
             includeGroupAndSubgroups("curse.maven")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Modrinth'
+                url = 'https://api.modrinth.com/maven'
+            }
+        }
+        filter {
+            includeGroupAndSubgroups("maven.modrinth")
+        }
+    }
     maven {
         name = 'ModMenu'
         url = 'https://maven.terraformersmc.com/releases'
