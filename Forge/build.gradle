@@ -21,10 +21,16 @@ java {
 }
 
 mixin {
-    add sourceSets.main, "mapfrontiers-refmap.json"
+//    add sourceSets.main, "mapfrontiers-refmap.json"
 
-    config("${mod_id}.forge.mixins.json")
     config("${mod_id}.mixins.json")
+    config("${mod_id}.forge.mixins.json")
+}
+
+jar {
+    manifest {
+        attributes["MixinConfigs"] = "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
+    }
 }
 
 minecraft {
