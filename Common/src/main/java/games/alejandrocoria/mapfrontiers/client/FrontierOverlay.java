@@ -28,7 +28,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -664,9 +664,11 @@ public class FrontierOverlay extends FrontierData {
     }
 
     private void renderBannerLayer(GuiGraphics graphics, int x, int y, int atlasWidth, int atlasHeight, int scale, ResourceLocation sheet, TextureAtlasSprite sprite, DyeColor dye) {
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        // TODO find an alternative to not flush all buffers
+        graphics.flush();
+
+        RenderSystem.setShader(CoreShaders.POSITION_TEX_COLOR);
         RenderSystem.setShaderTexture(0, sheet);
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
 
         RenderSystem.enableBlend();
 

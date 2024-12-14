@@ -106,7 +106,7 @@ public class PacketPersonalFrontierShared {
             }
 
             text.append(button);
-            player.sendSystemMessage(text);
+            player.displayClientMessage(text, false);
         }
     }
 

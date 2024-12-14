@@ -306,6 +306,16 @@ public class ScrollBox extends AbstractContainerWidget {
         return false;
     }
 
+    @Override
+    protected int contentHeight() {
+        return elementHeight;
+    }
+
+    @Override
+    protected double scrollRate() {
+        return elementHeight;
+    }
+
     public void scrollBottom() {
         scrollStart = elements.size() - scrollHeight;
         scrollBarGrabbed = false;

@@ -1,10 +1,10 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -90,23 +90,14 @@ public class ColorPicker extends AbstractWidgetNoNarration {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-
         int texX = active ? 0 : 137;
 
-        graphics.blit(texture, getX(), getY(), texX, 0, 128, 128, textureSizeX, textureSizeY);
-        if (active) {
-            RenderSystem.setShaderColor(((colorFullBrightness & 0xff0000) >> 16) / 255.f, ((colorFullBrightness & 0x00ff00) >> 8) / 255.f, (colorFullBrightness & 0x0000ff) / 255.f, 1.f);
-        }
-        graphics.blit(texture, getX() + 132, getY(), texX + 129, 0, 8, 128, textureSizeX, textureSizeY);
-        if (!active) {
-            RenderSystem.setShaderColor(((colorFullBrightness & 0xff0000) >> 16) / 255.f, ((colorFullBrightness & 0x00ff00) >> 8) / 255.f, (colorFullBrightness & 0x0000ff) / 255.f, 1.f);
-        }
-        graphics.fill(getX() + (int) hsX + 64, getY() + (int) hsY + 64, getX() + (int) hsX + 65, getY() + (int) hsY + 65, colorFullBrightness);
+        graphics.blit(RenderType::guiTextured, texture, getX(), getY(), texX, 0, 128, 128, textureSizeX, textureSizeY);
+        graphics.blit(RenderType::guiTextured, texture, getX() + 132, getY(), texX + 129, 0, 8, 128, textureSizeX, textureSizeY, active ? colorFullBrightness : 0xFFFFFFFF);
+        graphics.fill(getX() + (int) hsX + 64, getY() + (int) hsY + 64, getX() + (int) hsX + 65, getY() + (int) hsY + 65, active ? 0xFFFFFFFF : colorFullBrightness);
         graphics.fill(getX() + 131, getY() + (int) v, getX() + 139, getY() + (int) v + 1, color);
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-        graphics.blit(texture, getX() + (int) hsX + 64 - 2, getY() + (int) hsY + 64 - 2, texX, 129, 5, 5, textureSizeX, textureSizeY);
-        graphics.blit(texture, getX() + 131, getY() + (int) v - 2, texX + 6, 129, 10, 5, textureSizeX, textureSizeY);
+        graphics.blit(RenderType::guiTextured, texture, getX() + (int) hsX + 64 - 2, getY() + (int) hsY + 64 - 2, texX, 129, 5, 5, textureSizeX, textureSizeY);
+        graphics.blit(RenderType::guiTextured, texture, getX() + 131, getY() + (int) v - 2, texX + 6, 129, 10, 5, textureSizeX, textureSizeY);
     }
 
     private void updateMouse(double mouseX, double mouseY, boolean dragging) {

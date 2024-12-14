@@ -1,11 +1,11 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component.scroll;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
 import games.alejandrocoria.mapfrontiers.client.gui.component.StringWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -63,8 +63,6 @@ public class RadioListElement extends ScrollBox.ScrollElement {
     }
 
     private void drawRadio(GuiGraphics graphics, int x, int y, boolean checked) {
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-
-        graphics.blit(texture, x, y, checked ? 12 : 0, 0, 12, 12, textureSizeX, textureSizeY);
+        graphics.blit(RenderType::guiTextured, texture, x, y, checked ? 12 : 0, 0, 12, 12, textureSizeX, textureSizeY);
     }
 }

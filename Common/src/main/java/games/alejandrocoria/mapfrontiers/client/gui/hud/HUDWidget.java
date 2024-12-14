@@ -33,15 +33,6 @@ public class HUDWidget extends AbstractWidgetNoNarration {
         this.positionHUD = positionHUD;
     }
 
-    @Override
-    public boolean clicked(double mouseX, double mouseY) {
-        int factor = (int) Minecraft.getInstance().getWindow().getGuiScale();
-        int xScaled = (int) mouseX * factor;
-        int yScaled = (int) mouseY * factor;
-
-        return this.active && this.visible && hud.isInside(xScaled, yScaled);
-    }
-
     @Nullable
     public ComponentPath nextFocusPath(FocusNavigationEvent navigationEvent) {
         return null;
@@ -49,7 +40,11 @@ public class HUDWidget extends AbstractWidgetNoNarration {
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return clicked(mouseX, mouseY);
+        int factor = (int) Minecraft.getInstance().getWindow().getGuiScale();
+        int xScaled = (int) mouseX * factor;
+        int yScaled = (int) mouseY * factor;
+
+        return this.active && this.visible && hud.isInside(xScaled, yScaled);
     }
 
     @Override

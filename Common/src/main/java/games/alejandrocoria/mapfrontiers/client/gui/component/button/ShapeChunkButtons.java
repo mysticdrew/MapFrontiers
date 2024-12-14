@@ -1,6 +1,5 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component.button;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.MapFrontiers;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
 import games.alejandrocoria.mapfrontiers.client.gui.component.AbstractWidgetNoNarration;
@@ -9,6 +8,7 @@ import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -88,23 +88,9 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
         labelShapes.setY(y + 2);
     }
 
-    @Override
-    public boolean clicked(double mouseX, double mouseY) {
-        if (!active || !visible) {
-            return false;
-        }
-
-        return mouseX >= getX() && mouseX < getX() + width && mouseY >= getY() && mouseY < getY() + height;
-    }
-
     @Nullable
     public ComponentPath nextFocusPath(FocusNavigationEvent navigationEvent) {
         return null;
-    }
-
-    @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        return clicked(mouseX, mouseY);
     }
 
     @Override
@@ -124,8 +110,6 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-
         int col = 0;
         int row = 0;
         for (int i = 0; i < 8; ++i) {
@@ -135,7 +119,7 @@ public class ShapeChunkButtons extends AbstractWidgetNoNarration {
                 texY = 49;
             }
 
-            graphics.blit(texture, getX() + col * 55, getY() + row * 55 + 18, texX + 588, texY, 49, 49, textureSizeX, textureSizeY);
+            graphics.blit(RenderType::guiTextured, texture, getX() + col * 55, getY() + row * 55 + 18, texX + 588, texY, 49, 49, textureSizeX, textureSizeY);
 
             ++col;
             if (col == 4) {

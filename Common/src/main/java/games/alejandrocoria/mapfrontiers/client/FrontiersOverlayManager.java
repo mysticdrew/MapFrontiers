@@ -66,13 +66,13 @@ public class FrontiersOverlayManager {
             if (MapFrontiersPlugin.isEditing()) {
                 float opacity = markerDotSelected.getOpacity();
                 if (opacity < targetDotSelectedOpacity) {
-                    opacity += client.getTimer().getGameTimeDeltaTicks() * 0.5f;
+                    opacity += client.getDeltaTracker().getGameTimeDeltaTicks() * 0.5f;
                     if (opacity >= targetDotSelectedOpacity) {
                         opacity = targetDotSelectedOpacity;
                         targetDotSelectedOpacity = 0.f;
                     }
                 } else {
-                    opacity -= client.getTimer().getGameTimeDeltaTicks() * 0.07f;
+                    opacity -= client.getDeltaTracker().getGameTimeDeltaTicks() * 0.07f;
                     if (opacity <= targetDotSelectedOpacity) {
                         opacity = targetDotSelectedOpacity;
                         targetDotSelectedOpacity = 1.f;

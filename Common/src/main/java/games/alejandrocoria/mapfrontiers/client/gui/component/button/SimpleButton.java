@@ -1,6 +1,5 @@
 package games.alejandrocoria.mapfrontiers.client.gui.component.button;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import games.alejandrocoria.mapfrontiers.client.gui.ColorConstants;
 import games.alejandrocoria.mapfrontiers.client.gui.component.StringWidget;
 import net.minecraft.client.gui.Font;
@@ -49,8 +48,6 @@ public class SimpleButton extends ButtonBase {
         } else {
             label.setColor(textColor);
         }
-
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
 
         int borderColor = isKeyboardFocused() ? ColorConstants.SIMPLE_BUTTON_BORDER_FOCUSED : active ? ColorConstants.SIMPLE_BUTTON_BORDER : ColorConstants.SIMPLE_BUTTON_BORDER_DISABLED;
         graphics.hLine(getX(), getX() + width - 1, getY(), borderColor);
