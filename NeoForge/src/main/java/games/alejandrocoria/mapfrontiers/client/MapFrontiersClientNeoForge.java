@@ -73,7 +73,7 @@ public class MapFrontiersClientNeoForge extends MapFrontiersClient {
         ClientEventHandler.postClientDisconnectedEvent();
     }
 
-    public static void mouseEvent(InputEvent.MouseButton.Post event) {
+    public static void mouseEvent(InputEvent.MouseButton.Pre event) {
         if (event.getAction() == GLFW.GLFW_RELEASE) {
             ClientEventHandler.postMouseReleaseEvent(event.getButton());
         }
