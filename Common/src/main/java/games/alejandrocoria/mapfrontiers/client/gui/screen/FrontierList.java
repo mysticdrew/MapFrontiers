@@ -248,7 +248,7 @@ public class FrontierList extends AutoScaledScreen {
 
     @Override
     public void onClose() {
-        ClientEventHandler.unsuscribeAllEvents(this);
+        ClientEventHandler.unsubscribeAllEvents(this);
         super.onClose();
     }
 

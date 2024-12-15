@@ -123,7 +123,7 @@ public class FullscreenMap {
         if (frontierHighlighted != null) {
             frontierHighlighted.setHighlighted(false);
         }
-        ClientEventHandler.unsuscribeAllEvents(this);
+        ClientEventHandler.unsubscribeAllEvents(this);
     }
 
     public void addButtons(ThemeButtonDisplay buttonDisplay, Screen fullscreen) {

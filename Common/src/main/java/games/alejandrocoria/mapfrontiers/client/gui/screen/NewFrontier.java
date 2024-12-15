@@ -171,7 +171,7 @@ public class NewFrontier extends AutoScaledScreen {
 
     @Override
     public void onClose() {
-        ClientEventHandler.unsuscribeAllEvents(this);
+        ClientEventHandler.unsubscribeAllEvents(this);
         ClientEventHandler.postUpdatedConfigEvent();
         super.onClose();
     }

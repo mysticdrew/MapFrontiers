@@ -40,7 +40,7 @@ public class EventHandler {
     }
 
 
-    public static void unsuscribeAllEvents(Object object) {
+    public static void unsubscribeAllEvents(Object object) {
         commandRegistrationEventMap.remove(object);
         serverStartingEventMap.remove(object);
         serverStoppingEventMap.remove(object);

@@ -89,7 +89,7 @@ public class FrontiersManager {
     }
 
     public void close() {
-        EventHandler.unsuscribeAllEvents(this);
+        EventHandler.unsubscribeAllEvents(this);
     }
 
     public void setSettings(FrontierSettings frontierSettings) {

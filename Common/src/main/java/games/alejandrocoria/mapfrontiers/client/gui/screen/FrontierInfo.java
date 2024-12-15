@@ -500,13 +500,13 @@ public class FrontierInfo extends AutoScaledScreen {
     @Override
     public void onClose() {
         sendChangesToServer();
-        ClientEventHandler.unsuscribeAllEvents(this);
+        ClientEventHandler.unsubscribeAllEvents(this);
         super.onClose();
     }
 
     private void deleteFrontier() {
         // Unsubscribing to not receive this same event.
-        ClientEventHandler.unsuscribeAllEvents(this);
+        ClientEventHandler.unsubscribeAllEvents(this);
         frontiersOverlayManager.clientDeleteFrontier(frontier);
         onClose();
     }
