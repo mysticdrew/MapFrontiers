@@ -118,14 +118,15 @@ public class MapFrontiersClient {
         });
 
         ClientEventHandler.subscribeHudRenderEvent(MapFrontiersClient.class, (graphics, delta) -> {
-            if (hud != null) {
+            if (hud == null) {
+                hud = new HUD(frontiersOverlayManager, personalFrontiersOverlayManager);
+            } else {
                 hud.drawInGameHUD(graphics, delta);
             }
         });
 
         ClientEventHandler.subscribeClientConnectedEvent(MapFrontiersClient.class, () -> {
             initializeManagers();
-            hud = new HUD(frontiersOverlayManager, personalFrontiersOverlayManager);
 
             MapFrontiers.LOGGER.info("ClientConnectedEvent done");
         });
